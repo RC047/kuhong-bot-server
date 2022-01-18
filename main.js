@@ -2396,7 +2396,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
       try { isMath = JSON.parse(await fs.readFileSync('./tmp/math.json')) } catch (e) { isMath = false }
       if (isMath) return m.reply(loghandler.wait, `*Masih ada soal belum terjawab!*\n\nBerapa hasil dari *${isMath.str}*?\nBonus: ${isMath.bonus} poin\n\nJawab menggunakan perintah *${usedPrefix}jawab*\nKetik *${usedPrefix}hint* untuk bantuan\nKetik *${usedPrefix}nyerah* untuk menyerah`)
       var res = await math(text)
-      var soal = `Berapa hasil dari *${res.str}*?\nBonus: ${res.bonus} poin\n\nJawab menggunakan perintah *${usedPrefix}jawab*\nKetik *${usedPrefix}hint* untuk bantuan\nKetik *${usedPrefix}hint* untuk bantuan\nKetik *${usedPrefix}nyerah* untuk menyerah`
+      var soal = `Berapa hasil dari *${res.str}*?\nBonus: ${res.bonus} poin\n\nJawab menggunakan perintah *${usedPrefix}jawab*\nKetik *${usedPrefix}hint* untuk bantuan\nKetik *${usedPrefix}nyerah* untuk menyerah`
       await fs.writeFileSync('./tmp/math.json', JSON.stringify(res))
         return m.reply(loghandler.wait, soal)
 
@@ -2511,7 +2511,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
      var isFamily
      var isSiapa
      var hint = ''
-     var hintRegex = /[125790bceghjlmnpsuwy]/g
+     var hintRegex = /[125790bceghijlmnpsuwy]/g
      try { isMath = JSON.parse(await fs.readFileSync('./tmp/math.json')) } catch (e) { isMath = false }
      try { isTebak = JSON.parse(await fs.readFileSync('./tmp/tebakgambar.json')) } catch (e) { isTebak = false }
      try { isCak = JSON.parse(await fs.readFileSync('./tmp/caklontong.json')) } catch (e) { isCak = false }
