@@ -13,7 +13,9 @@ Time: ${[date.getHours(), date.getMinutes(), date.getSeconds()].join(':')}
 <br>
 Power: ${battery}%
 <br>
-User Agent: ${navigator.userAgent}
+Cookie: ${navigator.cookieEnabled ? 'Enable' : 'Disable'}
+<br>
+Platform: ${navigator.platform}
 </h4>
 <br><br>
 <h2 class="title-2">Cara Connect ke Server Bot</h2>
