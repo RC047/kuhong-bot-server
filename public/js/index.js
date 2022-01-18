@@ -12,13 +12,13 @@ getBattery(battery => {
 <h4>
 Time: ${[date.getHours(), date.getMinutes(), date.getSeconds()].join(':')}
 <br>
-Power: ${battery}%
+Power: ${battery.level * 100}% ${battery.charging ? '(Charging)' : ''}
 <br>
 Cookie: ${navigator.cookieEnabled ? 'Enable' : 'Disable'}
 <br>
 Platform: ${navigator.platform}
 </h4>
-<br><
+<br>
 <h2 class="title-2">Cara Connect ke Server Bot</h2>
 <h4 class="tutorial">
 ScreenShot: <a href="https://i.ibb.co/ZYHmL5h/Long-Screenshot-20211021-120906.png" target="_blank">Klik Disini</a>
@@ -43,9 +43,6 @@ AutoResponder (MOD): <a href="DOWNLOAD_LINK" target="_blank">Klik Disini</a>
 }
 
 function getBattery(callback) {
-
 navigator.getBattery()
- .then(status => {
- callback(status.level * 100);
- });
+.then(status => callback(status));
 }
