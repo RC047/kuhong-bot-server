@@ -2403,9 +2403,11 @@ ${Math.floor(Math.random() * 50)} Zamrud
   } else if (/^tebakgambar|caklontong|family100|siapa(kah)?aku$/i.test(command)) {
   	var type = command.replace(/(kah)/g, '')
  	 try {
-      var res = pickRandom(JSON.parse(await fs.readFileSync(`./lib/json/${type}.json`)).result)
+      var res = pickRandom(JSON.parse(await fs.readFileSync(`./lib/json/${type}.json`))).result
       } catch (e) {
-      res = await (await fetch(`https://zekais-api.herokuapp.com/${type}?apikey=${apikey.zekais}`)).json()
+      var status = await fetch(`https://zekais-api.herokuapp.com/${type}?apikey=${apikey.zekais}`)
+      if (!status.ok) return m.reply(loghandler.wait, 'Soal tidak dapat ditemukan!')
+      res = await status.json()
       }
       if (!res.soal) return m.reply(loghandler.wait, 'Soal tidak dapat ditemukan!')
       if (/^tebakgambar$/i.test(command)) {
