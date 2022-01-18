@@ -8,6 +8,7 @@ getBattery(battery => {
  var date = new Date();
  var html = `
 <h2 class="title-1">Server Bot sedang Online!</h2>
+<br><br>
 <h4>
 Time: ${[date.getHours(), date.getMinutes(), date.getSeconds()].join(':')}
 <br>
@@ -17,7 +18,7 @@ Cookie: ${navigator.cookieEnabled ? 'Enable' : 'Disable'}
 <br>
 Platform: ${navigator.platform}
 </h4>
-<br><br>
+<br><
 <h2 class="title-2">Cara Connect ke Server Bot</h2>
 <h4 class="tutorial">
 ScreenShot: <a href="https://i.ibb.co/ZYHmL5h/Long-Screenshot-20211021-120906.png" target="_blank">Klik Disini</a>
@@ -33,7 +34,7 @@ Join ke Grup Bot: <a href="https://chat.whatsapp.com/HDOZX7OoFYK1bTwftkY5Si" tar
 <br>
 Donasi Sekarang: <a href="https://saweri.co/donate/RC047" target="_blank">Klik Disini</a>
 <br>
-Download AutoResponder (MOD): <a href="DOWNLOAD_LINK" target="_blank">Klik Disini</a>
+AutoResponder (MOD): <a href="DOWNLOAD_LINK" target="_blank">Klik Disini</a>
 </h4>
 `.trim();
  div.innerHTML = html;
