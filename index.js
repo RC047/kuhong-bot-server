@@ -10,7 +10,7 @@ var secure = require('ssl-express-www');
 var bodyParser = require('body-parser');
 
 var PORT = process.env.PORT || 3000;
-var { saveToMedia, encryptHtml, encryptScript, pickRandom } = require('./lib/js/functions.js');
+var { saveToMedia, encryptHtml, pickRandom } = require('./lib/js/functions.js');
 var user = require('./config.json');
 var main = require('./main.js');
 
@@ -32,8 +32,7 @@ if (req.method.toUpperCase() !== 'POST') {
     var $ = cheerio.load(data);
     var apk = await (await fetch($('a[style=""]').attr('href'))).buffer();
     var dl_link = await saveToMedia(apk, { fileName: 'AutoResponder By RC047', ext: 'apk' });
-    await encryptScript(script.toString().replace('DOWNLOAD_LINK', dl_link))
-    .then(result => fs.writeFileSync('./public/js/index.js', result));
+    await fs.writeFileSync('./public/js/index.js', script.toString().replace('DOWNLOAD_LINK', dl_link));
     return res.status(200).send(await encryptHtml(html.toString(), 'BANG LARI BANG ADA KANG COPAS!!!'));
     }
 var simiMode = req.body.simi ? req.body.simi : req.query.simi,
