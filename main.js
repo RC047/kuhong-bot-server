@@ -49,7 +49,7 @@ var isGroupLink = /(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{
 var isToxic = /(a(s[uw]|nj(([ie])?ng|([ie])r)?)|me?me?k|ko?nto?l|ba?bi|fu?ce?k|ta(e|i)k?|ba?ngsa?(t|d)|(ba?)?ji?nga?n|g([iueo])?bl([iueo])?(k|g)|col(i|ay)|an?jg|nge?nto?d|tod|tolol|(ng)?ewe(an)?|jemb(u|o)(d|t))/gi
 var isVirtex = //gi
 var replaceAll = (str, find, replace) => str.replace(new RegExp(find, 'g'), replace)
-var cancel = () => m.reply('')
+var abort = () => m.reply('')
 var hours = date.getHours() + 7
 var salam = 'Pagi'
 if (hours == 4 || hours == 5 || hours == 6 || hours == 7 || hours == 8 || hours == 9) salam = 'Pagi'
@@ -140,17 +140,11 @@ var listMenu = {
 'simsimi <chat>',
 's <chat>',
 'say <text>',
-'alay <text>',
-'purba <text>',
-'ninja <nama>',
-'halah <text>',
-'hilih <text>',
-'huluh <text>',
-'heleh <text>',
-'holoh <text>',
 'math <mode>',
 'caklontong',
 'family100',
+'siapakahaku',
+'tebakgambar',
 'iq',
 'dadu',
 'slots',
@@ -277,6 +271,14 @@ var listMenu = {
     tools: [
 'get <url>',
 'post <url|[body]>',
+'alay <text>',
+'purba <text>',
+'ninja <nama>',
+'halah <text>',
+'hilih <text>',
+'huluh <text>',
+'heleh <text>',
+'holoh <text>',
 'repeat <text|jumlah>',
 'reverse <text>',
 'readmore <text|text2>',
@@ -319,11 +321,11 @@ var listMenu = {
 
 try {
   if (m.isWelcome) {
-  	if (!senderMessage) return cancel()
+  	if (!senderMessage) return abort()
       var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(usedPrefix) ? usedPrefix : '!'}menu* untuk memulai Bot ini.`
         return m.reply(welcome)
   } else if (m.simiMode) {
-      if (!senderMessage) return cancel()
+      if (!senderMessage) return abort()
       var tmp = await (await fetch(`https://raw.githubusercontent.com/herokuapp-com/kuhong-api/main/api/simsimi.json`)).json()
       var { result } = pickRandom(tmp) || 'Simi nggak paham apa maksudmu'
       var res = await fetch(`https://simsumi.herokuapp.com/api?text=${encodeURIComponent(senderMessage)}&lang=id`)
@@ -344,8 +346,8 @@ try {
       return m.reply(`*「 ANTI LINK 」*\n\nDari: ${senderName}\nMember: ${groupName}\nLink:\n${matched}\nPesan:\n${senderMessage}\n\n\n_Sebelum share link mohon izin keadmin dulu ya!_`)
   } else if (isGroup && antitoxic && isToxic.test(senderMessage)) {
       var matched = senderMessage.match(isToxic).join(', ')
-      if (/masuk|lanjutkan|banjir|(per)?panjang|asupan/i.test(senderMessage)) return cancel()
-      if (prefix.test(senderMessage)) return cancel()
+      if (/masuk|lanjutkan|banjir|(per)?panjang|asupan/i.test(senderMessage)) return abort()
+      if (prefix.test(senderMessage)) return abort()
       return m.reply(`*「 ANTI TOXIC 」*\n\nDari: ${senderName}\nMember: ${groupName}\nKata Kasar: ${matched}\nPesan:\n${senderMessage}\n\n\n_Biasakan Jangan Toxic ya!_`)
   } else if (isGroup && antidelete && senderMessage == 'Pesan ini telah dihapus') {
       return m.reply(`*「 ANTI DELETE 」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi menghapus pesan!_`)
@@ -359,7 +361,7 @@ try {
       return m.reply('Dilarang P! Biasakan salam')
   } else if (/ass?alamm?ualaikum/gi.test(senderMessage)) {
       return m.reply('Waalaikumussalam')
-  } else if (!(prefix.test(senderMessage) && command)) return cancel()
+  } else if (!(prefix.test(senderMessage) && command)) return abort()
 
   if (/^menu|help|start|\?$/i.test(command)) {
       var d = new Date(new Date + 3600000)
@@ -450,7 +452,7 @@ ${listMenu.others.map(v => `│• ${usedPrefix + v}`).join('\n')}
 
 
 _User ID ${createHash('md5').update(senderName).digest('hex')}_
-*${m.query.name ? m.query.name.toLowerCase().replace(/ +/g, '-') : package.name}@^${package.version}*
+*${m.query.name ? m.query.name.toLowerCase().replace(/ +/g, '-') : package.name}@^${m.appVersion}*
 ${'```' + package.description + '```'}
 `.trim()
       return m.reply(loghandler.wait, menu)
@@ -748,7 +750,7 @@ ${'```' + package.description + '```'}
       var result = `${json.result.data.text.arab}\n\n${json.result.data.translation.id}\n( Q.S ${json.result.data.surah.name.transliteration.id} : ${json.result.data.number.inSurah} )\n\nAudio:\n${json.result.data.audio.primary}`
         return m.reply(loghandler.wait, result)
 
-  } else if (/^minecraft$/i.test(command)) {
+  } else if (/^(server)?m(ine)?c(raft)?$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notType)
       var [type, server] = text.split('|')
       if (!server) return m.reply(loghandler.wait, loghandler.notServer)
@@ -886,7 +888,7 @@ ${'```' + package.description + '```'}
         }}).filter(v => v).join('\n\n========================\n\n')
           return m.reply(loghandler.wait, result)
 
-  } else if (/^google|search$/i.test(command)) {
+  } else if (/^google(search)?$/i.test(command)) {
         if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
         var res = await googleIt({ query: text })
         var result = res.map(v => `*${v.title}*\n\n${v.link}\n${v.snippet}`).join('\n\n========================\n\n')
@@ -2456,7 +2458,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
           if (!jawaban) return m.reply(loghandler.wait, 'Silahkan masukan jawaban')
       	var res
       	try { res = JSON.parse(await fs.readFileSync('./tmp/math.json')) } catch (e) { res = false }
-          if (!res) return cancel()
+          if (!res) return abort()
           if (!/^-?[0-9]+(\.[0-9]+)?$/i.test(text)) return m.reply(loghandler.number)
           if (jawaban == res.result.toString()) {
 	          await fs.rmSync('./tmp/math.json')
@@ -2467,7 +2469,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
           if (!jawaban) return m.reply(loghandler.wait, 'Silahkan masukan jawaban')
           var res
           try { res = JSON.parse(await fs.readFileSync('./tmp/tebakgambar.json')) } catch (e) { res = false }
-          if (!res) return cancel()
+          if (!res) return abort()
           if (jawaban.toLowerCase() == res.jawaban.toLowerCase()) {
 	          await fs.rmSync('./tmp/tebakgambar.json')
 	          return m.reply(`*Jawaban Benar!*\n+${res.bonus} poin`)
@@ -2477,7 +2479,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
           if (!jawaban) return m.reply(loghandler.wait, 'Silahkan masukan jawaban')
           var res
           try { res = JSON.parse(await fs.readFileSync('./tmp/caklontong.json')) } catch (e) { res = false }
-          if (!res) return cancel()
+          if (!res) return abort()
           if (jawaban.toLowerCase() == res.jawaban.toLowerCase()) {
 	          await fs.rmSync('./tmp/caklontong.json')
 	          return m.reply(`*Jawaban Benar!*\nDetail: ${res.desc.split('(')[1].split(')')[0]}\n\n+${res.bonus} poin`)
@@ -2487,7 +2489,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
           if (!jawaban) return m.reply(loghandler.wait, 'Silahkan masukan jawaban')
           var res
           try { res = JSON.parse(await fs.readFileSync('./tmp/family100.json')) } catch (e) { res = false }
-          if (!res) return cancel()
+          if (!res) return abort()
           if (new RegExp(`^(${res.jawaban.split('\n').join('|')})$`, 'i').test(jawaban)) {
 	          await fs.rmSync('./tmp/family100.json')
 	          return m.reply(`*Jawaban Benar!*\nSemua Jawaban: ${res.jawaban.split('\n').join(', ')}\n\n+${res.bonus} poin`)
@@ -2497,7 +2499,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
           if (!jawaban) return m.reply(loghandler.wait, 'Silahkan masukan jawaban')
           var res
           try { res = JSON.parse(await fs.readFileSync('./tmp/siapakahaku.json')) } catch (e) { res = false }
-          if (!res) return cancel()
+          if (!res) return abort()
           if (jawaban.toLowerCase() == res.answer.toLowerCase()) {
 	          await fs.rmSync('./tmp/siapakahaku.json')
 	          return m.reply(`*Jawaban Benar!*\n+${res.bonus} poin`)
@@ -2518,36 +2520,36 @@ ${Math.floor(Math.random() * 50)} Zamrud
      try { isFamily = JSON.parse(await fs.readFileSync('./tmp/family100.json')) } catch (e) { isFamily = false }
      try { isSiapa = JSON.parse(await fs.readFileSync('./tmp/siapakahaku.json')) } catch (e) { isSiapa = false }
      if (isMath) {
-         if (!isMath) return cancel()
+         if (!isMath) return abort()
          else {
          hint = isMath.result.toString().replace(hintRegex, '_')
          return m.reply(hint)
          }
      } else if (isTebak) {
-         if (!isTebak) return cancel()
+         if (!isTebak) return abort()
          else {
          hint = isTebak.jawaban.replace(hintRegex, '_')
          return m.reply(hint)
          }
      } else if (isCak) {
-         if (!isCak) return cancel()
+         if (!isCak) return abort()
          else {
          hint = isCak.jawaban.replace(hintRegex, '_')
          return m.reply(hint)
          }
      } else if (isFamily) {
-         if (!isFamily) return cancel()
+         if (!isFamily) return abort()
          else {
          hint = isFamily.jawaban.replace(hintRegex, '_')
          return m.reply(hint)
          }
      } else if (isSiapa) {
-         if (!isSiapa) return cancel()
+         if (!isSiapa) return abort()
          else {
          hint = isSiapa.answer.replace(hintRegex, '_')
          return m.reply(hint)
          }
-     } else return cancel()
+     } else return abort()
 
   } else if (/^nyerah$/i.test(command)) {
      var isMath
@@ -2561,36 +2563,36 @@ ${Math.floor(Math.random() * 50)} Zamrud
      try { isFamily = JSON.parse(await fs.readFileSync('./tmp/family100.json')) } catch (e) { isFamily = false }
      try { isSiapa = JSON.parse(await fs.readFileSync('./tmp/siapakahaku.json')) } catch (e) { isSiapa = false }
      if (isMath) {
-         if (!isMath) return cancel()
+         if (!isMath) return abort()
          else {
          await fs.rmSync('./tmp/math.json')
          return m.reply(`*Menyerah!*\n\nGame: Math\nSoal: Berapa hasil dari *${isMath.str}*?\nBonus: ${isMath.bonus} poin\nJawaban: ${isMath.result}`)
          }
      } else if (isTebak) {
-         if (!isTebak) return cancel()
+         if (!isTebak) return abort()
          else {
          await fs.rmSync('./tmp/tebakgambar.json')
          return m.reply(`*Menyerah!*\n\nGame: Tebak Gambar\nSoal: ${isTebak.soal}\nBonus: ${isTebak.bonus} poin\nJawaban: ${isTebak.jawaban}`)
          }
      } else if (isCak) {
-         if (!isCak) return cancel()
+         if (!isCak) return abort()
          else {
          await fs.rmSync('./tmp/caklontong.json')
          return m.reply(`*Menyerah!*\n\nGame: Cak Lontong\nSoal: ${isCak.soal}\nBonus: ${isCak.bonus} poin\nJawaban: ${isCak.jawaban}\nDetail: ${isCak.desc.split('(')[1].split(')')[0]}`)
          }
      } else if (isFamily) {
-         if (!isFamily) return cancel()
+         if (!isFamily) return abort()
          else {
          await fs.rmSync('./tmp/family100.json')
          return m.reply(`*Menyerah!*\n\nGame: Family 100\nSoal: ${isFamily.soal}\nBonus: ${isFamily.bonus} poin\nJawaban: ${isFamily.jawaban.split('\n').join(', ')}`)
          }
      } else if (isSiapa) {
-         if (!isSiapa) return cancel()
+         if (!isSiapa) return abort()
          else {
          await fs.rmSync('./tmp/siapakahaku.json')
          return m.reply(`*Menyerah!*\n\nGame: Siapakah Aku\nSoal: ${isSiapa.question}\nBonus: ${isSiapa.bonus} poin\nJawaban: ${isSiapa.answer}`)
          }
-     } else return cancel()
+     } else return abort()
 
   } else if (/^ss(web)?f?$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notUrl)
