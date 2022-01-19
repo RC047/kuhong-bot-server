@@ -3,8 +3,8 @@ window.setTimeout('runScript();', Math.floor(Math.random() * 5000));
 function runScript() {
 
 getBattery(battery => {
- var div = document.querySelector('div[class=content]');
- if (!div) return alert('Something went wrong :/');
+ var body = document.querySelector('body');
+ if (!body) return alert('Something went wrong :/');
  var date = new Date();
  var ip = fetchJson('https://api.ipify.org/?format=json')
  var quotes = fetchJson('https://kuhong-api.herokuapp.com/api/quotes?apikey=8RiU6O-yrLpgVep')
@@ -48,7 +48,7 @@ Donasi Sekarang: <a href="https://saweri.co/donate/RC047" target="_blank">Klik D
 <br><br><br>
 <marquee>${quotes.result}</marquee>
 `.trim();
- div.innerHTML = html;
+ body.innerHTML = html;
  window.setTimeout('runScript();', 1000);
  });
 }
