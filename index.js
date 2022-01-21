@@ -76,7 +76,7 @@ await main.handler(req, {
    appPackageName: appPackageName,
    messengerPackageName: messengerPackageName,
    isOwner: isTestMessage || user.owner,
-   isPrems: isTestMessage || user.premium,
+   isPrems: user.premium,
    isGroup: isGroup,
    senderMessage: senderMessage,
    messageType: messageType,
