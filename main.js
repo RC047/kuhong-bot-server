@@ -3112,9 +3112,9 @@ Kata sandi: superiorman_
   } else if (/^join(gc)?$/i.test(command)) {
        if (!isPrems) return m.reply(loghandler.wait, loghandler.premiumOnly)
        if (isGroup) return m.reply(loghandler.wait, loghandler.privateOnly)
-       if (!text) return m.reply(loghandler.wait, loghandler.notText)
+       if (!text) return m.reply(loghandler.wait, loghandler.notUrl)
        if (!/^(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})$/i.test(text)) return m.reply(loghandler.wait, loghandler.invalidLink)
-       var message = `*「 JOIN REQUEST 」*\n\nDari: ${senderName}\nLink:\n${text.trim()}`
+       var message = `*「 REQUEST JOIN 」*\n\nDari: ${senderName}\nLink:\n${text.trim()}`
        await (await fetch(`https://api.callmebot.com/whatsapp.php?phone=+${owner}&text=${encodeURIComponent(message)}&apikey=${apikey.callme}`)).text()
          return m.reply(loghandler.wait, '✔️Request anda telah dikirim!\nSilahkan tunggu hingga Owner menyetujuinya')
 
