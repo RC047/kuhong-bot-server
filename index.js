@@ -10,7 +10,7 @@ var secure = require('ssl-express-www');
 var bodyParser = require('body-parser');
 
 var PORT = process.env.PORT || 3000;
-var { saveToMedia, encryptHtml, encryptScript, pickRandom } = require('./lib/js/functions.js');
+var { saveToMedia, encryptHtml, pickRandom } = require('./lib/js/functions.js');
 var user = require('./config.json');
 var main = require('./main.js');
 
@@ -28,12 +28,10 @@ app.all('/', async (req, res, next) => {
 if (req.method.toUpperCase() !== 'POST') {
     var html = await fs.readFileSync('./index.html');
     var dev = await fs.readFileSync('./dev.html');
-    var script = await fs.readFileSync('./public/js/index.js');
     var data = await (await fetch('https://gamedva.com/autoresponder-for-wa-mod?download&file=0')).text();
     var $ = cheerio.load(data);
     var apk = await (await fetch($('a[style=""]').attr('href'))).buffer();
-    var dl_link = await saveToMedia(apk, { fileName: 'AutoResponder By RC047', ext: 'apk' });
-    await fs.writeFileSync('./public/js/index.js', await encryptScript(script));
+    var dl_link = await saveToMedia(apk, { fileName: 'AutoResponder By Kuhong', ext: 'apk' });
     var result = html.toString().replace('DOWNLOAD_LINK', dl_link);
     if (req.query.dev == 'true') result += dev.toString();
       return res.status(200).send(await encryptHtml(result, 'BANG LARI BANG ADA KANG COPAS!!!'));
