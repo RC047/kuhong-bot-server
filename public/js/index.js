@@ -19,5 +19,5 @@ window.setTimeout('runScripts();', 1);
 function setFact() {
 var json = fetchURI('https://recoders-area.caliph.repl.co/api/fakta');
 document.getElementById('fact').textContent = json.data.result;
-window.setTimeout('setFact();', 15000);
+window.setTimeout('setFact();', 25000);
 }
