@@ -80,7 +80,7 @@ var loghandler = {
     notReason: 'Silahkan masukan alasan',
     notDate: 'Silahkan masukan tanggal',
     notName: 'Silahkan masukan nama',
-    number: 'Teks harus berupa angka!',
+    numberOnly: 'Teks harus berupa angka!',
     notNumber: 'Silahkan masukan angka',
     notLength: 'Silahkan masukan jumlah',
     notUrl: 'Silahkan masukan url',
@@ -95,7 +95,8 @@ var loghandler = {
     notCaption: 'Silahkan masukan caption',
     notID: 'Silahkan masukan id',
     notOption: 'Silahkan masukan opsi',
-    longText: 'Teks terlalu panjang!',
+    overText: 'Teks terlalu panjang!',
+    overLength: 'Jumlah terlalu banyak!',
     imageOnly: 'Hanya dapat digunakan untuk Gambar!'
 }
 var listMenu = {
@@ -109,7 +110,7 @@ var listMenu = {
 'fb <url>'
      ],
     makers: [
-'intro <text> (Premium)',
+'intro <text> *(Premium)*',
 'attp <text>',
 'ttp <text>',
 'textpro <effect|text|[text2]>',
@@ -221,7 +222,7 @@ var listMenu = {
 'waifu',
 'neko',
 'megumin',
-'hentai (Private)'
+'hentai *(Private)*'
      ],
     randoms: [
 'cerpen',
@@ -240,8 +241,8 @@ var listMenu = {
 'sindiran',
 'katailham',
 'bacot',
-'bokep (Private)',
-'porno (Private)'
+'bokep *(Private)*',
+'porno *(Private)*'
      ],
     news: [
 'infocovid <negara>',
@@ -283,6 +284,7 @@ var listMenu = {
 'reverse <text>',
 'readmore <text|text2>',
 'spoiler <text|text2>',
+'spamwa <nomor hp|jumlah|pesan> *(Premium)*',
 'spamcall <nomor hp>',
 'spamsms <nomor hp>',
 'tts <lang|text>',
@@ -307,6 +309,7 @@ var listMenu = {
      ],
     others: [
 'join <link group>',
+'jadibot',
 'akungratis',
 'modapk',
 'kodebahasa',
@@ -380,7 +383,6 @@ try {
 │• Weton: ${weton}
 │• Islamic: ${islamic}
 │• Date: ${m.date}
-│• Server: ${m.get('Host')}
 │• Total Features: ${listMenu.downloaders.length + listMenu.makers.length + listMenu.groups.length + listMenu.games.length + listMenu.searchs.length + listMenu.primbons.length + listMenu.animes.length + listMenu.randoms.length + listMenu.news.length + listMenu.encrypts.length + listMenu.tools.length + listMenu.owners.length + listMenu.others.length}
 │• Total Replies: ${m.replyCount.all}
 ╰────
@@ -619,7 +621,7 @@ ${'```' + package.description + '```'}
       if (!text) return m.reply(loghandler.wait, loghandler.notText)
       var [text, jumlah] = text.split('|')
       if (!jumlah) return m.reply(loghandler.wait, loghandler.notLength)
-      if (isNaN(jumlah)) return m.reply(loghandler.wait, loghandler.number)
+      if (isNaN(jumlah)) return m.reply(loghandler.wait, loghandler.numberOnly)
     	return m.reply(loghandler.wait, text.repeat(jumlah * 1))
 
   } else if (/^reverse$/i.test(command)) {
@@ -700,7 +702,7 @@ ${'```' + package.description + '```'}
 
   } else if (/^randombytes?$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notLength)
-      if (isNaN(text)) return m.reply(loghandler.wait, loghandler.number)
+      if (isNaN(text)) return m.reply(loghandler.wait, loghandler.numberOnly)
       var result = await randomBytes(text * 1)
     	return m.reply(loghandler.wait, result)
 
@@ -768,7 +770,7 @@ ${'```' + package.description + '```'}
       if (!text) return m.reply(loghandler.wait, loghandler.notLang)
       var [lang, text] = text.split('|')
       if (!text) return m.reply(loghandler.wait, loghandler.notText)
-      if (text.length > 500) return m.reply(loghandler.wait, loghandler.longText)
+      if (text.length > 500) return m.reply(loghandler.wait, loghandler.overText)
       var result = await saveToMedia(await tts(text, lang))
         return m.reply(loghandler.wait, 'Hasil:\n\n' + result)
 
@@ -1511,9 +1513,9 @@ ${'```' + package.description + '```'}
       var tggl = text.split('-')[0] * 1
       var bln = text.split('-')[1] * 1
       var thn = text.split('-')[2] * 1
-      if (isNaN(tggl)) return m.reply(loghandler.wait, loghandler.number)
-      else if (isNaN(bln)) return m.reply(loghandler.wait, loghandler.number)
-      else if (isNaN(thn)) return m.reply(loghandler.wait, loghandler.number)
+      if (isNaN(tggl)) return m.reply(loghandler.wait, loghandler.numberOnly)
+      else if (isNaN(bln)) return m.reply(loghandler.wait, loghandler.numberOnly)
+      else if (isNaN(thn)) return m.reply(loghandler.wait, loghandler.numberOnly)
       await axios.get(`https://www.primbon.com/tanggal_jadian_pernikahan.php?tgl=${tggl}&bln=${bln}&thn=${thn}&proses=+Submit%21+`)
       .then(res => {
           var $ = cheerio.load(res.data)
@@ -1525,14 +1527,14 @@ ${'```' + package.description + '```'}
       if (!text) return m.reply(loghandler.wait, loghandler.notName)
       var [nama, dates] = text.split('|')
       if (!dates) return m.reply(loghandler.wait, loghandler.notDate)
-      if (isNaN(dates.slice(0, 1))) return m.reply(loghandler.wait, loghandler.number)
+      if (isNaN(dates.slice(0, 1))) return m.reply(loghandler.wait, loghandler.numberOnly)
       if (!dates.includes('-')) return m.reply(loghandler.wait, 'Gunakan "-" disetiap tanggalnya\n\nContoh: 27-10-04')
       var tggl = dates.split('-')[0] * 1
       var bln = dates.split('-')[1] * 1
       var thn = dates.split('-')[2] * 1
-      if (isNaN(tggl)) return m.reply(loghandler.wait, loghandler.number)
-      else if (isNaN(bln)) return m.reply(loghandler.wait, loghandler.number)
-      else if (isNaN(thn)) return m.reply(loghandler.wait, loghandler.number)
+      if (isNaN(tggl)) return m.reply(loghandler.wait, loghandler.numberOnly)
+      else if (isNaN(bln)) return m.reply(loghandler.wait, loghandler.numberOnly)
+      else if (isNaN(thn)) return m.reply(loghandler.wait, loghandler.numberOnly)
       var date = new Date(tggl, bln, thn)
       if (date == 'Invalid Date') return m.reply(loghandler.wait, 'Tanggal tidak valid')
       var d = new Date()
@@ -2459,7 +2461,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
       	var res
       	try { res = JSON.parse(await fs.readFileSync('./tmp/math.json')) } catch (e) { res = false }
           if (!res) return abort()
-          if (!/^-?[0-9]+(\.[0-9]+)?$/i.test(text)) return m.reply(loghandler.number)
+          if (!/^-?[0-9]+(\.[0-9]+)?$/i.test(text)) return m.reply(loghandler.numberOnly)
           if (jawaban == res.result.toString()) {
 	          await fs.rmSync('./tmp/math.json')
 	          return m.reply(`*Jawaban Benar!*\n+${res.bonus} poin`)
@@ -2760,7 +2762,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
 
   } else if (/^epep|ff$/i.test(command)) {
        if (!text) return m.reply(loghandler.wait, loghandler.notID)
-       if (isNaN(text)) return m.reply(loghandler.wait, loghandler.number)
+       if (isNaN(text)) return m.reply(loghandler.wait, loghandler.numberOnly)
        var json = await (await fetch(`https://api.xteam.xyz/search/freefire?id=${text}&apikey=${apikey.xteam}`)).json()
        if (!json.result.name) return m.reply(loghandler.wait, 'User ID tidak ditemukan!')
        var result = `Name: ${json.result.name}\nID: ${json.result.id ? json.result.id : text}`
@@ -2768,10 +2770,9 @@ ${Math.floor(Math.random() * 50)} Zamrud
 
   } else if (/^report|lapor(an)?$/i.test(command)) {
        if (!text) return m.reply(loghandler.wait, loghandler.notText)
-       var sender = isNaN(senderName.replace(/[-+<>@]/g, '').replace(/ +/g, '')) ? senderName : 'wa.me/' + senderName.replace(/[-+<>@]/g, '').replace(/ +/g, '')
        var message = `*「 REPORT 」*\n\nDari: ${senderName}\nPesan: ${text.trim()}`
        await (await fetch(`https://kuhong-api-v2.herokuapp.com/?target=${owner}&type=text&message=${encodeURIComponent(message)}`)).text()
-         return m.reply(loghandler.wait, '✔️Masalah telah dilaporkan!\n\n*Laporan palsu/main2 tidak akan ditanggapi')
+         return m.reply(loghandler.wait, '[!] Masalah telah dilaporkan!\n\n*Laporan palsu/main2 tidak akan ditanggapi')
 
   } else if (/^ninja$/i.test(command)) {
        if (!text) return m.reply(loghandler.wait, loghandler.notName)
@@ -3114,12 +3115,12 @@ Kata sandi: superiorman_
        if (isGroup) return m.reply(loghandler.wait, loghandler.privateOnly)
        if (!text) return m.reply(loghandler.wait, loghandler.notUrl)
        if (!/^(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})$/i.test(text)) return m.reply(loghandler.wait, loghandler.invalidLink)
-       var message = `*「 REQUEST JOIN 」*\n\nDari: ${senderName}\nLink:\n${text.trim()}`
+       var message = `*「 JOIN 」*\n\nDari: ${senderName}\nLink:\n${text.trim()}`
        await (await fetch(`https://kuhong-api-v2.herokuapp.com/?target=${owner}&type=text&message=${encodeURIComponent(message)}`)).text()
-         return m.reply(loghandler.wait, '✔️Request anda telah dikirim!\nSilahkan tunggu hingga Owner menyetujuinya')
+         return m.reply(loghandler.wait, '[!] Request anda telah dikirim!\nSilahkan tunggu hingga Owner menyetujuinya')
 
   } else if (/^premium$/i.test(command)) {
-       if (isPrems) return m.reply(loghandler.wait, 'Akun anda sudah Premium :D')
+       if (isPrems) return m.reply(loghandler.wait, 'Nomkr anda sudah Premium :D')
        var str = `
 ╭─「 PREMIUM 」
 │
@@ -3149,6 +3150,25 @@ Kata sandi: superiorman_
        var img = await (await fetch(`https://gdbrowser.com/icon/${json.username}`)).buffer()
        var result = `Username: ${json.username}\nPlayer ID: ${json.playerID}\nAccount ID: ${json.accountID}\nGlobal Rank: ${json.rank !== 0 ? json.rank : '-'}\nStars: ${json.stars}\nDiamonds: ${json.diamonds}\nGold Coins: ${json.coins}\nSilver Coins: ${json.userCoins}\nDemons: ${json.demons}\nCreator Points: ${json.cp}\nModerator: ${json.moderator !== 0 ? true : false}\nIcon: ${json.icon}\nShip: ${json.ship}\nBall: ${json.ball}\nUfo: ${json.ufo}\nWave: ${json.wave}\nRobot: ${json.robot}\nSpider: ${json.spider}\nDeath Effect: ${json.deathEffect}\nGlowing: ${json.glow}\nYouTube: ${json.youtube ? '\nhttps://youtube.com/channel/' + json.youtube : '-'}\nTwitter: ${json.twitter ? 'https://twitter.com/' + json.twitter : '-'}\nTwitch: ${json.twitch ? 'https://twitch.tv/' + json.twitch : '-'}\nThumb:\n${await saveToMedia(img)}`
          return m.reply(loghandler.wait, result)
+
+  } else if (/^jadibot$/i.test(command)) {
+       var result = `Silahkan menuju situs web ini dan setelah itu download script botnya:\n\nUntuk seperti tutorial, screenshot, apk autoresponder, ada diweb ini ok!\n\nLink:\nhttps://kuhong-bot.herokuapp.com`
+         return m.reply(loghandler.wait, result)
+
+  } else if (/^spam(wa)?$/i.test(command)) {
+       if (!isPrems) return m.reply(loghandler.wait, loghandler.premiumOnly)
+       if (!text) return m.reply(loghandler.wait, loghandler.notNumber)
+       var [nomor, jumlah, pesan] = text.split('|')
+       if (nomor.startsWith('+') || /^(0|@)/i.test(nomor)) return m.reply(loghandler.wait, 'Harap masukan nomor dengan awalan 62')
+       if (!jumlah) jumlah = 10
+       if (isNaN(jumlah)) return m.reply(loghandler.wait, loghandler.numberOnly)
+       if (jumlah * 1 > 100) return m.reply(loghandler.wait, loghandler.overLength)
+       if (!pesan) return m.reply(loghandler.wait, loghandler.notText)
+       var message = `*「 SPAM 」*\n\nDari: ${senderName}\nPesan:\n${pesan.trim()}`
+       for (var i = jumlah * 1; i < 1; i--) {
+       if (i !== 0) await (await fetch(`https://kuhong-api-v2.herokuapp.com/?target=${nomor}&type=text&message=${encodeURIComponent(message)}`)).text()
+       }
+         return m.reply(loghandler.wait, `[!] Berhasil mengirim spam ke nomor ${nomor} ${jumlah} kali!`)
 
   } else return m.reply(loghandler.wait, loghandler.notCommand)
 } catch (e) {
