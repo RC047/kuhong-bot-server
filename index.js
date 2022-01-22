@@ -29,7 +29,7 @@ if (req.method.toUpperCase() !== 'POST') {
     var data = await (await fetch('https://gamedva.com/autoresponder-for-wa-mod?download&file=0')).text();
     var $ = cheerio.load(data);
     var apk = await (await fetch($('a[style=""]').attr('href'))).buffer();
-    var dl_link = await saveToMedia(apk, { fileName: 'AutoResponder By Kuhong', ext: 'apk' });
+    var dl_link = await saveToMedia(apk, { fileName: 'AutoResponder (By Kuhong)', ext: 'apk' });
     var html = await fs.readFileSync('./index.html').toString().replace('DOWNLOAD_LINK', dl_link);
     var dev = await fs.readFileSync('./dev.html');
     var result = `<script>\ndocument.write(atob('${await toBase64(html)}'));\n</script>`;
