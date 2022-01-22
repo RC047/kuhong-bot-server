@@ -1,0 +1,5 @@
+"sep=,"
+"received_message","pattern_matching","reply_message","multiple_replies","multiple_reply_delay","multiple_reply_delay_max","recipients","contacts","ignored_contacts","reply_delay","reply_delay_max","specific_times","monday","tuesday","wednesday","thursday","friday","saturday","sunday","pause_type","pause_value","disabled","subrule_of","go_to_rule","req_screen_off","req_charging","req_silent","req_do_not_disturb","req_car_mode","prev_rule_timeout","priority_alert"
+"*","none","https://kuhong-bot.herokuapp.com/?welcome=true","webhook","","","c","","","","","0","","","","","","","","days","7","0","","",,,,,,,
+"*","none","https://kuhong-bot.herokuapp.com","webhook","","","b","","","","","0","","","","","","","","seconds","0","0","","",,,,,,,
+"*","none","https://kuhong-bot.herokuapp.com/?simi=true","webhook","","","c","","","","","0","","","","","","","","seconds","0","1","","",,,,,,,
