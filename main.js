@@ -28,7 +28,7 @@ var { performance } = require('perf_hooks');
 var { obfuscate } = require('js-confuser');
 var { JSDOM } = require('jsdom');
 var { fromBuffer } = require('file-type');
-var { saveToMedia, math, modes, encryptHtml, encryptScript, escapeFull, getZodiac, yta, ytv, servers, joox, alay, purba, stylizeText, tts, tahta, searchGempa, getBuffer, textWrap, getRandom, pickRandom, formatDate, muptime, pad, clockString, post } = require('./lib/js/functions.js');
+var { saveToMedia, math, modes, encryptHtml, encryptScript, escapeFull, getZodiac, yta, ytv, servers, joox, alay, purba, stylizeText, tts, tahta, searchGempa, getBuffer, textWrap, getRandom, pickRandom, formatDate, muptime, pad, clockString, post, stringify } = require('./lib/js/functions.js');
 
 
 async function handler(m, { appPackageName, messengerPackageName, isOwner, isPrems, isGroup, senderMessage, messageType, groupName, senderName, usedPrefix, command, text }) {
@@ -44,7 +44,7 @@ var prefix = new RegExp('^[' + (m.query.prefix ? m.query.prefix : 'zxZX¡!/#$%+�
 var date = new Date()
 var readMore = String.fromCharCode(8206).repeat(4001)
 var isURL = (url) => /^(http(s)?:\/\/)?(\w+:?\w*@)?(\S+)(:\d+)?((?<=\.)\w+)+(\/([\w#!:.?+=&%@!\-/])*)?/gi.test(url)
-var isApikey = new RegExp(apikey.kuhong + '|' + apikey.xteam + '|' + apikey.zeks + '|' + apikey.zekais + '|' + apikey.callme + '|' + apikey.imgbb + '|' + apikey.removebg, 'gi')
+var isApikey = new RegExp(apikey.kuhong + '|' + apikey.xteam + '|' + apikey.zeks + '|' + apikey.zekais + '|' + '|' + apikey.imgbb + '|' + apikey.removebg, 'gi')
 var isGroupLink = /(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})/gi
 var isToxic = /(a(s[uw]|nj(([ie])?ng|([ie])r)?)|me?me?k|ko?nto?l|ba?bi|fu?ce?k|ta(e|i)k?|ba?ngsa?(t|d)|(ba?)?ji?nga?n|g([iueo])?bl([iueo])?(k|g)|col(i|ay)|an?jg|nge?nto?d|tod|tolol|(ng)?ewe(an)?|jemb(u|o)(d|t))/gi
 var isVirtex = //gi
@@ -337,7 +337,7 @@ try {
       if (json.success == '' || json.success == undefined || /Limit/i.test(json.success)) return m.reply(result)
         return m.reply(json.success)
   } else if (isGroup && afk.name !== null) {
-      await fs.writeFileSync('./tmp/' + afk.name + '_afk.json', JSON.stringify({ name: null, reason: null }))
+      await fs.writeFileSync('./tmp/' + afk.name + '_afk.json', stringify({ name: null, reason: null }))
       return m.reply(`*「 BERHENTI AFK 」*\n\nSelamat datang kembali *${afk.name}!*\nudah beres ${afk.reason}nya kan?`)
   } else if (isGroup && !(afk.name == null) && senderMessage.includes(afk.name == null ? Math.floor(Math.random() * 10000) : afk.name)) {
       return m.reply(`*「 SEDANG AFK 」*\n\nSshhh!!! Jangan ganggu dia!\nDianya lagi ${afk.reason} dulu katanya`)
@@ -516,7 +516,7 @@ ${'```' + package.description + '```'}
       if (!isGroup) return m.reply(loghandler.wait, loghandler.groupOnly)
       if (!text) return m.reply(loghandler.wait, loghandler.notReason)
       var result = `*「 IZIN AFK 」*\n\nNama: ${senderName}\nAlasan: ${text}`
-      await fs.writeFileSync('./tmp/' + senderName + '_afk.json', JSON.stringify({ name: senderName, reason: text.trim() }))
+      await fs.writeFileSync('./tmp/' + senderName + '_afk.json', stringify({ name: senderName, reason: text.trim() }))
     	return m.reply(result)
 
   } else if (/^exec(ute)?|eval$/i.test(command)) {
@@ -825,7 +825,7 @@ ${'```' + package.description + '```'}
          .on('error', (e) => m.reply(loghandler.wait, `*「 ${e.code ? e.code + 'ERROR' : 'ERROR'} 」*\n\n${util.format(e.message ? e.message : e)}`))
          .on('exit', async() => {
          var result = await saveToMedia(fs.readFileSync(outputPath))
-           return m.reply(loghandler.wait, 'Hasil:\n\n' + result)
+         return m.reply(loghandler.wait, 'Hasil:\n\n' + result)
          })
 
   } else if (/^nulis2$/i.test(command)) {
@@ -2399,7 +2399,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
       if (isMath) return m.reply(loghandler.wait, `*Masih ada soal belum terjawab!*\n\nBerapa hasil dari *${isMath.str}*?\nBonus: ${isMath.bonus} poin\n\nJawab menggunakan perintah *${usedPrefix}jawab*\nKetik *${usedPrefix}hint* untuk bantuan\nKetik *${usedPrefix}nyerah* untuk menyerah`)
       var res = await math(text)
       var soal = `Berapa hasil dari *${res.str}*?\nBonus: ${res.bonus} poin\n\nJawab menggunakan perintah *${usedPrefix}jawab*\nKetik *${usedPrefix}hint* untuk bantuan\nKetik *${usedPrefix}nyerah* untuk menyerah`
-      await fs.writeFileSync('./tmp/math.json', JSON.stringify(res))
+      await fs.writeFileSync('./tmp/math.json', stringify(res))
         return m.reply(loghandler.wait, soal)
 
   } else if (/^tebakgambar|caklontong|family100|siapa(kah)?aku$/i.test(command)) {
@@ -2417,28 +2417,28 @@ ${Math.floor(Math.random() * 50)} Zamrud
           try { isTebak = JSON.parse(await fs.readFileSync('./tmp/tebakgambar.json')) } catch (e) { isTebak = false }
           if (isTebak) return m.reply(loghandler.wait, `*Masih ada soal belum terjawab!*\n\n${isTebak.soal}\nBonus: ${isTebak.bonus} poin\n\nJawab menggunakan perintah *${usedPrefix}jawab*\nKetik *${usedPrefix}hint* untuk bantuan\nKetik *${usedPrefix}nyerah* untuk menyerah`)
       	res.bonus = 10000
-      	await fs.writeFileSync('./tmp/tebakgambar.json', JSON.stringify(res))
+      	await fs.writeFileSync('./tmp/tebakgambar.json', stringify(res))
           return m.reply(loghandler.wait, `Soal:\n${res.soal}\nBonus: ${res.bonus} poin\n\nJawab menggunakan perintah *${usedPrefix}jawab*\nKetik *${usedPrefix}hint* untuk bantuan\nKetik *${usedPrefix}nyerah* untuk menyerah`)
       } else if (/^caklontong$/i.test(command)) {
       	var isCak
           try { isCak = JSON.parse(await fs.readFileSync('./tmp/caklontong.json')) } catch (e) { isCak = false }
           if (isCak) return m.reply(loghandler.wait, `*Masih ada soal belum terjawab!*\n\n${isCak.soal}\nBonus: ${isCak.bonus} poin\n\nJawab menggunakan perintah *${usedPrefix}jawab*\nKetik *${usedPrefix}hint* untuk bantuan\nKetik *${usedPrefix}nyerah* untuk menyerah`)
       	res.bonus = 5000
-      	await fs.writeFileSync('./tmp/caklontong.json', JSON.stringify(res))
+      	await fs.writeFileSync('./tmp/caklontong.json', stringify(res))
           return m.reply(loghandler.wait, `${res.soal}\nBonus: ${res.bonus} poin\n\nJawab menggunakan perintah *${usedPrefix}jawab*\nKetik *${usedPrefix}hint* untuk bantuan\nKetik *${usedPrefix}nyerah* untuk menyerah`)
       } else if (/^family100$/i.test(command)) {
       	var isFamily
           try { isFamily = JSON.parse(await fs.readFileSync('./tmp/family100.json')) } catch (e) { isFamily = false }
           if (isFamily) return m.reply(loghandler.wait, `*Masih ada soal belum terjawab!*\n\n${isFamily.soal}\nBonus: ${isFamily.bonus} poin\n\nJawab menggunakan perintah *${usedPrefix}jawab*\nKetik *${usedPrefix}hint* untuk bantuan\nKetik *${usedPrefix}nyerah* untuk menyerah`)
       	res.bonus = 5000
-      	await fs.writeFileSync('./tmp/family100.json', JSON.stringify(res))
+      	await fs.writeFileSync('./tmp/family100.json', stringify(res))
           return m.reply(loghandler.wait, `${res.soal}\nBonus: ${res.bonus} poin\n\nJawab menggunakan perintah *${usedPrefix}jawab*\nKetik *${usedPrefix}hint* untuk bantuan\nKetik *${usedPrefix}nyerah* untuk menyerah`)
       } else if (/^siapa(kah)?aku$/i.test(command)) {
       	var isSiapa
           try { isSiapa = JSON.parse(await fs.readFileSync('./tmp/siapakahaku.json')) } catch (e) { isSiapa = false }
           if (isSiapa) return m.reply(loghandler.wait, `*Masih ada soal belum terjawab!*\n\n${isSiapa.question}\nBonus: ${isSiapa.bonus} poin\n\nJawab menggunakan perintah *${usedPrefix}jawab*\nKetik *${usedPrefix}hint* untuk bantuan\nKetik *${usedPrefix}nyerah* untuk menyerah`)
       	res.bonus = 5000
-      	await fs.writeFileSync('./tmp/siapakahaku.json', JSON.stringify(res))
+      	await fs.writeFileSync('./tmp/siapakahaku.json', stringify(res))
           return m.reply(loghandler.wait, `${res.question}\nBonus: ${res.bonus} poin\n\nJawab menggunakan perintah *${usedPrefix}jawab*\nKetik *${usedPrefix}hint* untuk bantuan\nKetik *${usedPrefix}nyerah* untuk menyerah`)
       }
 
@@ -2770,7 +2770,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
        if (!text) return m.reply(loghandler.wait, loghandler.notText)
        var sender = isNaN(senderName.replace(/[-+<>@]/g, '').replace(/ +/g, '')) ? senderName : 'wa.me/' + senderName.replace(/[-+<>@]/g, '').replace(/ +/g, '')
        var message = `*「 REPORT 」*\n\nDari: ${senderName}\nPesan: ${text.trim()}`
-       await (await fetch(`https://api.callmebot.com/whatsapp.php?phone=+${owner}&text=${encodeURIComponent(message)}&apikey=${apikey.callme}`)).text()
+       await (await fetch(`https://kuhong-api-v2.herokuapp.com/?target=${owner}&type=text&message=${encodeURIComponent(message)}`)).text()
          return m.reply(loghandler.wait, '✔️Masalah telah dilaporkan!\n\n*Laporan palsu/main2 tidak akan ditanggapi')
 
   } else if (/^ninja$/i.test(command)) {
@@ -3115,7 +3115,7 @@ Kata sandi: superiorman_
        if (!text) return m.reply(loghandler.wait, loghandler.notUrl)
        if (!/^(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})$/i.test(text)) return m.reply(loghandler.wait, loghandler.invalidLink)
        var message = `*「 REQUEST JOIN 」*\n\nDari: ${senderName}\nLink:\n${text.trim()}`
-       await (await fetch(`https://api.callmebot.com/whatsapp.php?phone=+${owner}&text=${encodeURIComponent(message)}&apikey=${apikey.callme}`)).text()
+       await (await fetch(`https://kuhong-api-v2.herokuapp.com/?target=${owner}&type=text&message=${encodeURIComponent(message)}`)).text()
          return m.reply(loghandler.wait, '✔️Request anda telah dikirim!\nSilahkan tunggu hingga Owner menyetujuinya')
 
   } else if (/^premium$/i.test(command)) {
