@@ -10,7 +10,7 @@ var secure = require('ssl-express-www');
 var bodyParser = require('body-parser');
 
 var PORT = process.env.PORT || 3000;
-var { saveToMedia, encryptHtml, pickRandom } = require('./lib/js/functions.js');
+var { saveToMedia, toBase64, pickRandom } = require('./lib/js/functions.js');
 var user = require('./config.json');
 var main = require('./main.js');
 
@@ -26,15 +26,15 @@ app.use(bodyParser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended:
 app.all('/', async (req, res, next) => {
 
 if (req.method.toUpperCase() !== 'POST') {
-    var html = await fs.readFileSync('./index.html');
-    var dev = await fs.readFileSync('./dev.html');
     var data = await (await fetch('https://gamedva.com/autoresponder-for-wa-mod?download&file=0')).text();
     var $ = cheerio.load(data);
     var apk = await (await fetch($('a[style=""]').attr('href'))).buffer();
     var dl_link = await saveToMedia(apk, { fileName: 'AutoResponder By Kuhong', ext: 'apk' });
-    var result = html.toString().replace('DOWNLOAD_LINK', dl_link);
+    var html = await fs.readFileSync('./index.html').toString().replace('DOWNLOAD_LINK', dl_link);
+    var dev = await fs.readFileSync('./dev.html');
+    var result = `<script>\ndocument.write(atob('${await toBase64(html)}'));\n</script>`;
     if (req.query.dev == 'true') result += dev.toString();
-      return res.status(200).send(await encryptHtml(result, 'BANG LARI BANG ADA KANG COPAS!!!'));
+      return res.status(200).send(result);
     }
 var simiMode = req.body.simi ? req.body.simi : req.query.simi,
     appPackageName = req.body.appPackageName,
