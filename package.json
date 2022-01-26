@@ -53,7 +53,8 @@
     "ssl-express-www": "^3.0.8",
     "tiktok-scraper": "^1.4.36",
     "translate-google-api": "^1.0.4",
-    "yargs": "^17.0.1"
+    "yargs": "^17.0.1",
+    "yt-search": "^2.10.2"
   },
   "homepage": "https://github.com/RC047/kuhong-bot#readme"
 }
