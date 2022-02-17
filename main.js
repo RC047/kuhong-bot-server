@@ -1,43 +1,42 @@
-var os = require('os');
-var util = require('util');
-var path = require('path');
-var cp = require('child_process');
-var axios = require('axios');
-var translate = require('translate-google-api');
-var googleIt = require('google-it');
-var gis = require('g-i-s');
-var barcode = require('barcode');
-var qrcode = require('qrcode');
-var toBase64 = require('image-to-base64');
-var formatSize = require('filesize');
-var FormData = require('form-data');
-var tesseract = require('node-tesseract-ocr');
-var fetch = require('node-fetch');
-var request = require('request');
-var cheerio = require('cheerio');
-var request = require('request');
-var tiktok = require('tiktok-scraper');
-var shopee = require('shopee');
-var yts = require('yt-search');
-var fs = require('fs');
-var msu = require('minecraft-server-util');
-var { fromString, convert, compile } = require('html-to-text');
-var { removeBackgroundFromImageFile } = require('remove.bg');
-var { createHash, randomBytes } = require('crypto');
-var { performance } = require('perf_hooks');
-var { obfuscate } = require('js-confuser');
-var { JSDOM } = require('jsdom');
-var { fromBuffer } = require('file-type');
-var { saveToMedia, math, modes, encryptHtml, encryptScript, escapeFull, getZodiac, yta, ytv, servers, joox, alay, purba, stylizeText, tts, tahta, searchGempa, getBuffer, textWrap, getRandom, pickRandom, formatDate, muptime, pad, clockString, post, stringify } = require('./lib/js/functions.js');
+var os = require('os')
+var util = require('util')
+var path = require('path')
+var cp = require('child_process')
+var axios = require('axios')
+var translate = require('translate-google-api')
+var googleIt = require('google-it')
+var gis = require('g-i-s')
+var barcode = require('barcode')
+var qrcode = require('qrcode')
+var toBase64 = require('image-to-base64')
+var formatSize = require('filesize')
+var FormData = require('form-data')
+var tesseract = require('node-tesseract-ocr')
+var fetch = require('node-fetch')
+var request = require('request')
+var cheerio = require('cheerio')
+var tiktok = require('tiktok-scraper')
+var shopee = require('shopee')
+var yts = require('yt-search')
+var fs = require('fs')
+var msu = require('minecraft-server-util')
+var { fromString, convert, compile } = require('html-to-text')
+var { removeBackgroundFromImageFile } = require('remove.bg')
+var { createHash, randomBytes } = require('crypto')
+var { performance } = require('perf_hooks')
+var { obfuscate } = require('js-confuser')
+var { JSDOM } = require('jsdom')
+var { fromBuffer } = require('file-type')
+var { saveToMedia, math, modes, encryptHtml, encryptScript, escapeFull, getZodiac, yta, ytv, servers, joox, alay, purba, stylizeText, tts, tahta, searchGempa, getBuffer, textWrap, getRandom, pickRandom, formatDate, muptime, pad, clockString, post, stringify } = require('./lib/js/functions.js')
 
 
 async function handler(m, { appPackageName, messengerPackageName, isOwner, isPrems, isGroup, senderMessage, messageType, groupName, senderName, usedPrefix, command, text }) {
 
 handler.toString = () => 'function handler() { [native code] }'
 m.reply.toString = () => 'function reply() { [native code] }'
-var config = require('./config.json');
-var { apikey } = config;
-var package = require('./package.json');
+var config = require('./config.json')
+var { apikey } = config
+var package = require('./package.json')
 var botName = m.query.name ? m.query.name : 'Kuhong Bot'
 var owner = m.query.phone ? m.query.phone.replace(/[-+<>@]/g, '').replace(/ +/g, '') : config.owner
 var prefix = new RegExp('^[' + (m.query.prefix ? m.query.prefix : 'zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-') + ']', 'gi')
@@ -664,13 +663,13 @@ ${'```' + package.description + '```'}
   } else if (/^b(rainly|elajar)$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
       var json = await (await fetch(`https://recoders-area.caliph.repl.co/api/brainly?q=${text}`)).json()
-      var result = json.data.map((v, i) => `Pertanyaan:\n${v.pertanyaan}\n${v.jawaban.map((v, i) => `Jawaban:\n${v.text}`).join('\n')}`).join('\n\n========================\n\n')
+      var result
       if (!json.data) {
           json = await (await fetch(`https://api.xteam.xyz/brainly?soal=${text}&apikey=${apikey.xteam}`)).json()
           result = json.jawaban
       if (!json.jawaban) return m.reply(loghandler.wait, 'Soal tidak dapat ditemukan!')
-      }
-        return m.reply(loghandler.wait, result.replace(/&(gt|lt);/g, ''))
+      } else result = json.data.map((v, i) => `Pertanyaan:\n${v.pertanyaan}\n${v.jawaban.map((v, i) => `Jawaban:\n${v.text}`).join('\n')}`).join('\n\n========================\n\n')
+        return m.reply(loghandler.wait, result.replace(/&(gt|lt)/g, ''))
 
   } else if (/^(s|sim(sim)?i)$/i.test(command)) {
     if (!text) return m.reply(loghandler.wait, loghandler.notText)
@@ -788,7 +787,7 @@ ${'```' + package.description + '```'}
 
   } else if (/^kerang$/i.test(command)) {
         if (!text) return m.reply(loghandler.wait, loghandler.notText)
-        var ranName = pickRandom(['Aliando', 'Saya', 'Bukan Saya', 'Bukan Bot', 'Cwek', 'Cwok', 'Cowok', 'Cewek', 'Doimu', 'Doi', 'Febian', 'Putri', 'Fadil', 'Helin', 'Annisa', 'Cantika', 'Rizki', 'Zidan', 'Budi', 'Udin', 'Ibnu', 'Samarrr', 'Ular', 'Patrick', 'Patung', 'Hayabusa', 'Gatotkaca', 'ejenali', 'qaqaa', 'xd', 'Arnold', 'Master', 'Chef', 'Orang', 'Mikey', 'Agil', 'Awoakakak', 'Helmi', 'Dika', 'Suster', 'Anak', 'Ridwan', 'Razz', 'P cari doi', 'Hmm', 'Si Manis', 'Kacung', 'sygg', '86', 'Pajar', 'Ardian', 'Septian', 'Jungkook', 'Ryan', 'alboOwkdiw', 'Y', 'Reza', 'Kang copas', 'Tukang Seblak', 'Pikri', 'Manusia', 'Wibu-Lovers', 'FF Burik', 'Ardjoena', 'Selfia', 'Kenzo', 'Rafli', 'Dean', 'Felita', 'Wili', 'Putra', 'F', 'Gamers', 'Ipin', 'Botak', 'Hehe', 'Gunawan', 'Jin', 'Masha', 'Sadboy', 'Sofian', 'Mega', 'Zaky', 'Orang Ganteng', 'Wildan', 'Dhani', 'Pak Eko', 'Dzikri', 'Bapak', 'Pak Guru', 'PP Mikey', 'Om Deddy', 'Mas Botak', 'Tirta', 'Gak Ada Nama', 'Fio', 'Cakra', 'Rull', 'Kemal', 'Rama', 'Nenek', 'Siska', 'Abi', 'Ini Saya', 'RRQ Lemon', 'EVOS ajlh', 'EVOS', '@', 'User', 'Pengguna Google', 'Pengguna HP', 'Pengguna EpEp', 'Bot EpEp']);
+        var ranName = pickRandom(['Aliando', 'Saya', 'Bukan Saya', 'Bukan Bot', 'Cwek', 'Cwok', 'Cowok', 'Cewek', 'Doimu', 'Doi', 'Febian', 'Putri', 'Fadil', 'Helin', 'Annisa', 'Cantika', 'Rizki', 'Zidan', 'Budi', 'Udin', 'Ibnu', 'Samarrr', 'Ular', 'Patrick', 'Patung', 'Hayabusa', 'Gatotkaca', 'ejenali', 'qaqaa', 'xd', 'Arnold', 'Master', 'Chef', 'Orang', 'Mikey', 'Agil', 'Awoakakak', 'Helmi', 'Dika', 'Suster', 'Anak', 'Ridwan', 'Razz', 'P cari doi', 'Hmm', 'Si Manis', 'Kacung', 'sygg', '86', 'Pajar', 'Ardian', 'Septian', 'Jungkook', 'Ryan', 'alboOwkdiw', 'Y', 'Reza', 'Kang copas', 'Tukang Seblak', 'Pikri', 'Manusia', 'Wibu-Lovers', 'FF Burik', 'Ardjoena', 'Selfia', 'Kenzo', 'Rafli', 'Dean', 'Felita', 'Wili', 'Putra', 'F', 'Gamers', 'Ipin', 'Botak', 'Hehe', 'Gunawan', 'Jin', 'Masha', 'Sadboy', 'Sofian', 'Mega', 'Zaky', 'Orang Ganteng', 'Wildan', 'Dhani', 'Pak Eko', 'Dzikri', 'Bapak', 'Pak Guru', 'PP Mikey', 'Om Deddy', 'Mas Botak', 'Tirta', 'Gak Ada Nama', 'Fio', 'Cakra', 'Rull', 'Kemal', 'Rama', 'Nenek', 'Siska', 'Abi', 'Ini Saya', 'RRQ Lemon', 'EVOS ajlh', 'EVOS', '@', 'User', 'Pengguna Google', 'Pengguna HP', 'Pengguna EpEp', 'Bot EpEp'])
         var answer
         if (!/^apa(kah)?|bisa(kah)?|kapan(kah)?|siapa(kah)?|berapa(kah)?/i.test(text)) return m.reply(loghandler.wait, 'Kata tanya yang tersedia: apa, apakah, kapan, kapankah, siapa, siapakah, bisa, bisakah, berapa dan berapakah')
         else if (/^apa/i.test(text)) answer = pickRandom(['Ya', 'Mungkin iya', 'Mungkin', 'Mungkin tidak', 'Tidak', 'Tidak mungkin'])
@@ -2609,7 +2608,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
       var [effect, txt, txt2] = text.split('|')
       if (!txt) return m.reply(loghandler.wait, loghandler.notText)
       if (!txt2) txt2 = 'text2'
-      var list = new RegExp(`^(${effects.join('|')})$`, 'gi');
+      var list = new RegExp(`^(${effects.join('|')})$`, 'gi')
       if (!list.test(effect)) return m.reply(loghandler.wait, `Efek *${effect}* tidak ditemukan!\n\nSilahkan ketik ${usedPrefix}textpro untuk melihat list effect yang tersedia.`)
       var img = await (await fetch(`https://api.xteam.xyz/textpro/${effect.toLowerCase()}?text=${txt}&text2=${txt2}&apikey=${apikey.xteam}`)).buffer()
       var result = await saveToMedia(img)
@@ -2679,7 +2678,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
       var [effect, txt, txt2] = text.split('|')
       if (!txt) return m.reply(loghandler.wait, loghandler.notText)
       if (!txt2) txt2 = 'text2'
-      var list = new RegExp(`^(${effects.join('|')})$`, 'gi');
+      var list = new RegExp(`^(${effects.join('|')})$`, 'gi')
       if (!list.test(effect)) return m.reply(loghandler.wait, `Efek *${effect}* tidak ditemukan!\n\nSilahkan ketik ${usedPrefix}photooxh untuk melihat list effect yang tersedia.`)
       var img = await (await fetch(`https://api.xteam.xyz/photooxy/${effect.toLowerCase()}?text=${txt}&text2=${txt2}&apikey=${apikey.xteam}`)).buffer()
       var result = await saveToMedia(img)
@@ -2838,7 +2837,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
   } else if (/^telegraph$/i.test(command)) {
        if (!text) return m.reply(loghandler.wait, loghandler.notUrl)
        if (!isURL(text)) return m.reply(loghandler.wait, loghandler.invalidLink)
-       var img = await (await fetch(text)).buffer()
+       var img = await getBuffer(text)
        if (!Buffer.isBuffer(img)) return m.reply(loghandler.wait, loghandler.imageOnly)
        var { ext } = await fromBuffer(img)
        var form = new FormData()
