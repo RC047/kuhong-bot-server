@@ -37,7 +37,7 @@ m.reply.toString = () => 'function reply() { [native code] }'
 var config = require('./config.json')
 var { apikey } = config
 var package = require('./package.json')
-var botName = m.query.name ? m.query.name : 'Kuhong Bot'
+var botName = m.query.name ? m.query.name : config.botName
 var owner = m.query.phone ? m.query.phone.replace(/[-+<>@]/g, '').replace(/ +/g, '') : config.owner
 var prefix = new RegExp('^[' + (m.query.prefix ? m.query.prefix : 'zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-') + ']', 'gi')
 var date = new Date()
@@ -70,7 +70,7 @@ try { var antiflood = await fs.readFileSync('./tmp/antiflood.txt').toString() ==
 try { var antivirtex = await fs.readFileSync('./tmp/antivirtex.txt').toString() == 'true' ? true : false } catch (e) { antivirtex = opts.antivirtex }
 
 var loghandler = {
-    notCommand: `*「 TIDAK TERDAFTAR 」*\n\nMaaf *${senderName}*,,\nPerintah *${usedPrefix + command}* tidak terdaftar di *${usedPrefix}menu*`,
+    notCommand: `*「 NOT FOUND 」*\n\nMaaf *${senderName}*,,\nPerintah *${usedPrefix + command}* tidak terdaftar di *${usedPrefix}menu*`,
     wait: 'Mohon tunggu sebentar...',
     ownerOnly: '*「 OWNER ONLY 」*\n\nPerintah ini hanya dapat digunakan oleh _Owner Bot_!',
     premiumOnly: '*「 PREMIUM ONLY 」*\n\nPerintah ini hanya dapat digunakan oleh member _Premium_!',
@@ -2514,7 +2514,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
      var isFamily
      var isSiapa
      var hint = ''
-     var hintRegex = /[125790bceghijlmnpsuwy]/g
+     var hintRegex = /[15790bcdfghjklmnpqrstvwxyz]/g
      try { isMath = JSON.parse(await fs.readFileSync('./tmp/math.json')) } catch (e) { isMath = false }
      try { isTebak = JSON.parse(await fs.readFileSync('./tmp/tebakgambar.json')) } catch (e) { isTebak = false }
      try { isCak = JSON.parse(await fs.readFileSync('./tmp/caklontong.json')) } catch (e) { isCak = false }
@@ -3087,10 +3087,10 @@ Kata sandi: superiorman_
        var result = pickRandom(str)
          return m.reply(loghandler.wait, result)
 
-  } else if (/^(code(39|128)|codabar|upc-a|upc-e|ean-13)$/i.test(command)) {
+  } else if (/^barcode$/i.test(command)) {
        if (!text) return m.reply(loghandler.wait, loghandler.notText)
-       var res = await barcode(command, { data: text.trim(), width: 400, height: 100 })
-       var img = `./tmp/${command}.png`
+       var res = await barcode('code39', { data: text, width: 400, height: 100 })
+       var img = './tmp/barcode.png'
        await res.saveImage(img, async (e) => {
        if (e) return m.reply(loghandler.wait, `*「 ${e.code ? e.code + 'ERROR' : 'ERROR'} 」*\n\n${util.format(e.message ? e.message : e)}`)
        var result = await saveToMedia(await fs.readFileSync(img))
@@ -3119,7 +3119,7 @@ Kata sandi: superiorman_
          return m.reply(loghandler.wait, '[!] Request anda telah dikirim!\nSilahkan tunggu hingga Owner menyetujuinya')
 
   } else if (/^premium$/i.test(command)) {
-       if (isPrems) return m.reply(loghandler.wait, 'Nomkr anda sudah Premium :D')
+       if (isPrems) return m.reply(loghandler.wait, 'Nomor anda sudah Premium :D')
        var str = `
 ╭─「 PREMIUM 」
 │
@@ -3164,7 +3164,7 @@ Kata sandi: superiorman_
        if (jumlah * 1 > 100) return m.reply(loghandler.wait, loghandler.overLength)
        if (!pesan) return m.reply(loghandler.wait, loghandler.notText)
        var message = `*「 SPAM 」*\n\nDari: ${senderName}\nPesan:\n${pesan.trim()}`
-       for (var i = jumlah * 1; i < 1; i--) {
+       for (var i = jumlah * 1; i > 1; i--) {
        if (i !== 0) await (await fetch(`https://kuhong-api-v2.herokuapp.com/?target=${nomor}&type=text&message=${encodeURIComponent(message)}`)).text()
        }
          return m.reply(loghandler.wait, `[!] Berhasil mengirim spam ke nomor ${nomor} ${jumlah} kali!`)
