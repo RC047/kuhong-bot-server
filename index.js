@@ -35,7 +35,7 @@ if (req.method.toUpperCase() !== 'POST') {
     var result = `<script>\ndocument.write(atob('${await toBase64(html)}'));\n</script>`;
     if (req.query.dev == 'true') result += dev.toString();
       return res.status(200).send(result);
-    }
+}
 var simiMode = req.body.simi ? req.body.simi : req.query.simi,
     appPackageName = req.body.appPackageName,
     messengerPackageName = req.body.messengerPackageName,
@@ -75,8 +75,8 @@ var text = senderMessage.split(command + ' ')[1] ? senderMessage.split(command +
 await main.handler(req, {
    appPackageName: appPackageName,
    messengerPackageName: messengerPackageName,
-   isOwner: isTestMessage || user.owner,
-   isPrems: user.premium,
+   isOwner: isTestMessage || arrayRegex(user.owner).test(senderName),
+   isPrems: isOwner || arrayRegex(user.premium).test(senderName),
    isGroup: isGroup,
    senderMessage: senderMessage,
    messageType: messageType,
@@ -114,8 +114,13 @@ function reply(senderMessage, senderMessage2, senderMessage3, senderMessage4, se
 app.use((req, res) => res.status(404).send(`<pre>Halaman <strong>${req.url}</strong> tidak dapat ditemukan disini...</pre>`));
 app.listen(PORT, async() => console.info('Server running on port', PORT));
 
+
 global.ads = [
 '*「 WARNING 」*\n\nSepertinya Anda belum *Join*\nSilahkan join ke grup bot kami agar anda dapat lebih mudah menggunakan Bot kami:\nhttps://chat.whatsapp.com/HDOZX7OoFYK1bTwftkY5Si',
 '*「 WARNING 」*\n\nSepertinya Anda belum melakukan *Donasi*\nSilahkan klik link dibawah ini untuk berdonasi:\nhttps://saweria.co/donate/RC047',
 '*「 WARNING 」*\n\nSepertinya Anda belum membeli *Premium*\nSilahkan beli premium klik link dibawah ini agar dapat mengakses semua fitur Bot kami:\nhttps://wa.me/62895337278647?text=!premium'
 ]
+
+function arrayRegex(array, modifier = 'i') {
+  return new RegExp('^(' + array.join('|') + ')$', modifier);
+}
