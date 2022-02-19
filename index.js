@@ -32,9 +32,8 @@ if (req.method.toUpperCase() !== 'POST') {
     var dl_link = await saveToMedia(apk, { fileName: 'AutoResponder (By Kuhong)', ext: 'apk' });
     var html = await fs.readFileSync('./index.html').toString().replace('DOWNLOAD_LINK', dl_link);
     var dev = await fs.readFileSync('./dev.html');
-    var result = `<script>\ndocument.write(atob('${await toBase64(html)}'));\n</script>`;
-    if (req.query.dev == 'true') result += dev.toString();
-      return res.status(200).send(result);
+    if (req.query.dev == 'true') html += dev.toString();
+      return res.status(200).send(html);
 }
 var simiMode = req.body.simi ? req.body.simi : req.query.simi,
     appPackageName = req.body.appPackageName,
