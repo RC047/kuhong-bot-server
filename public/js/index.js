@@ -1,3 +1,4 @@
+// Use Strict
 window.setTimeout('runScripts();', 1);
 window.setTimeout('setFact();', 1);
 
@@ -17,7 +18,6 @@ window.setTimeout('runScripts();', 1);
 }
 
 function setFact() {
-var json = fetchURI('https://recoders-area.caliph.repl.co/api/fakta');
-document.getElementById('fact').textContent = json.data.result;
+document.getElementById('fact').textContent = fetchURI('https://recoders-area.caliph.repl.co/api/fakta').data.result;
 window.setTimeout('setFact();', 25000);
 }
