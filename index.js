@@ -48,7 +48,7 @@ var simiMode = req.body.simi ? req.body.simi : req.query.simi,
 try {
 req.reply = (...message) => {
   var botName = req.query.name ? req.query.name : user.botName;
-  if (!message) message = ['']
+  if (!message) message = new Array('')
   else {
      for (var i = message.reverse().length; i > -1; i--) {
      if (message[i]) console.info(`${botName}:\n${message[i]}`)
