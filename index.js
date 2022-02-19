@@ -22,7 +22,7 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended: true }));
 
-
+app.get('/', async (req, res, next) => res.status(200).sendFile(process.cwd() + '/index.html'));
 app.post('/', async (req, res, next) => {
 
 var simiMode = req.body.simi ? req.body.simi : req.query.simi,
@@ -86,15 +86,7 @@ await main.handler(req, {
   }
 });
 
-app.use(async (req, res, next) => {
-
-var data = await (await fetch('https://gamedva.com/autoresponder-for-wa-mod?download&file=0')).text();
-var $ = cheerio.load(data);
-var apk = await (await fetch($('a[style=""]').attr('href'))).buffer();
-await saveToMedia(apk, { fileName: 'AutoResponder (By Kuhong)', ext: 'apk' });
-
-  return res.status(200).sendFile(process.cwd() + '/index.html')
-});
+app.use((req, res, next) => res.status(404).send(`<pre>Halaman <strong>${req.url}</strong> tidak dapat ditemukan disini...</pre>`));
 app.listen(PORT, async() => console.info('Server running on port', PORT));
 
 
