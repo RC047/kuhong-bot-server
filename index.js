@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended:
 app.get('/', async (req, res, next) => {
 
 await (await fetch('https://kuhong-bot.herokuapp.com/download')).text()
-  return res.status(200).sendFile(process.cwd() + '/index.html'));
+  return res.status(200).sendFile(process.cwd() + '/index.html');
 })
 
 app.post('/', async (req, res, next) => {
