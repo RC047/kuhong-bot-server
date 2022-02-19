@@ -451,7 +451,8 @@ ${listMenu.others.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
 
-_User ID ${createHash('md5').update(senderName).digest('hex')}_
+User ID:
+_${await createHash('md5').update(senderName).digest('hex')}_
 *${m.query.name ? m.query.name.toLowerCase().replace(/ +/g, '-') : package.name}@^${m.appVersion}*
 ${'```' + package.description + '```'}
 `.trim()
@@ -3155,7 +3156,7 @@ Kata sandi: superiorman_
 │• Permanen: 50K
 │
 │• Pembayaran:
-│${(m.query.card ? m.query.card : 'tri').toUpperCase()} +${owner}
+│+${owner} (${(m.query.card ? m.query.card : 'tri').toUpperCase()})
 │${m.query.donate ? m.query.donate : 'https://saweria.co/donate/RC047'}
 ╰────
 `.trim()
@@ -3185,11 +3186,11 @@ Kata sandi: superiorman_
        var [jumlah, pesan] = text.split('|')
        if (!jumlah) return m.reply(loghandler.wait, loghandler.notLength)
        if (isNaN(jumlah)) return m.reply(loghandler.wait, loghandler.numberOnly)
-       if (Number(jumlah) > 10 && !isPrems) return m.reply(loghandler.wait, loghandlet.limited)
-       if (Number(jumlah) > 100) return m.reply(loghandler.wait, loghandler.overLength)
+       if (jumlah * 1 > 10 && !isPrems) return m.reply(loghandler.wait, loghandlet.limited)
+       if (jumlah * 1 > 100) return m.reply(loghandler.wait, loghandler.overLength)
        if (!pesan) return m.reply(loghandler.wait, loghandler.notText)
        var result = ''
-       for (var i = Number(jumlah); i > 0; i--) result += pesan + '\',\''
+       for (var i = jumlah * 1; i > 0; i--) result += pesan + '\',\''
          return eval(`m.reply('${result.slice(0, result.length - 3)}')`)
 
   } else return m.reply(loghandler.wait, loghandler.notCommand)
