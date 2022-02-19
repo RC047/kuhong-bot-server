@@ -41,7 +41,7 @@ var simiMode = req.body.simi ? req.body.simi : req.query.simi,
     messengerPackageName = req.body.messengerPackageName,
     isWelcome = req.body.welcome ? req.body.welcome : req.query.welcome,
     isGroup = req.body.query.isGroup,
-    senderMessage = util.format(req.body.query.message),
+    senderMessage = decodeURIComponent(req.body.query.message),
     groupName = isGroup ? req.body.query.sender : '',
     senderName = isGroup ? req.body.query.groupParticipant : req.body.query.sender,
     isTestMessage = req.body.query.isTestMessage;
@@ -55,7 +55,7 @@ req.reply = (...message) => {
      if (message[i]) console.info(`${botName}:\n${message[i]}`)
      }
   }
-  var result = JSON.parse(`{ "replies": [${message.map(v => `{ "message": "${v}" }`).join(',\n')}] }`)
+  var result = JSON.parse(`{ "replies": [${message.map(v => `{ "message": "${util.format(v)}" }`).join(',\n')}] }`)
     return res.status(200).json(result);
 }
 req.isWelcome = isWelcome == 'true' ? true : false;
