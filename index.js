@@ -87,24 +87,16 @@ await main.handler(req, {
    text: text.replace(/^</g, '').replace(/>$/g, '').replace(/^\[/g, '').replace(/]$/g, '')
 });
 
-function reply(senderMessage, senderMessage2, senderMessage3, senderMessage4, senderMessage5) {
-  var botName = req.query.name ? req.query.name : 'Kuhong Bot';
-  if (!senderMessage) senderMessage = '';
-  else console.info(`${botName}:\n${senderMessage}`);
-  if (senderMessage && senderMessage2) console.log(`${botName}:\n${senderMessage2}`);
-  if (senderMessage && senderMessage2 && senderMessage3) console.log(`${botName}:\n${senderMessage3}`);
-  if (senderMessage && senderMessage2 && senderMessage3 && senderMessage4) console.log(`${botName}:\n${senderMessage4}`);
-  if (senderMessage && senderMessage2 && senderMessage3 && senderMessage4 && senderMessage5) console.log(`${botName}:\n${senderMessage5}`);
-  var senderMessages = new Array({ message: util.format(senderMessage) });
-  if (isAds) {
-     senderMessages = new Array({ message: util.format(adsMessage) }, { message: util.format(senderMessage) });
-     if (senderMessage == '') senderMessages = new Array({ message: util.format(senderMessage) })
+function reply(...message) {
+  var botName = req.query.name ? req.query.name : global.botName;
+  if (!message) message = ['']
+  else {
+     for (var i = message.reverse().length; i > -1; i--) {
+     if (message[i]) console.info(`${botName}:\n${message[i]}`)
+     }
   }
-  if (senderMessage && senderMessage2) senderMessages.push({ message: util.format(senderMessage2) });
-  if (senderMessage && senderMessage2 && senderMessage3) senderMessages.push({ message: util.format(senderMessage3) });
-  if (senderMessage && senderMessage2 && senderMessage3 && senderMessage4) senderMessages.push({ message: util.format(senderMessage4) });
-  if (senderMessage && senderMessage2 && senderMessage3 && senderMessage4 && senderMessage5) senderMessages.push({ message: util.format(senderMessage5) });
-    return res.status(200).json({ status: 200, replies: senderMessages });
+  var result = JSON.parse(`{ "replies": [${message.map(v => `{ "message": "${v}" }`).join(',\n')}] }`)
+    return res.status(200).json(result);
   }
 } catch (e) {
   console.error('SystemError:\n', e);
@@ -114,12 +106,6 @@ function reply(senderMessage, senderMessage2, senderMessage3, senderMessage4, se
 app.use((req, res) => res.status(404).send(`<pre>Halaman <strong>${req.url}</strong> tidak dapat ditemukan disini...</pre>`));
 app.listen(PORT, async() => console.info('Server running on port', PORT));
 
-
-global.ads = [
-'*「 WARNING 」*\n\nSepertinya Anda belum *Join*\nSilahkan join ke grup bot kami agar anda dapat lebih mudah menggunakan Bot kami:\nhttps://chat.whatsapp.com/HDOZX7OoFYK1bTwftkY5Si',
-'*「 WARNING 」*\n\nSepertinya Anda belum melakukan *Donasi*\nSilahkan klik link dibawah ini untuk berdonasi:\nhttps://saweria.co/donate/RC047',
-'*「 WARNING 」*\n\nSepertinya Anda belum membeli *Premium*\nSilahkan beli premium klik link dibawah ini agar dapat mengakses semua fitur Bot kami:\nhttps://wa.me/62895337278647?text=!premium'
-]
 
 function arrayRegex(array, modifier = 'i') {
   return new RegExp('^(' + array.join('|') + ')$', modifier);
