@@ -10,7 +10,6 @@ var secure = require('ssl-express-www');
 var bodyParser = require('body-parser');
 
 var PORT = process.env.PORT || 3000;
-var { saveToMedia } = require('./lib/js/functions.js');
 var user = require('./config.json');
 var main = require('./main.js');
 
@@ -22,14 +21,10 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended: true }));
 
-app.get('/', async (req, res, next) => {
 
-await (await fetch('https://kuhong-bot.herokuapp.com/download')).text()
-  return res.status(200).sendFile(process.cwd() + '/index.html');
-})
+app.all('/', async (req, res, next) => {
 
-app.post('/', async (req, res, next) => {
-
+if (req.method.toUpperCase() !== 'POST') return res.status(200).sendFile(process.cwd() + '/index.html');
 var simiMode = req.body.simi ? req.body.simi : req.query.simi,
     appPackageName = req.body.appPackageName,
     messengerPackageName = req.body.messengerPackageName,
@@ -89,16 +84,6 @@ await main.handler(req, {
 } catch (e) {
   console.error('SystemError:\n\n', e);
   }
-});
-
-app.get('/download', async (req, res, next) => {
-
-var data = await (await fetch('https://gamedva.com/autoresponder-for-wa-mod?download&file=0')).text();
-var $ = cheerio.load(data);
-var apk = await (await fetch($('a[style=""]').attr('href'))).buffer();
-await saveToMedia(apk, { fileName: 'AutoResponder (By Kuhong)', ext: 'apk' });
-
-   return res.status(200).json({ status: res.statusCode || false, message: 'AutoResponder has been downloaded!' })
 });
 
 app.use((req, res, next) => res.status(404).send(`<pre>Halaman <strong>${req.url}</strong> tidak dapat ditemukan disini...</pre>`));
