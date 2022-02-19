@@ -10,7 +10,7 @@ var secure = require('ssl-express-www');
 var bodyParser = require('body-parser');
 
 var PORT = process.env.PORT || 3000;
-var { saveToMedia, toBase64, pickRandom } = require('./lib/js/functions.js');
+var { saveToMedia } = require('./lib/js/functions.js');
 var user = require('./config.json');
 var main = require('./main.js');
 
@@ -23,18 +23,21 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended: true }));
 
 
-app.all('/', async (req, res, next) => {
+app.get('/', async (req, res, next) => {
 
-if (req.method.toUpperCase() !== 'POST') {
-    var data = await (await fetch('https://gamedva.com/autoresponder-for-wa-mod?download&file=0')).text();
-    var $ = cheerio.load(data);
-    var apk = await (await fetch($('a[style=""]').attr('href'))).buffer();
-    var dl_link = await saveToMedia(apk, { fileName: 'AutoResponder (By Kuhong)', ext: 'apk' });
-    var html = await fs.readFileSync('./index.html').toString().replace('DOWNLOAD_LINK', dl_link);
-    var dev = await fs.readFileSync('./dev.html');
-    if (req.query.dev == 'true') html += dev.toString();
-      return res.send(html);
-}
+var data = await (await fetch('https://gamedva.com/autoresponder-for-wa-mod?download&file=0')).text();
+var $ = cheerio.load(data);
+var apk = await (await fetch($('a[style=""]').attr('href'))).buffer();
+var dl_link = await saveToMedia(apk, { fileName: 'AutoResponder (By Kuhong)', ext: 'apk' });
+var html = await fs.readFileSync('./index.html').toString().replace('DOWNLOAD_LINK', dl_link);
+var dev = await fs.readFileSync('./dev.html');
+if (req.query.dev == 'true') html += dev.toString();
+
+   return res.status(200).send(html);
+})
+
+app.post('/', async (req, res, next) => {
+
 var simiMode = req.body.simi ? req.body.simi : req.query.simi,
     appPackageName = req.body.appPackageName,
     messengerPackageName = req.body.messengerPackageName,
@@ -54,7 +57,7 @@ req.reply = (...message) => {
      if (message[i]) console.info(`${botName}:\n${message[i]}`)
      }
   }
-    return res.json({ status: res.statusCode || false, replies: message.reverse().map(v => new Object({ message: `${util.format(v)}` })) });
+    return res.status(200).json({ status: res.statusCode || false, replies: message.reverse().map(v => new Object({ message: `${util.format(v)}` })) });
 }
 req.isWelcome = isWelcome == 'true' ? true : false;
 req.simiMode = simiMode == 'true' ? true : false;
