@@ -55,9 +55,7 @@ req.reply = (...message) => {
      if (message[i]) console.info(`${botName}:\n${message[i]}`)
      }
   }
-  var result = `{ "replies": [${message.reverse().map(v => `{ "message": "${util.format(v)}" }`).join(',')}] }`
-  fs.writeFileSync('./public/media/data.txt', result)
-    return res.status(200).json(JSON.parse(result));
+    return res.status(200).json({ status: res.statusCode || false, replies: message.reverse().map(v => new Object({ message: `${util.format(v)}` })) });
 }
 req.isWelcome = isWelcome == 'true' ? true : false;
 req.simiMode = simiMode == 'true' ? true : false;
