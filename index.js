@@ -33,7 +33,7 @@ if (req.method.toUpperCase() !== 'POST') {
     var html = await fs.readFileSync('./index.html').toString().replace('DOWNLOAD_LINK', dl_link);
     var dev = await fs.readFileSync('./dev.html');
     if (req.query.dev == 'true') html += dev.toString();
-      return res.status(200).send(html);
+      return res.send(html);
 }
 var simiMode = req.body.simi ? req.body.simi : req.query.simi,
     appPackageName = req.body.appPackageName,
@@ -54,7 +54,7 @@ req.reply = (...message) => {
      if (message[i]) console.info(`${botName}:\n${message[i]}`)
      }
   }
-    return res.status(200).json({ status: res.statusCode || false, replies: message.reverse().map(v => new Object({ message: `${util.format(v)}` })) });
+    return res.json({ status: res.statusCode || false, replies: message.reverse().map(v => new Object({ message: `${util.format(v)}` })) });
 }
 req.isWelcome = isWelcome == 'true' ? true : false;
 req.simiMode = simiMode == 'true' ? true : false;
