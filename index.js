@@ -2,8 +2,6 @@ console.log('Starting...');
 var express = require('express');
 var app = express();
 var util = require('util');
-var fs = require('fs');
-var fetch = require('node-fetch');
 var cheerio = require('cheerio');
 var cors = require('cors');
 var secure = require('ssl-express-www');
