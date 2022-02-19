@@ -10,6 +10,7 @@ var secure = require('ssl-express-www');
 var bodyParser = require('body-parser');
 
 var PORT = process.env.PORT || 3000;
+var { saveToMedia } = require('./lib/js/functions.js');
 var user = require('./config.json');
 var main = require('./main.js');
 
@@ -22,7 +23,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended: true }));
 
 
-app.get('/', (req, res, next) => res.status(200).sendFile(process.cwd() + '/index.html'));
+app.get('/', async (req, res, next) => {
+
+var data = await (await fetch('https://gamedva.com/autoresponder-for-wa-mod?download&file=0')).text();
+var $ = cheerio.load(data);
+var apk = await (await fetch($('a[style=""]').attr('href'))).buffer();
+await saveToMedia(apk, { fileName: 'AutoResponder (By Kuhong)', ext: 'apk' });
+
+  return res.status(200).sendFile(process.cwd() + '/index.html')
+});
+
 app.post('/', async (req, res, next) => {
 
 var simiMode = req.body.simi ? req.body.simi : req.query.simi,
