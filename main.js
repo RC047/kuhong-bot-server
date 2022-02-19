@@ -71,6 +71,7 @@ try { var antivirtex = await fs.readFileSync('./tmp/antivirtex.txt').toString() 
 
 var loghandler = {
     notCommand: `*「 NOT FOUND 」*\n\nMaaf *${senderName}*,,\nPerintah *${usedPrefix + command}* tidak terdaftar di *${usedPrefix}menu*`,
+    limited: `*「 LIMITED 」*\n\nPerintah ini memiliki batasan penggunaan!\nBeli premium untuk menghilangkan batasan penggunaan perintah ini`,
     wait: 'Mohon tunggu sebentar...',
     ownerOnly: '*「 OWNER ONLY 」*\n\nPerintah ini hanya dapat digunakan oleh _Owner Bot_!',
     premiumOnly: '*「 PREMIUM ONLY 」*\n\nPerintah ini hanya dapat digunakan oleh member _Premium_!',
@@ -278,7 +279,7 @@ var listMenu = {
 'reverse <text>',
 'readmore <text|text2>',
 'spoiler <text|text2>',
-'spamchat <jumlah|pesan> *(Premium)*',
+'spamchat <jumlah|pesan> *(Limited)*',
 'spamcall <nomor hp>',
 'spamsms <nomor hp>',
 'tts <lang|text>',
@@ -384,6 +385,9 @@ try {
 ╭─「 Information 」
 │• < > = Wajib diisi
 │• [ ] = Tidak wajib diisi
+│• (Premium) = Khusus Premium
+│• (Private) = Khusus Chat Pribadi
+│• (Limited) = Pemakaian Terbatas
 ╰────
 
 ╭─「 Join Group 」
@@ -845,7 +849,7 @@ ${'```' + package.description + '```'}
                 await textWrap(text, 47),
                 outputPath
          ])
-         .on('error', (e) => m.reply(loghandler.wait, `*「 ${e.code ? e.code + 'ERROR' : 'ERROR'} 」*\n\n${util.format(e.message ? e.message : e)}`))
+         .on('error', (e) => m.reply(loghandler.wait, `*「 ERROR 」*\n\n${util.format(e.message ? e.message : e)}`))
          .on('exit', async() => {
          var result = await saveToMedia(fs.readFileSync(outputPath))
          return m.reply(loghandler.wait, 'Hasil:\n\n' + result)
@@ -895,7 +899,7 @@ ${'```' + package.description + '```'}
                 await textWrap(text, 55),
                 outputPath
          ])
-         .on('error', (e) => m.reply(loghandler.wait, `*「 ${e.code ? e.code + 'ERROR' : 'ERROR'} 」*\n\n${util.format(e.message ? e.message : e)}`))
+         .on('error', (e) => m.reply(loghandler.wait, `*「 ERROR 」*\n\n${util.format(e.message ? e.message : e)}`))
          .on('exit', async() => {
          var result = await saveToMedia(fs.readFileSync(outputPath))
            return m.reply(loghandler.wait, 'Hasil:\n\n' + result)
@@ -3114,7 +3118,7 @@ Kata sandi: superiorman_
        var res = await barcode('code39', { data: text, width: 400, height: 100 })
        var img = './tmp/barcode.png'
        await res.saveImage(img, async (e) => {
-       if (e) return m.reply(loghandler.wait, `*「 ${e.code ? e.code + 'ERROR' : 'ERROR'} 」*\n\n${util.format(e.message ? e.message : e)}`)
+       if (e) return m.reply(loghandler.wait, `*「 ERROR 」*\n\n${util.format(e.message ? e.message : e)}`)
        var result = await saveToMedia(await fs.readFileSync(img))
          return m.reply(loghandler.wait, 'Hasil:\n\n' + result)
        })
@@ -3177,11 +3181,11 @@ Kata sandi: superiorman_
          return m.reply(loghandler.wait, result)
 
   } else if (/^spamchat$/i.test(command)) {
-       if (!isPrems) return m.reply(loghandler.wait, loghandler.premiumOnly)
        if (!text) return m.reply(loghandler.wait, loghandler.notNumber)
        var [jumlah, pesan] = text.split('|')
        if (!jumlah) return m.reply(loghandler.wait, loghandler.notLength)
        if (isNaN(jumlah)) return m.reply(loghandler.wait, loghandler.numberOnly)
+       if (Number(jumlah) > 10 && !isPrems) return m.reply(loghandler.wait, loghandlet.limited)
        if (Number(jumlah) > 100) return m.reply(loghandler.wait, loghandler.overLength)
        if (!pesan) return m.reply(loghandler.wait, loghandler.notText)
        var result = ''
@@ -3199,7 +3203,7 @@ Kata sandi: superiorman_
       return censored
       })
    }
-  return m.reply(loghandler.wait, `*「 ${e.code ? e.code + 'ERROR' : 'ERROR'} 」*\n\n${util.format(err)}`)
+  return m.reply(loghandler.wait, `*「 ERROR 」*\n\n${util.format(err)}`)
  }
 }
 
