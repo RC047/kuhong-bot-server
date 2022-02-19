@@ -27,7 +27,7 @@ var { performance } = require('perf_hooks')
 var { obfuscate } = require('js-confuser')
 var { JSDOM } = require('jsdom')
 var { fromBuffer } = require('file-type')
-var { saveToMedia, math, modes, encryptHtml, encryptScript, escapeFull, getZodiac, yta, ytv, servers, joox, alay, purba, stylizeText, tts, tahta, searchGempa, getBuffer, textWrap, getRandom, pickRandom, formatDate, muptime, pad, clockString, post, stringify } = require('./lib/js/functions.js')
+var { saveToMedia, math, modes, encryptHtml, encryptScript, escapeFull, getZodiac, yta, ytv, servers, joox, stylizeText, tts, tahta, searchGempa, getBuffer, textWrap, getRandom, pickRandom, formatDate, muptime, pad, clockString, post, stringify } = require('./lib/js/functions.js')
 
 
 async function handler(m, { appPackageName, messengerPackageName, isOwner, isPrems, isGroup, senderMessage, messageType, groupName, senderName, usedPrefix, command, text }) {
@@ -114,12 +114,7 @@ var listMenu = {
 'ttp <text>',
 'textpro <effect|text|[text2]>',
 'photooxy <effect|text|[text2]>',
-'code39 <text>',
-'code128 <text>',
-'codabar <text>',
-'upc-a <text>',
-'upc-e <text>',
-'ean-13 <text>',
+'barcode <text>',
 'qrcode <text>',
 'tahta <text>',
 'customtahta <text>',
@@ -283,7 +278,7 @@ var listMenu = {
 'reverse <text>',
 'readmore <text|text2>',
 'spoiler <text|text2>',
-'spamwa <nomor hp|jumlah|pesan> *(Premium)*',
+'spamchat <jumlah|pesan> *(Premium)*',
 'spamcall <nomor hp>',
 'spamsms <nomor hp>',
 'tts <lang|text>',
@@ -610,11 +605,38 @@ ${'```' + package.description + '```'}
 
   } else if (/^alay$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notText)
-    	return m.reply(loghandler.wait, await alay(text))
+      var result = text.replace(/[a-z]/gi, v => Math.random() > .5 ? v[['toLowerCase', 'toUpperCase'][Math.floor(Math.random() * 2)]]() : v).replace(/[abegiors]/gi, v => {
+             if (Math.random() > .5) return v
+             switch (v.toLowerCase()) {
+                  case 'a': return '4'
+                  case 'b': return Math.random() > .5 ? '8' : '13'
+                  case 'e': return '3'
+                  case 'g': return Math.random() > .5 ? '6' : '9'
+                  case 'i': return '1'
+                  case 'o': return '0'
+                  case 'r': return '12'
+                  case 's': return '5'
+            }
+     })
+    	return m.reply(loghandler.wait, result)
 
   } else if (/^purba$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notText)
-    	return m.reply(loghandler.wait, await purba(text))
+      var result = text.replace(/[aiueoAIUEO]/gi, v => {
+             switch (v) {
+                  case 'a': return 'ava'
+                  case 'i': return 'ivi'
+                  case 'u': return 'uvu'
+                  case 'e': return 'eve'
+                  case 'o': return 'ovo'
+                  case 'A': return 'Ava'
+                  case 'I': return 'Ivi'
+                  case 'U': return 'Uvu'
+                  case 'E': return 'Eve'
+                  case 'O': return 'Ovo'
+            }
+     })
+    	return m.reply(loghandler.wait, result)
 
   } else if (/^repeat$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notText)
@@ -3154,20 +3176,17 @@ Kata sandi: superiorman_
        var result = `Silahkan menuju situs web ini dan setelah itu download script botnya:\n\nUntuk seperti tutorial, screenshot, apk autoresponder, ada diweb ini ok!\n\nLink:\nhttps://kuhong-bot.herokuapp.com`
          return m.reply(loghandler.wait, result)
 
-  } else if (/^spam(wa)?$/i.test(command)) {
+  } else if (/^spamchat$/i.test(command)) {
        if (!isPrems) return m.reply(loghandler.wait, loghandler.premiumOnly)
        if (!text) return m.reply(loghandler.wait, loghandler.notNumber)
-       var [nomor, jumlah, pesan] = text.split('|')
-       if (nomor.startsWith('+') || /^(0|@)/i.test(nomor)) return m.reply(loghandler.wait, 'Harap masukan nomor dengan awalan 62')
-       if (!jumlah) jumlah = 10
+       var [jumlah, pesan] = text.split('|')
+       if (!jumlah) return m.reply(loghandler.wait, loghandler.notLength)
        if (isNaN(jumlah)) return m.reply(loghandler.wait, loghandler.numberOnly)
-       if (jumlah * 1 > 100) return m.reply(loghandler.wait, loghandler.overLength)
+       if (Number(jumlah) > 100) return m.reply(loghandler.wait, loghandler.overLength)
        if (!pesan) return m.reply(loghandler.wait, loghandler.notText)
-       var message = `*「 SPAM 」*\n\nDari: ${senderName}\nPesan:\n${pesan.trim()}`
-       for (var i = jumlah * 1; i > 1; i--) {
-       if (i !== 0) await (await fetch(`https://kuhong-api-v2.herokuapp.com/?target=${nomor}&type=text&message=${encodeURIComponent(message)}`)).text()
-       }
-         return m.reply(loghandler.wait, `[!] Berhasil mengirim spam ke nomor ${nomor} ${jumlah} kali!`)
+       var result = ''
+       for (var i = Number(jumlah); i > 0; i--) result += pesan + '\',\''
+         return eval(`m.reply('${result.slice(0, result.length - 3)}')`)
 
   } else return m.reply(loghandler.wait, loghandler.notCommand)
 } catch (e) {
