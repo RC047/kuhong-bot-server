@@ -47,7 +47,17 @@ var simiMode = req.body.simi ? req.body.simi : req.query.simi,
     isTestMessage = req.body.query.isTestMessage;
 
 try {
-req.reply = reply;
+req.reply = (...message) => {
+  var botName = req.query.name ? req.query.name : user.bot;
+  if (!message) message = ['']
+  else {
+     for (var i = message.reverse().length; i > -1; i--) {
+     if (message[i]) console.info(`${botName}:\n${message[i]}`)
+     }
+  }
+  var result = JSON.parse(`{ "replies": [${message.map(v => `{ "message": "${v}" }`).join(',\n')}] }`)
+    return res.status(200).json(result);
+}
 req.isWelcome = isWelcome == 'true' ? true : false;
 req.simiMode = simiMode == 'true' ? true : false;
 req.battery = '%battery%';
@@ -62,9 +72,6 @@ req.replyCount = {
   all: '%reply_count_overall%'
 }
 
-
-var adsMessage = pickRandom(global.ads);
-var isAds = Math.floor(Math.random() * 50) == Math.floor(Math.random() * 50) ? true : false;
 var messageType = /^📷+(Foto|Image|Pictures?)?/gi.test(senderMessage) ? 'image' : /^🎥+(Vid(i|e)o)?/gi.test(senderMessage) ? 'video' : /^🎵+(Audio)?/gi.test(senderMessage) ? 'audio' : /^💟+(Stic?ker)?/gi.test(senderMessage) ? 'sticker' : 'text';
 console.info(`${senderName}${isGroup ? ' (' + groupName + ')' : ''} [${messageType}]:\n${senderMessage}`);
 if (messageType !== 'text') senderMessage = senderMessage.slice(3)
@@ -86,18 +93,6 @@ await main.handler(req, {
    command: command.toLowerCase(),
    text: text.replace(/^</g, '').replace(/>$/g, '').replace(/^\[/g, '').replace(/]$/g, '')
 });
-
-function reply(...message) {
-  var botName = req.query.name ? req.query.name : global.botName;
-  if (!message) message = ['']
-  else {
-     for (var i = message.reverse().length; i > -1; i--) {
-     if (message[i]) console.info(`${botName}:\n${message[i]}`)
-     }
-  }
-  var result = JSON.parse(`{ "replies": [${message.map(v => `{ "message": "${v}" }`).join(',\n')}] }`)
-    return res.status(200).json(result);
-  }
 } catch (e) {
   console.error('SystemError:\n', e);
   }
