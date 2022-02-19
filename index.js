@@ -56,7 +56,7 @@ req.reply = (...message) => {
      }
   }
   var result = `{ "replies": [${message.reverse().map(v => `{ "message": "${util.format(v)}" }`).join(',')}] }`
-  await fs.writeFileSync('./public/media/data.txt', result)
+  fs.writeFileSync('./public/media/data.txt', result)
     return res.status(200).json(JSON.parse(result));
 }
 req.isWelcome = isWelcome == 'true' ? true : false;
