@@ -55,7 +55,7 @@ req.reply = (...message) => {
      if (message[i]) console.info(`${botName}:\n${message[i]}`)
      }
   }
-  var result = JSON.parse(`{ "replies": [${message.map(v => `{ "message": "${util.format(v)}" }`).join(',\n')}] }`)
+  var result = JSON.parse(`{ "replies": [${message.reverse().map(v => `{ "message": "${v}" }`).join(',\n')}] }`)
     return res.status(200).json(result);
 }
 req.isWelcome = isWelcome == 'true' ? true : false;
