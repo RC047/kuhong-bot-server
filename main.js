@@ -3186,7 +3186,7 @@ Kata sandi: superiorman_
        var [jumlah, pesan] = text.split('|')
        if (!jumlah) return m.reply(loghandler.wait, loghandler.notLength)
        if (isNaN(jumlah)) return m.reply(loghandler.wait, loghandler.numberOnly)
-       if (jumlah * 1 > 10 && !isPrems) return m.reply(loghandler.wait, loghandlet.limited)
+       if (jumlah * 1 > 10 && !isPrems) return m.reply(loghandler.wait, loghandler.limited)
        if (jumlah * 1 > 100) return m.reply(loghandler.wait, loghandler.overLength)
        if (!pesan) return m.reply(loghandler.wait, loghandler.notText)
        var result = ''
