@@ -85,9 +85,6 @@ await main.handler(req, {
 });
 
 app.use((req, res, next) => res.status(404).send(`<pre>Halaman <strong>${req.url}</strong> tidak dapat ditemukan disini...</pre>`));
-app.listen(PORT, async() => console.info('Server running on port', PORT));
+app.listen(PORT, () => console.info('Server running on port', PORT));
 
-
-function arrayRegex(array, modifier = 'i') {
-  return new RegExp('^(' + array.join('|') + ')$', modifier);
-}
+// console.log(user)
