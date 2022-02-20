@@ -8,6 +8,7 @@ var secure = require('ssl-express-www');
 var bodyParser = require('body-parser');
 
 var PORT = process.env.PORT || 3000;
+var { arrayRegex } = require('./lib/js/functions.js');
 var user = require('./config.json');
 var main = require('./main.js');
 
