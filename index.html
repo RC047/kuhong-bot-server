@@ -12,12 +12,11 @@
     <meta name="msapplication-TileImage" content="https://i.ibb.co/frhZmyZ/pp.jpg">
     <meta property="og:image" name="og:image" content="https://i.ibb.co/frhZmyZ/pp.jpg">
     <meta name="theme-color" content="#ffffff">
-    <audio autoplay="autoplay" hidden="hidden" src="https://kuhong-api.herokuapp.com/api/getmusic"></audio>
     <link rel="icon" type="image/png" sizes="192x192" href="https://i.ibb.co/frhZmyZ/pp.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <script src="https://kuhong-api.herokuapp.com/js/fetcher.js"></script>
     <script src="js/index.js"></script>
-    <script>setTimeout(function(){var status=document.getElementById('status').textContent;if(status=='Detecting...'){document.querySelector('body').remove();alert('WAIT!');alert('Looks like this site has a bit of a technical problem :/');return document.write('Content Deleted')};},5000);</script>
+    <script>setTimeout(function(){var status=document.getElementById('status').textContent;if(status=='Detecting...'){document.querySelector('body').remove();return document.write('<div style="text-align:center"><h1>Server is undergoing Maintenance</h1><br><h4>Report:<br><a href="https://wa.me/62895337278647" target="_blank">https://wa.me/62895337278647</a></h4></div>')}else if(status=='Offline'){document.querySelector('body').remove();return document.write('<h1 style="text-align:center">Server is Offline!</h1>')};},5000);</script>
   </head>
 <body>
 <fieldset class="main">
