@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended:
 
 app.all('/', async (req, res, next) => {
 
-if (req.method.toUpperCase() !== 'POST') return res.status(200).sendFile(process.cwd() + '/index.html');
+if (req.method !== 'POST') return res.status(200).sendFile(process.cwd() + '/index.html');
 var simiMode = req.body.simi ? req.body.simi : req.query.simi,
     appPackageName = req.body.appPackageName,
     messengerPackageName = req.body.messengerPackageName,
