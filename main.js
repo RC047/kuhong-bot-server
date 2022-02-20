@@ -27,16 +27,16 @@ var { performance } = require('perf_hooks')
 var { obfuscate } = require('js-confuser')
 var { JSDOM } = require('jsdom')
 var { fromBuffer } = require('file-type')
-var { saveToMedia, math, modes, encryptHtml, encryptScript, escapeFull, getZodiac, yta, ytv, servers, joox, stylizeText, tts, tahta, searchGempa, getBuffer, textWrap, getRandom, pickRandom, formatDate, muptime, pad, clockString, post, stringify } = require('./lib/js/functions.js')
+var { saveToMedia, math, modes, encryptHtml, encryptScript, escapeFull, getZodiac, yta, ytv, servers, joox, stylizeText, tts, tahta, searchGempa, getBuffer, textWrap, getRandom, arrayRegex, pickRandom, formatDate, muptime, pad, clockString, post, stringify } = require('./lib/js/functions.js')
 
 
 async function handler(m, { appPackageName, messengerPackageName, isOwner, isPrems, isGroup, senderMessage, messageType, groupName, senderName, usedPrefix, command, text }) {
 
 handler.toString = () => 'function handler() { [native code] }'
 m.reply.toString = () => 'function reply() { [native code] }'
+var package = require('./package.json')
 var config = require('./config.json')
 var { apikey } = config
-var package = require('./package.json')
 var botName = m.query.name ? m.query.name : config.botName
 var owner = m.query.phone ? m.query.phone.replace(/[-+<>@]/g, '').replace(/ +/g, '') : config.owner
 var prefix = new RegExp('^[' + (m.query.prefix ? m.query.prefix : 'zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-') + ']', 'gi')
@@ -55,6 +55,7 @@ if (hours == 4 || hours == 5 || hours == 6 || hours == 7 || hours == 8 || hours 
 else if (hours == 10 || hours == 11 || hours == 12 || hours == 13 || hours == 14) salam = 'Siang'
 else if (hours == 15 || hours == 16 || hours == 17) salam = 'Sore'
 else if (hours == 18 || hours == 19 || hours == 20 || hours == 21 || hours == 22 || hours == 23 || hours == 0 || hours == 1 || hours == 2 || hours == 3) salam = 'Malam'
+
 var opts = {
 	antidelete: true,
 	antilink: true,
@@ -99,6 +100,7 @@ var loghandler = {
     overLength: 'Jumlah terlalu banyak!',
     imageOnly: 'Hanya dapat digunakan untuk Gambar!'
 }
+
 var listMenu = {
     downloaders: [
 'ytmp4 <url>',
@@ -320,7 +322,7 @@ var listMenu = {
 try {
   if (m.isWelcome) {
   	if (!senderMessage) return abort()
-      var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(usedPrefix) ? usedPrefix : '!'}menu* untuk memulai Bot ini.`
+      var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : '!'}menu* untuk memulai Bot ini.`
         return m.reply(welcome)
   } else if (m.simiMode) {
       if (!senderMessage) return abort()
@@ -337,7 +339,7 @@ try {
   } else if (isGroup && afk.name !== null) {
       await fs.writeFileSync('./tmp/' + afk.name + '_afk.json', stringify({ name: null, reason: null }))
       return m.reply(`*「 BERHENTI AFK 」*\n\nSelamat datang kembali *${afk.name}!*\nudah beres ${afk.reason}nya kan?`)
-  } else if (isGroup && !(afk.name == null) && senderMessage.includes(afk.name == null ? Math.floor(Math.random() * 10000) : afk.name)) {
+  } else if (isGroup && afk.name !== null && senderMessage.includes(afk.name == null ? Math.floor(Math.random() * 10000) : afk.name)) {
       return m.reply(`*「 SEDANG AFK 」*\n\nSshhh!!! Jangan ganggu dia!\nDianya lagi ${afk.reason} dulu katanya`)
   } else if (isGroup && antilink && isGroupLink.test(senderMessage)) {
       var matched = senderMessage.match(isGroupLink).join('\n')
@@ -520,7 +522,7 @@ ${'```' + package.description + '```'}
       await fs.writeFileSync('./tmp/' + senderName + '_afk.json', stringify({ name: senderName, reason: text.trim() }))
     	return m.reply(result)
 
-  } else if (/^exec(ute)?|eval$/i.test(command)) {
+  } else if (/^e(xec(ute)?|val)$/i.test(command)) {
       var exec = util.promisify(cp.exec).bind(cp)
       if (!isOwner) return m.reply(loghandler.wait, loghandler.ownerOnly)
       if (!text) return m.reply(loghandler.wait, loghandler.notText)
@@ -815,8 +817,8 @@ ${'```' + package.description + '```'}
   } else if (/^kerang$/i.test(command)) {
         if (!text) return m.reply(loghandler.wait, loghandler.notText)
         var ranName = pickRandom(['Aliando', 'Saya', 'Bukan Saya', 'Bukan Bot', 'Cwek', 'Cwok', 'Cowok', 'Cewek', 'Doimu', 'Doi', 'Febian', 'Putri', 'Fadil', 'Helin', 'Annisa', 'Cantika', 'Rizki', 'Zidan', 'Budi', 'Udin', 'Ibnu', 'Samarrr', 'Ular', 'Patrick', 'Patung', 'Hayabusa', 'Gatotkaca', 'ejenali', 'qaqaa', 'xd', 'Arnold', 'Master', 'Chef', 'Orang', 'Mikey', 'Agil', 'Awoakakak', 'Helmi', 'Dika', 'Suster', 'Anak', 'Ridwan', 'Razz', 'P cari doi', 'Hmm', 'Si Manis', 'Kacung', 'sygg', '86', 'Pajar', 'Ardian', 'Septian', 'Jungkook', 'Ryan', 'alboOwkdiw', 'Y', 'Reza', 'Kang copas', 'Tukang Seblak', 'Pikri', 'Manusia', 'Wibu-Lovers', 'FF Burik', 'Ardjoena', 'Selfia', 'Kenzo', 'Rafli', 'Dean', 'Felita', 'Wili', 'Putra', 'F', 'Gamers', 'Ipin', 'Botak', 'Hehe', 'Gunawan', 'Jin', 'Masha', 'Sadboy', 'Sofian', 'Mega', 'Zaky', 'Orang Ganteng', 'Wildan', 'Dhani', 'Pak Eko', 'Dzikri', 'Bapak', 'Pak Guru', 'PP Mikey', 'Om Deddy', 'Mas Botak', 'Tirta', 'Gak Ada Nama', 'Fio', 'Cakra', 'Rull', 'Kemal', 'Rama', 'Nenek', 'Siska', 'Abi', 'Ini Saya', 'RRQ Lemon', 'EVOS ajlh', 'EVOS', '@', 'User', 'Pengguna Google', 'Pengguna HP', 'Pengguna EpEp', 'Bot EpEp'])
-        var answer
-        if (!/^apa(kah)?|bisa(kah)?|kapan(kah)?|siapa(kah)?|berapa(kah)?/i.test(text)) return m.reply(loghandler.wait, '*Kata tanya yang tersedia:* apa, apakah, kapan, kapankah, siapa, siapakah, bisa, bisakah, berapa dan berapakah')
+        var answer = '*Kata tanya yang tersedia:* apa, apakah, kapan, kapankah, siapa, siapakah, bisa, bisakah, berapa dan berapakah'
+        if (!/^apa(kah)?|bisa(kah)?|kapan(kah)?|siapa(kah)?|berapa(kah)?/i.test(text)) return m.reply(loghandler.wait, answer)
         else if (/^apa/i.test(text)) answer = pickRandom(['Ya', 'Mungkin iya', 'Mungkin', 'Mungkin tidak', 'Tidak', 'Tidak mungkin'])
         else if (/^bisa/i.test(text)) answer = pickRandom(['Iya', 'Bisa', 'Tentu saja bisa', 'Tentu bisa', 'Sudah pasti', 'Sudah pasti bisa', 'Tidak', 'Tidak bisa', 'Tentu tidak', 'tentu tidak bisa', 'Sudah pasti tidak'])
         else if (/^kapan/i.test(text)) answer = Math.floor(Math.random() * 100) + pickRandom([' detik', ' menit', ' jam', ' hari', ' pekan', ' minggu', ' bulan', ' tahun', ' dekade', ' windu', ' abad']) + ' lagi ...'
