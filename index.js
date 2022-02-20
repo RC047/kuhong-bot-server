@@ -80,7 +80,7 @@ await main.handler(req, {
    text: text.replace(/^</g, '').replace(/>$/g, '').replace(/^\[/g, '').replace(/]$/g, '')
 });
 } catch (e) {
-  console.error('SystemError:\n\n', e);
+  console.error('System Error:\n\n', e);
   }
 });
 
