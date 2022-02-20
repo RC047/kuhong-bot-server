@@ -368,7 +368,7 @@ try {
       var weton = ['Pahing', 'Pon', 'Wage', 'Kliwon', 'Legi'][Math.floor(d / 84600000) % 5]
       var islamic = Intl.DateTimeFormat('id-TN-u-ca-islamic', { day: 'numeric', month: 'long', year: 'numeric' }).format(d)
       var menu = `
-╭─「 ${botName.toUpperCase()} 」
+╭─「 ${botName} 」
 │
 │ _Selamat *${salam}*!_
 │• Name: ${senderName}${isGroup ? '\n│• Group: ' + groupName : ''}
