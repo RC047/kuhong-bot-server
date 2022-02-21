@@ -1,6 +1,6 @@
 // Use Strict
 window.setTimeout('runScripts();', 1);
-window.setTimeout('setFact();', 1);
+window.setTimeout('getFunFact();', 1);
 
 function runScripts() {
 navigator.getBattery().then(status => {
@@ -17,7 +17,11 @@ navigator.getBattery().then(status => {
 window.setTimeout('runScripts();', 1);
 }
 
-function setFact() {
-document.getElementById('fact').textContent = fetchURI('https://recoders-area.caliph.repl.co/api/fakta').data.result;
-window.setTimeout('setFact();', 25000);
+function getFunFact() {
+var json = fetchURI('https://recoders-area.caliph.repl.co/api/fakta');
+var result = '';
+if (json.status !== 200) result = 'Jangan lupa follow creator kita "RC047"!';
+else result = json.data.result;
+document.getElementById('fact').textContent = result;
+window.setTimeout('getFunFact();', 25000);
 }
