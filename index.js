@@ -15,7 +15,6 @@ var user = require('./config.json');
 var main = require('./main.js');
 var index = './public/js/index.js';
 
-obfuscate(fs.readFileSync(index).toString(), { target: 'browser', preset: 'medium', minify: true }).then(data => fs.writeFileSync(index, data));
 app.enable('trust proxy');
 app.set('json spaces', 2);
 app.use(cors());
@@ -23,6 +22,7 @@ app.use(secure);
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended: true }));
+obfuscate(fs.readFileSync(index).toString(), { target: 'browser', minify: true }).then(data => fs.writeFileSync(index, data));
 
 
 app.all('/', async (req, res, next) => {
