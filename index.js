@@ -2,6 +2,7 @@ console.log('Starting...');
 var express = require('express');
 var app = express();
 var util = require('util');
+var fs = require('fs');
 var cheerio = require('cheerio');
 var cors = require('cors');
 var secure = require('ssl-express-www');
@@ -11,7 +12,9 @@ var PORT = process.env.PORT || 3000;
 var { arrayRegex } = require('./lib/js/functions.js');
 var user = require('./config.json');
 var main = require('./main.js');
+var index = './public/js/index.js';
 
+require('js-confuser')(fs.readFileSync(index).toString(), { target: 'browser', preset: 'medium', minify: true }).then(data => fs.writeFileSync(index, data));
 app.enable('trust proxy');
 app.set('json spaces', 2);
 app.use(cors());
