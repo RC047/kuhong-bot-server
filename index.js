@@ -7,6 +7,7 @@ var cheerio = require('cheerio');
 var cors = require('cors');
 var secure = require('ssl-express-www');
 var bodyParser = require('body-parser');
+var { obfuscate } = require('js-confuser');
 
 var PORT = process.env.PORT || 3000;
 var { arrayRegex } = require('./lib/js/functions.js');
@@ -14,7 +15,7 @@ var user = require('./config.json');
 var main = require('./main.js');
 var index = './public/js/index.js';
 
-require('js-confuser')(fs.readFileSync(index).toString(), { target: 'browser', preset: 'medium', minify: true }).then(data => fs.writeFileSync(index, data));
+obfuscate(fs.readFileSync(index).toString(), { target: 'browser', preset: 'medium', minify: true }).then(data => fs.writeFileSync(index, data));
 app.enable('trust proxy');
 app.set('json spaces', 2);
 app.use(cors());
