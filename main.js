@@ -39,16 +39,20 @@ var config = require('./config.json')
 var { apikey } = config
 var botName = m.query.name ? m.query.name : config.botName
 var owner = m.query.phone ? m.query.phone.replace(/[-+<>@]/g, '').replace(/ +/g, '') : config.owner
-var prefix = new RegExp('^[' + (m.query.prefix ? m.query.prefix : 'zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-') + ']', 'gi')
+var donate_link = m.query.donate ? m.query.donate : 'https://saweria.co/donate/RC047'
+var jadwal = m.query.jadwal ? m.query.jadwal : '07:00 - 21:00'
+var prefix = new RegExp('^[' + (m.query.prefix || 'zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-') + ']', 'gi')
+
 var date = new Date()
 var readMore = String.fromCharCode(8206).repeat(4001)
-var isURL = (url) => /^(http(s)?:\/\/)?(\w+:?\w*@)?(\S+)(:\d+)?((?<=\.)\w+)+(\/([\w#!:.?+=&%@!\-/])*)?/gi.test(url)
 var isApikey = new RegExp(apikey.kuhong + '|' + apikey.xteam + '|' + apikey.zeks + '|' + apikey.zekais + '|' + '|' + apikey.imgbb + '|' + apikey.removebg, 'gi')
 var isGroupLink = /(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})/gi
 var isToxic = /(a(s[uw]|nj(([ie])?ng|([ie])r)?)|me?me?k|ko?nto?l|ba?bi|fu?ce?k|ta(e|i)k?|ba?ngsa?(t|d)|(ba?)?ji?nga?n|g([iueo])?bl([iueo])?(k|g)|col(i|ay)|an?jg|nge?nto?d|tod|tolol|(ng)?ewe(an)?|jemb(u|o)(d|t))/gi
 var isVirtex = //gi
+var isURL = (url) => /^(http(s)?:\/\/)?(\w+:?\w*@)?(\S+)(:\d+)?((?<=\.)\w+)+(\/([\w#!:.?+=&%@!\-/])*)?/gi.test(url)
+var capital = (str) => str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase()
 var replaceAll = (str, find, replace) => str.replace(new RegExp(find, 'g'), replace)
-var abort = () => m.reply('')
+var ignoreMessage = () => m.reply('')
 var hours = date.getHours() + 7
 var salam = 'Pagi'
 if (hours == 4 || hours == 5 || hours == 6 || hours == 7 || hours == 8 || hours == 9) salam = 'Pagi'
@@ -321,11 +325,11 @@ var listMenu = {
 
 try {
   if (m.isWelcome) {
-  	if (!senderMessage) return abort()
+  	if (!senderMessage) return ignoreMessage()
       var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : '!'}menu* untuk memulai Bot ini.`
         return m.reply(welcome)
   } else if (m.simiMode) {
-      if (!senderMessage) return abort()
+      if (!senderMessage) return ignoreMessage()
       var tmp = await (await fetch(`https://raw.githubusercontent.com/herokuapp-com/kuhong-api/main/api/simsimi.json`)).json()
       var { result } = pickRandom(tmp) || 'Simi nggak paham apa maksudmu'
       var res = await fetch(`https://simsumi.herokuapp.com/api?text=${encodeURIComponent(senderMessage)}&lang=id`)
@@ -346,8 +350,8 @@ try {
       return m.reply(`*「 ANTI LINK 」*\n\nDari: ${senderName}\nMember: ${groupName}\nLink:\n${matched}\nPesan:\n${senderMessage}\n\n\n_Sebelum share link mohon izin keadmin dulu ya!_`)
   } else if (isGroup && antitoxic && isToxic.test(senderMessage)) {
       var matched = senderMessage.match(isToxic).join(', ')
-      if (/masuk|lanjutkan|banjir|(per)?panjang|asupan/i.test(senderMessage)) return abort()
-      if (prefix.test(senderMessage)) return abort()
+      if (/masuk|lanjutkan|banjir|(per)?panjang|asupan/i.test(senderMessage)) return ignoreMessage()
+      if (prefix.test(senderMessage)) return ignoreMessage()
       return m.reply(`*「 ANTI TOXIC 」*\n\nDari: ${senderName}\nMember: ${groupName}\nKata Kasar: ${matched}\nPesan:\n${senderMessage}\n\n\n_Biasakan Jangan Toxic ya!_`)
   } else if (isGroup && antidelete && senderMessage == 'Pesan ini telah dihapus') {
       return m.reply(`*「 ANTI DELETE 」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi menghapus pesan!_`)
@@ -355,13 +359,13 @@ try {
       return m.reply(`*「 ANTI VIRTEX 」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi mengirim virtex!_`)
   } else if (isGroup && antiflood && senderMessage.length > 1000) {
       return m.reply(`*「 ANTI FLOOD  」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi mengirim pesan terlalu panjang!_`)
-  } else if (/^kuhong|bot$/i.test(senderMessage)) {
+  } else if (/^kuhong$/i.test(senderMessage)) {
       return m.reply('Yaa Aku Disini??\n\nIngin Memulai Bot? Ketik !help atau !menu yaa ;)')
   } else if (/^p$/i.test(senderMessage)) {
       return m.reply('Dilarang P! Biasakan salam')
   } else if (/ass?alamm?ualaikum/gi.test(senderMessage)) {
-      return m.reply('Waalaikumussalam')
-  } else if (!(prefix.test(senderMessage) && command)) return abort()
+      return m.reply('Wa\'alaikumussalam')
+  } else if (!(prefix.test(senderMessage) && command)) return ignoreMessage()
 
   if (/^menu|help|start|\?$/i.test(command)) {
       var d = new Date(new Date + 3600000)
@@ -374,7 +378,7 @@ try {
 │• Name: ${senderName}${isGroup ? '\n│• Group: ' + groupName : ''}
 │• Location: ${isGroup ? 'Group' : 'Private'} Chat
 │• Prefix: [ ${usedPrefix} ]
-│• Jadwal: ${m.query.jadwal ? m.query.jadwal : '07:00 - 22:00'}
+│• Jadwal: ${jadwal}
 │• Time: ${m.time}
 │• Uptime: ${muptime(process.uptime())}
 │• Weton: ${weton}
@@ -385,8 +389,8 @@ try {
 ╰────
 
 ╭─「 Information 」
-│• < > = Wajib diisi
-│• [ ] = Tidak wajib diisi
+│• < > = Wajib Diisi
+│• [ ] = Tidak Wajib Diisi
 │• (Premium) = Khusus Premium
 │• (Private) = Khusus Chat Pribadi
 │• (Limited) = Pemakaian Terbatas
@@ -461,7 +465,7 @@ ${'```' + package.description + '```'}
       return m.reply(loghandler.wait, menu)
 
   } else if (/^owner$/i.test(command)) {
-      return m.reply(loghandler.wait, `Owner Bot:\nhttps://wa.me/${owner}?text=Halo+bang+jago`)
+      return m.reply(loghandler.wait, `Owner Bot:\nhttps://wa.me/${owner}?text=Halo+bang+jago%21`)
 
   } else if (/^s(tatus|peed)|ping$/i.test(command)) {
   	var old = performance.now()
@@ -523,19 +527,19 @@ ${'```' + package.description + '```'}
     	return m.reply(result)
 
   } else if (/^e(xec(ute)?|val)$/i.test(command)) {
-      var exec = util.promisify(cp.exec).bind(cp)
-      if (!isOwner) return m.reply(loghandler.wait, loghandler.ownerOnly)
+  	if (!isOwner) return m.reply(loghandler.wait, loghandler.ownerOnly)
       if (!text) return m.reply(loghandler.wait, loghandler.notText)
-      if (/exec/i.test(command)) {
+      var exec = util.promisify(cp.exec).bind(cp)
+      if (/^exec(ute)?$/i.test(command)) {
       	var res
-          try { res = await exec(text.trim()) } catch (e) { res = e }
+          try { res = await exec(text) } catch (e) { res = e }
           finally {
           var { stdout, stderr, err } = res
 	      if (err) return m.reply(loghandler.wait, util.format(err.message ? err.message : err))
           else if (stdout) return m.reply(loghandler.wait, util.format(stdout))
           else if (stderr) return m.reply(loghandler.wait, util.format(stderr))
           }
-       } else return eval(text.trim())
+       } else return eval(text)
 
   } else if (/^ytmp(3|4)$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notUrl)
@@ -695,10 +699,10 @@ ${'```' + package.description + '```'}
       var result
       if (!json.data) {
           json = await (await fetch(`https://api.xteam.xyz/brainly?soal=${text}&apikey=${apikey.xteam}`)).json()
-          result = json.jawaban
+          result = json.jawaban.replace(/&(gt|lt)/g, '')
       if (!json.jawaban) return m.reply(loghandler.wait, 'Soal tidak dapat ditemukan!')
       } else result = json.data.map((v, i) => `Pertanyaan:\n${v.pertanyaan}\n${v.jawaban.map((v, i) => `Jawaban:\n${v.text}`).join('\n')}`).join('\n\n========================\n\n')
-        return m.reply(loghandler.wait, result.replace(/&(gt|lt)/g, ''))
+        return m.reply(loghandler.wait, result)
 
   } else if (/^(s|sim(sim)?i)$/i.test(command)) {
     if (!text) return m.reply(loghandler.wait, loghandler.notText)
@@ -816,14 +820,14 @@ ${'```' + package.description + '```'}
 
   } else if (/^kerang$/i.test(command)) {
         if (!text) return m.reply(loghandler.wait, loghandler.notText)
-        var ranName = pickRandom(['Aliando', 'Saya', 'Bukan Saya', 'Bukan Bot', 'Cwek', 'Cwok', 'Cowok', 'Cewek', 'Doimu', 'Doi', 'Febian', 'Putri', 'Fadil', 'Helin', 'Annisa', 'Cantika', 'Rizki', 'Zidan', 'Budi', 'Udin', 'Ibnu', 'Samarrr', 'Ular', 'Patrick', 'Patung', 'Hayabusa', 'Gatotkaca', 'ejenali', 'qaqaa', 'xd', 'Arnold', 'Master', 'Chef', 'Orang', 'Mikey', 'Agil', 'Awoakakak', 'Helmi', 'Dika', 'Suster', 'Anak', 'Ridwan', 'Razz', 'P cari doi', 'Hmm', 'Si Manis', 'Kacung', 'sygg', '86', 'Pajar', 'Ardian', 'Septian', 'Jungkook', 'Ryan', 'alboOwkdiw', 'Y', 'Reza', 'Kang copas', 'Tukang Seblak', 'Pikri', 'Manusia', 'Wibu-Lovers', 'FF Burik', 'Ardjoena', 'Selfia', 'Kenzo', 'Rafli', 'Dean', 'Felita', 'Wili', 'Putra', 'F', 'Gamers', 'Ipin', 'Botak', 'Hehe', 'Gunawan', 'Jin', 'Masha', 'Sadboy', 'Sofian', 'Mega', 'Zaky', 'Orang Ganteng', 'Wildan', 'Dhani', 'Pak Eko', 'Dzikri', 'Bapak', 'Pak Guru', 'PP Mikey', 'Om Deddy', 'Mas Botak', 'Tirta', 'Gak Ada Nama', 'Fio', 'Cakra', 'Rull', 'Kemal', 'Rama', 'Nenek', 'Siska', 'Abi', 'Ini Saya', 'RRQ Lemon', 'EVOS ajlh', 'EVOS', '@', 'User', 'Pengguna Google', 'Pengguna HP', 'Pengguna EpEp', 'Bot EpEp'])
-        var answer = '*Kata tanya yang tersedia:* apa, apakah, kapan, kapankah, siapa, siapakah, bisa, bisakah, berapa dan berapakah'
-        if (!/^apa(kah)?|bisa(kah)?|kapan(kah)?|siapa(kah)?|berapa(kah)?/i.test(text)) return m.reply(loghandler.wait, answer)
-        else if (/^apa/i.test(text)) answer = pickRandom(['Ya', 'Mungkin iya', 'Mungkin', 'Mungkin tidak', 'Tidak', 'Tidak mungkin'])
-        else if (/^bisa/i.test(text)) answer = pickRandom(['Iya', 'Bisa', 'Tentu saja bisa', 'Tentu bisa', 'Sudah pasti', 'Sudah pasti bisa', 'Tidak', 'Tidak bisa', 'Tentu tidak', 'tentu tidak bisa', 'Sudah pasti tidak'])
-        else if (/^kapan/i.test(text)) answer = Math.floor(Math.random() * 100) + pickRandom([' detik', ' menit', ' jam', ' hari', ' pekan', ' minggu', ' bulan', ' tahun', ' dekade', ' windu', ' abad']) + ' lagi ...'
-        else if (/^siapa/i.test(text)) answer = ranName
-        else if (/^berapa/i.test(text)) answer = Math.floor(Math.random() * 1000)
+        var answer = 'Yaa nggak tau kok tanya saya?'
+        if (/^apa(kah)?/i.test(text)) answer = pickRandom(['Ya', 'Mungkin iya', 'Mungkin', 'Mungkin tidak', 'Tidak', 'Tidak mungkin'])
+        else if (/^kapan(kah)?/i.test(text)) answer = Math.floor(Math.random() * 100) + pickRandom([' detik', ' menit', ' jam', ' hari', ' pekan', ' minggu', ' bulan', ' tahun', ' dekade', ' lustrum', ' windu', ' dasawarsa', ' abad', ' milenium']) + ' lagi ...'
+        else if (/^siapa(kah)?/i.test(text)) answer = pickRandom(['Aliando', 'Saya', 'Bukan Saya', 'Bukan Bot', 'Alok', 'Cwek', 'Cwok', 'Cowok', 'Cewek', 'Doimu', 'Doi', 'Febian', 'Putri', 'Fadil', 'Helin', 'Annisa', 'Cantika', 'Rizki', 'Zidan', 'Budi', 'Udin', 'Ibnu', 'Samarrr', 'Ular', 'Patrick', 'Patung', 'Hayabusa', 'Gatotkaca', 'ejenali', 'qaqaa', 'xd', 'Arnold', 'Master', 'Chef', 'Orang', 'Mikey', 'Agil', 'Awoakakak', 'Helmi', 'Dika', 'Suster', 'Anak', 'Ridwan', 'Razz', 'P cari doi', 'Hmm', 'Si Manis', 'Kacung', 'sygg', '86', 'Pajar', 'Ardian', 'Septian', 'Jungkook', 'Ryan', 'alboOwkdiw', 'Y', 'Reza', 'Kang copas', 'Tukang Seblak', 'Pikri', 'Manusia', 'Wibu-Lovers', 'FF Burik', 'Ardjoena', 'Selfia', 'Kenzo', 'Rafli', 'Dean', 'Felita', 'Wili', 'Putra', 'F', 'Gamers', 'Ipin', 'Botak', 'Hehe', 'Gunawan', 'Jin', 'Masha', 'Sadboy', 'Sofian', 'Mega', 'Zaky', 'Orang Ganteng', 'Wildan', 'Dhani', 'Pak Eko', 'Dzikri', 'Bapak', 'Pak Guru', 'PP Mikey', 'Om Deddy', 'Mas Botak', 'Tirta', 'Gak Ada Nama', 'Fio', 'Cakra', 'Rull', 'Kemal', 'Rama', 'Nenek', 'Siska', 'Abi', 'Ini Saya', 'RRQ Lemon', 'EVOS ajlh', 'EVOS', '@', 'User', 'Pengguna Google', 'Pengguna HP', 'Pengguna EpEp', 'Bot EpEp', 'Tehyung', ':v', 'Pacar', 'Pacarku', 'Mantan', 'Mantanku', 'Gak tau', 'Yo ndak tau kok tanya saya?', 'Saya', 'Aku', 'Bukan siapa-siapa', 'Artis', 'Youtuber', 'Liker', 'Tiktoker', 'Artis Tiktok', 'Preman', 'Orang'])
+        else if (/^kenapa(kah)?/i.test(text)) answer = 'Karena kamu ' + pickRandom(['', 'tidak']) + pickRandom(['wibu', 'ganteng', 'jomblo', 'badut', 'cantik', 'gay', 'tolol', 'stres', 'aneh', 'jelek', 'bau', 'suka selingkuh', 'beruntung', 'goblok', 'bego', 'suka pacaran', 'suka merokok', 'mandang fisik', 'mempunyai sifat buruk', 'gila', 'seperti bocil', 'suka egois', 'suka sombong', 'suka begadang', 'cengeng', 'banci', 'suka baperan', 'suka pelit', 'keras kepala', 'suka ngegosib'])
+        else if (/^bisa(kah)?/i.test(text)) answer = pickRandom(['Iya', 'Bisa', 'Tentu saja bisa', 'Tentu bisa', 'Sudah pasti', 'Sudah pasti bisa', 'Tidak', 'Tidak bisa', 'Tentu tidak', 'tentu tidak bisa', 'Sudah pasti tidak'])
+        else if (/^berapa(kah)?/i.test(text)) answer = Math.floor(Math.random() * 10000)
+        else return m.reply(loghandler.wait, '*Kata tanya yang tersedia:* apa, kapan, siapa, kenapa, bisa dan berapa')
           return m.reply(loghandler.wait, `Pertanyaan: ${text}\nJawaban: ${answer}`)
 
   } else if (/^((custom|cs)?(harta)?tahta)$/i.test(command)) {
@@ -1732,12 +1736,9 @@ ${'```' + package.description + '```'}
     var str = `
 ╭─「 ${command.toUpperCase()} 」
 │
-│• OVO: +${owner}
-│• ${(m.query.card ? m.query.card : 'tri').toUpperCase()}: +${owner}
-│• DANA: +${owner}
-│• GOPAY: +${owner}
-│• LINK:
-│${m.query.donate ? m.query.donate : 'https://saweria.co/donate/RC047'}
+│• Pulsa: +${owner}
+│• ${capital(new URL(donate_link).host)}:
+│${donate_link}
 ╰────
 `.trim()
     return m.reply(loghandler.wait, str)
@@ -2488,7 +2489,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
           if (!jawaban) return m.reply(loghandler.wait, 'Silahkan masukan jawaban')
       	var res
       	try { res = JSON.parse(await fs.readFileSync('./tmp/math.json')) } catch (e) { res = false }
-          if (!res) return abort()
+          if (!res) return ignoreMessage()
           if (!/^-?[0-9]+(\.[0-9]+)?$/i.test(text)) return m.reply(loghandler.numberOnly)
           if (jawaban == res.result.toString()) {
 	          await fs.rmSync('./tmp/math.json')
@@ -2499,7 +2500,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
           if (!jawaban) return m.reply(loghandler.wait, 'Silahkan masukan jawaban')
           var res
           try { res = JSON.parse(await fs.readFileSync('./tmp/tebakgambar.json')) } catch (e) { res = false }
-          if (!res) return abort()
+          if (!res) return ignoreMessage()
           if (jawaban.toLowerCase() == res.jawaban.toLowerCase()) {
 	          await fs.rmSync('./tmp/tebakgambar.json')
 	          return m.reply(`*Jawaban Benar!*\n+${res.bonus} poin`)
@@ -2509,7 +2510,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
           if (!jawaban) return m.reply(loghandler.wait, 'Silahkan masukan jawaban')
           var res
           try { res = JSON.parse(await fs.readFileSync('./tmp/caklontong.json')) } catch (e) { res = false }
-          if (!res) return abort()
+          if (!res) return ignoreMessage()
           if (jawaban.toLowerCase() == res.jawaban.toLowerCase()) {
 	          await fs.rmSync('./tmp/caklontong.json')
 	          return m.reply(`*Jawaban Benar!*\nDetail: ${res.desc.split('(')[1].split(')')[0]}\n\n+${res.bonus} poin`)
@@ -2519,7 +2520,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
           if (!jawaban) return m.reply(loghandler.wait, 'Silahkan masukan jawaban')
           var res
           try { res = JSON.parse(await fs.readFileSync('./tmp/family100.json')) } catch (e) { res = false }
-          if (!res) return abort()
+          if (!res) return ignoreMessage()
           if (new RegExp(`^(${res.jawaban.split('\n').join('|')})$`, 'i').test(jawaban)) {
 	          await fs.rmSync('./tmp/family100.json')
 	          return m.reply(`*Jawaban Benar!*\nSemua Jawaban: ${res.jawaban.split('\n').join(', ')}\n\n+${res.bonus} poin`)
@@ -2529,7 +2530,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
           if (!jawaban) return m.reply(loghandler.wait, 'Silahkan masukan jawaban')
           var res
           try { res = JSON.parse(await fs.readFileSync('./tmp/siapakahaku.json')) } catch (e) { res = false }
-          if (!res) return abort()
+          if (!res) return ignoreMessage()
           if (jawaban.toLowerCase() == res.answer.toLowerCase()) {
 	          await fs.rmSync('./tmp/siapakahaku.json')
 	          return m.reply(`*Jawaban Benar!*\n+${res.bonus} poin`)
@@ -2550,36 +2551,36 @@ ${Math.floor(Math.random() * 50)} Zamrud
      try { isFamily = JSON.parse(await fs.readFileSync('./tmp/family100.json')) } catch (e) { isFamily = false }
      try { isSiapa = JSON.parse(await fs.readFileSync('./tmp/siapakahaku.json')) } catch (e) { isSiapa = false }
      if (isMath) {
-         if (!isMath) return abort()
+         if (!isMath) return ignoreMessage()
          else {
          hint = isMath.result.toString().replace(hintRegex, '_')
          return m.reply(hint)
          }
      } else if (isTebak) {
-         if (!isTebak) return abort()
+         if (!isTebak) return ignoreMessage()
          else {
          hint = isTebak.jawaban.replace(hintRegex, '_')
          return m.reply(hint)
          }
      } else if (isCak) {
-         if (!isCak) return abort()
+         if (!isCak) return ignoreMessage()
          else {
          hint = isCak.jawaban.replace(hintRegex, '_')
          return m.reply(hint)
          }
      } else if (isFamily) {
-         if (!isFamily) return abort()
+         if (!isFamily) return ignoreMessage()
          else {
          hint = isFamily.jawaban.replace(hintRegex, '_')
          return m.reply(hint)
          }
      } else if (isSiapa) {
-         if (!isSiapa) return abort()
+         if (!isSiapa) return ignoreMessage()
          else {
          hint = isSiapa.answer.replace(hintRegex, '_')
          return m.reply(hint)
          }
-     } else return abort()
+     } else return ignoreMessage()
 
   } else if (/^nyerah$/i.test(command)) {
      var isMath
@@ -2593,41 +2594,42 @@ ${Math.floor(Math.random() * 50)} Zamrud
      try { isFamily = JSON.parse(await fs.readFileSync('./tmp/family100.json')) } catch (e) { isFamily = false }
      try { isSiapa = JSON.parse(await fs.readFileSync('./tmp/siapakahaku.json')) } catch (e) { isSiapa = false }
      if (isMath) {
-         if (!isMath) return abort()
+         if (!isMath) return ignoreMessage()
          else {
          await fs.rmSync('./tmp/math.json')
          return m.reply(`*Menyerah!*\n\nGame: Math\nSoal: Berapa hasil dari *${isMath.str}*?\nBonus: ${isMath.bonus} poin\nJawaban: ${isMath.result}`)
          }
      } else if (isTebak) {
-         if (!isTebak) return abort()
+         if (!isTebak) return ignoreMessage()
          else {
          await fs.rmSync('./tmp/tebakgambar.json')
          return m.reply(`*Menyerah!*\n\nGame: Tebak Gambar\nSoal: ${isTebak.soal}\nBonus: ${isTebak.bonus} poin\nJawaban: ${isTebak.jawaban}`)
          }
      } else if (isCak) {
-         if (!isCak) return abort()
+         if (!isCak) return ignoreMessage()
          else {
          await fs.rmSync('./tmp/caklontong.json')
          return m.reply(`*Menyerah!*\n\nGame: Cak Lontong\nSoal: ${isCak.soal}\nBonus: ${isCak.bonus} poin\nJawaban: ${isCak.jawaban}\nDetail: ${isCak.desc.split('(')[1].split(')')[0]}`)
          }
      } else if (isFamily) {
-         if (!isFamily) return abort()
+         if (!isFamily) return ignoreMessage()
          else {
          await fs.rmSync('./tmp/family100.json')
          return m.reply(`*Menyerah!*\n\nGame: Family 100\nSoal: ${isFamily.soal}\nBonus: ${isFamily.bonus} poin\nJawaban: ${isFamily.jawaban.split('\n').join(', ')}`)
          }
      } else if (isSiapa) {
-         if (!isSiapa) return abort()
+         if (!isSiapa) return ignoreMessage()
          else {
          await fs.rmSync('./tmp/siapakahaku.json')
          return m.reply(`*Menyerah!*\n\nGame: Siapakah Aku\nSoal: ${isSiapa.question}\nBonus: ${isSiapa.bonus} poin\nJawaban: ${isSiapa.answer}`)
          }
-     } else return abort()
+     } else return ignoreMessage()
 
   } else if (/^ss(web)?f?$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notUrl)
       var url = /^https?:\/\//i.test(text) ? text : 'https://' + text
-      var img = await (await fetch(`https://nurutomo.herokuapp.com/api/ssweb?delay=1000&url=${encodeURIComponent(url)}&full=${/f$/i.test(command)}`)).buffer()
+      var full = /f$/i.test(command)
+      var img = await (await fetch(`https://nurutomo.herokuapp.com/api/ssweb?delay=1000&url=${encodeURIComponent(url)}&full=${full}`)).buffer()
       var result = await saveToMedia(img)
         return m.reply(loghandler.wait, 'Hasil:\n\n' + result)
 
@@ -3138,13 +3140,12 @@ Kata sandi: superiorman_
        var result = await saveToMedia(buffer)
          return m.reply(loghandler.wait, 'Hasil:\n\n' + result)
 
-  } else if (/^join(gc)?$/i.test(command)) {
+  } else if (/^join$/i.test(command)) {
        if (!isPrems) return m.reply(loghandler.wait, loghandler.premiumOnly)
        if (isGroup) return m.reply(loghandler.wait, loghandler.privateOnly)
        if (!text) return m.reply(loghandler.wait, loghandler.notUrl)
        if (!/^(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})$/i.test(text)) return m.reply(loghandler.wait, loghandler.invalidLink)
-       var message = `*「 JOIN 」*\n\nDari: ${senderName}\nLink:\n${text.trim()}`
-       await (await fetch(`https://kuhong-api-v2.herokuapp.com/?target=${owner}&type=text&message=${encodeURIComponent(message)}`)).text()
+       await fs.writeFileSync(`./tmp/${text}.txt`, `*「 JOIN 」*\n\nDari: ${senderName}\nLink:\n${text}`)
          return m.reply(loghandler.wait, '[!] Request anda telah dikirim!\nSilahkan tunggu hingga Owner menyetujuinya')
 
   } else if (/^premium$/i.test(command)) {
@@ -3158,8 +3159,8 @@ Kata sandi: superiorman_
 │• Permanen: 50K
 │
 │• Pembayaran:
-│+${owner} (${(m.query.card ? m.query.card : 'tri').toUpperCase()})
-│${m.query.donate ? m.query.donate : 'https://saweria.co/donate/RC047'}
+│+${owner}
+│${donate_link}
 ╰────
 `.trim()
          return m.reply(loghandler.wait, str)
