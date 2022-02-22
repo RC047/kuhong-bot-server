@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended:
 
 app.all('/', async (req, res, next) => {
 
-if (req.method !== 'POST') return res.status(200).sendFile(process.cwd() + '/index.html');
+if (req.method !== 'POST') return res.status(200).sendFile(__dirname + '/index.html');
 var isWelcome = req.body.welcome ? req.body.welcome : req.query.welcome,
     simiMode = req.body.simi ? req.body.simi : req.query.simi,
     appPackageName = req.body.appPackageName,
