@@ -30,7 +30,7 @@ var { fromBuffer } = require('file-type')
 var { saveToMedia, math, modes, encryptHtml, encryptScript, escapeFull, getZodiac, yta, ytv, servers, joox, stylizeText, tts, tahta, searchGempa, getBuffer, textWrap, getRandom, arrayRegex, pickRandom, formatDate, muptime, pad, clockString, post, stringify } = require('./lib/js/functions.js')
 
 
-async function handler(m, { appPackageName, messengerPackageName, isOwner, isPrems, isGroup, senderMessage, messageType, groupName, senderName, usedPrefix, command, text }) {
+async function handler(m, { appPackageName, messengerPackageName, isOwner, isPremium, isGroup, senderMessage, messageType, groupName, senderName, usedPrefix, command, text }) {
 
 handler.toString = () => 'function handler() { [native code] }'
 m.reply.toString = () => 'function reply() { [native code] }'
@@ -39,9 +39,10 @@ var config = require('./config.json')
 var { apikey } = config
 var botName = m.query.name ? m.query.name : config.botName
 var owner = m.query.phone ? m.query.phone.replace(/[-+<>@]/g, '').replace(/ +/g, '') : config.owner
+var gc_link = m.query.linkgc ? m.query.linkgc : 'https://chat.whatsapp.com/HDOZX7OoFYK1bTwftkY5Si'
 var donate_link = m.query.donate ? m.query.donate : 'https://saweria.co/donate/RC047'
 var jadwal = m.query.jadwal ? m.query.jadwal : '07:00 - 21:00'
-var prefix = new RegExp('^[' + (m.query.prefix || 'zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-') + ']', 'gi')
+var prefix = new RegExp('^[' + (m.query.prefix ? m.query.prefix : 'zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-') + ']', 'gi')
 
 var date = new Date()
 var readMore = String.fromCharCode(8206).repeat(4001)
@@ -52,7 +53,6 @@ var isVirtex = //gi
 var isURL = (url) => /^(http(s)?:\/\/)?(\w+:?\w*@)?(\S+)(:\d+)?((?<=\.)\w+)+(\/([\w#!:.?+=&%@!\-/])*)?/gi.test(url)
 var capital = (str) => str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase()
 var replaceAll = (str, find, replace) => str.replace(new RegExp(find, 'g'), replace)
-var ignoreMessage = () => m.reply('')
 var hours = date.getHours() + 7
 var salam = 'Pagi'
 if (hours == 4 || hours == 5 || hours == 6 || hours == 7 || hours == 8 || hours == 9) salam = 'Pagi'
@@ -76,7 +76,6 @@ try { var antivirtex = await fs.readFileSync('./tmp/antivirtex.txt').toString() 
 
 var loghandler = {
     notCommand: `*「 NOT FOUND 」*\n\nMaaf *${senderName}*,,\nPerintah *${usedPrefix + command}* tidak terdaftar di *${usedPrefix}menu*`,
-    limited: `*「 LIMITED 」*\n\nPerintah ini memiliki batasan penggunaan!\nBeli premium untuk menghilangkan batasan penggunaan perintah ini`,
     wait: 'Mohon tunggu sebentar...',
     ownerOnly: '*「 OWNER ONLY 」*\n\nPerintah ini hanya dapat digunakan oleh _Owner Bot_!',
     premiumOnly: '*「 PREMIUM ONLY 」*\n\nPerintah ini hanya dapat digunakan oleh member _Premium_!',
@@ -106,6 +105,12 @@ var loghandler = {
 }
 
 var listMenu = {
+	main: [
+'help',
+'menu',
+'start',
+'?'
+	 ],
     downloaders: [
 'ytmp4 <url>',
 'ytmp3 <url>',
@@ -285,7 +290,7 @@ var listMenu = {
 'reverse <text>',
 'readmore <text|text2>',
 'spoiler <text|text2>',
-'spamchat <jumlah|pesan> *(Limited)*',
+'spamchat <jumlah|pesan> *(Premium)*',
 'spamcall <nomor hp>',
 'spamsms <nomor hp>',
 'tts <lang|text>',
@@ -297,6 +302,9 @@ var listMenu = {
 'bitly <url>',
 'font <text>',
 'style <text>',
+'bold <text>',
+'italic <text>',
+'strikethrough <text>',
 'monoscope <text>',
 'imgbb <image url>',
 'ocr <image url>',
@@ -305,8 +313,9 @@ var listMenu = {
 'removebg <image url>'
      ],
     owners: [
+'setwelcome <text>',
 'exec <bash>',
-'eval <arguments>'
+'eval <functions>'
      ],
     others: [
 'join <link group>',
@@ -325,11 +334,11 @@ var listMenu = {
 
 try {
   if (m.isWelcome) {
-  	if (!senderMessage) return ignoreMessage()
-      var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : '!'}menu* untuk memulai Bot ini.`
+  	if (!senderMessage) return m.ignoreMessage()
+      var welcome = config.welcome.replace('%salam', salam).replace('%sender', senderName.startsWith('+') ? '\n' : ' ' + senderName).replace('%command', prefix.test(senderMessage) ? usedPrefix : m.query.prefix.length == 1 ? m.query.prefix : '!' + pickRandom(listMenu.main))
         return m.reply(welcome)
   } else if (m.simiMode) {
-      if (!senderMessage) return ignoreMessage()
+      if (!senderMessage) return m.ignoreMessage()
       var tmp = await (await fetch(`https://raw.githubusercontent.com/herokuapp-com/kuhong-api/main/api/simsimi.json`)).json()
       var { result } = pickRandom(tmp) || 'Simi nggak paham apa maksudmu'
       var res = await fetch(`https://simsumi.herokuapp.com/api?text=${encodeURIComponent(senderMessage)}&lang=id`)
@@ -350,8 +359,8 @@ try {
       return m.reply(`*「 ANTI LINK 」*\n\nDari: ${senderName}\nMember: ${groupName}\nLink:\n${matched}\nPesan:\n${senderMessage}\n\n\n_Sebelum share link mohon izin keadmin dulu ya!_`)
   } else if (isGroup && antitoxic && isToxic.test(senderMessage)) {
       var matched = senderMessage.match(isToxic).join(', ')
-      if (/masuk|lanjutkan|banjir|(per)?panjang|asupan/i.test(senderMessage)) return ignoreMessage()
-      if (prefix.test(senderMessage)) return ignoreMessage()
+      if (/masuk|lanjutkan|banjir|(per)?panjang|asupan/i.test(senderMessage)) return m.ignoreMessage()
+      if (prefix.test(senderMessage)) return m.ignoreMessage()
       return m.reply(`*「 ANTI TOXIC 」*\n\nDari: ${senderName}\nMember: ${groupName}\nKata Kasar: ${matched}\nPesan:\n${senderMessage}\n\n\n_Biasakan Jangan Toxic ya!_`)
   } else if (isGroup && antidelete && senderMessage == 'Pesan ini telah dihapus') {
       return m.reply(`*「 ANTI DELETE 」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi menghapus pesan!_`)
@@ -365,7 +374,7 @@ try {
       return m.reply('Dilarang P! Biasakan salam')
   } else if (/ass?alamm?ualaikum/gi.test(senderMessage)) {
       return m.reply('Wa\'alaikumussalam')
-  } else if (!(prefix.test(senderMessage) && command)) return ignoreMessage()
+  } else if (!(prefix.test(senderMessage) && command)) return m.ignoreMessage()
 
   if (/^menu|help|start|\?$/i.test(command)) {
       var d = new Date(new Date + 3600000)
@@ -393,15 +402,14 @@ try {
 │• [ ] = Tidak Wajib Diisi
 │• (Premium) = Khusus Premium
 │• (Private) = Khusus Chat Pribadi
-│• (Limited) = Pemakaian Terbatas
 ╰────
 
 ╭─「 Join Group 」
-│${m.query.linkgc ? m.query.linkgc : 'https://chat.whatsapp.com/HDOZX7OoFYK1bTwftkY5Si'}
+│${gc_link}
 ╰────
 ${readMore}
 ╭─「 Main Menu 」
-${['help', 'menu', 'start', '?'].map(v => `│• ${usedPrefix + v}`).join('\n')}
+${listMenu.main.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
 ╭─「 Downloaders Menu 」
@@ -525,6 +533,12 @@ ${'```' + package.description + '```'}
       var result = `*「 IZIN AFK 」*\n\nNama: ${senderName}\nAlasan: ${text}`
       await fs.writeFileSync('./tmp/' + senderName + '_afk.json', stringify({ name: senderName, reason: text.trim() }))
     	return m.reply(result)
+
+  } else if (/^set(welcome)$/i.test(command)) {
+  	if (!isOwner) return m.reply(loghandler.wait, loghandler.ownerOnly)
+      if (!text) return m.reply(loghandler.wait, loghandler.notText)
+      await fs.writeFileSync('./config.json', stringify(config).replace(config.welcome, text))
+        return m.reply(loghandler.wait, '*Welcome berhasil diatur*\n\n(%salam) untuk salam\n(%sender) untuk nama pengirim\n(%command) untuk perintah bot')
 
   } else if (/^e(xec(ute)?|val)$/i.test(command)) {
   	if (!isOwner) return m.reply(loghandler.wait, loghandler.ownerOnly)
@@ -978,9 +992,10 @@ ${'```' + package.description + '```'}
       var result = Object.entries(await stylizeText(text)).map(([name, value]) => `*${name}*\n${value}`).join('\n\n')
         return m.reply(loghandler.wait, result)
 
-  } else if (/^monoscope$/i.test(command)) {
+  } else if (/^(bold|italic|strikethrough|monoscope)$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notText)
-        return m.reply(loghandler.wait, '```' + text + '```')
+      var modifier = /^bold$/i.test(command) ? '*' : /^italic$/i.test(command) ? '_' : /^strikethrough$/i.test(command) ? '~' : /^monoscope$/i.test(command) ? '```' : ''
+        return m.reply(loghandler.wait, modifier + text + modifier)
 
   } else if (/^(tiny|short)url$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notUrl)
@@ -1737,7 +1752,7 @@ ${'```' + package.description + '```'}
 ╭─「 ${command.toUpperCase()} 」
 │
 │• Pulsa: +${owner}
-│• ${capital(new URL(donate_link).host)}:
+│• ${capital(new URL(donate_link).host).split('.')[0]}:
 │${donate_link}
 ╰────
 `.trim()
@@ -2489,7 +2504,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
           if (!jawaban) return m.reply(loghandler.wait, 'Silahkan masukan jawaban')
       	var res
       	try { res = JSON.parse(await fs.readFileSync('./tmp/math.json')) } catch (e) { res = false }
-          if (!res) return ignoreMessage()
+          if (!res) return m.ignoreMessage()
           if (!/^-?[0-9]+(\.[0-9]+)?$/i.test(text)) return m.reply(loghandler.numberOnly)
           if (jawaban == res.result.toString()) {
 	          await fs.rmSync('./tmp/math.json')
@@ -2500,7 +2515,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
           if (!jawaban) return m.reply(loghandler.wait, 'Silahkan masukan jawaban')
           var res
           try { res = JSON.parse(await fs.readFileSync('./tmp/tebakgambar.json')) } catch (e) { res = false }
-          if (!res) return ignoreMessage()
+          if (!res) return m.ignoreMessage()
           if (jawaban.toLowerCase() == res.jawaban.toLowerCase()) {
 	          await fs.rmSync('./tmp/tebakgambar.json')
 	          return m.reply(`*Jawaban Benar!*\n+${res.bonus} poin`)
@@ -2510,7 +2525,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
           if (!jawaban) return m.reply(loghandler.wait, 'Silahkan masukan jawaban')
           var res
           try { res = JSON.parse(await fs.readFileSync('./tmp/caklontong.json')) } catch (e) { res = false }
-          if (!res) return ignoreMessage()
+          if (!res) return m.ignoreMessage()
           if (jawaban.toLowerCase() == res.jawaban.toLowerCase()) {
 	          await fs.rmSync('./tmp/caklontong.json')
 	          return m.reply(`*Jawaban Benar!*\nDetail: ${res.desc.split('(')[1].split(')')[0]}\n\n+${res.bonus} poin`)
@@ -2520,7 +2535,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
           if (!jawaban) return m.reply(loghandler.wait, 'Silahkan masukan jawaban')
           var res
           try { res = JSON.parse(await fs.readFileSync('./tmp/family100.json')) } catch (e) { res = false }
-          if (!res) return ignoreMessage()
+          if (!res) return m.ignoreMessage()
           if (new RegExp(`^(${res.jawaban.split('\n').join('|')})$`, 'i').test(jawaban)) {
 	          await fs.rmSync('./tmp/family100.json')
 	          return m.reply(`*Jawaban Benar!*\nSemua Jawaban: ${res.jawaban.split('\n').join(', ')}\n\n+${res.bonus} poin`)
@@ -2530,7 +2545,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
           if (!jawaban) return m.reply(loghandler.wait, 'Silahkan masukan jawaban')
           var res
           try { res = JSON.parse(await fs.readFileSync('./tmp/siapakahaku.json')) } catch (e) { res = false }
-          if (!res) return ignoreMessage()
+          if (!res) return m.ignoreMessage()
           if (jawaban.toLowerCase() == res.answer.toLowerCase()) {
 	          await fs.rmSync('./tmp/siapakahaku.json')
 	          return m.reply(`*Jawaban Benar!*\n+${res.bonus} poin`)
@@ -2551,36 +2566,36 @@ ${Math.floor(Math.random() * 50)} Zamrud
      try { isFamily = JSON.parse(await fs.readFileSync('./tmp/family100.json')) } catch (e) { isFamily = false }
      try { isSiapa = JSON.parse(await fs.readFileSync('./tmp/siapakahaku.json')) } catch (e) { isSiapa = false }
      if (isMath) {
-         if (!isMath) return ignoreMessage()
+         if (!isMath) return m.ignoreMessage()
          else {
          hint = isMath.result.toString().replace(hintRegex, '_')
          return m.reply(hint)
          }
      } else if (isTebak) {
-         if (!isTebak) return ignoreMessage()
+         if (!isTebak) return m.ignoreMessage()
          else {
          hint = isTebak.jawaban.replace(hintRegex, '_')
          return m.reply(hint)
          }
      } else if (isCak) {
-         if (!isCak) return ignoreMessage()
+         if (!isCak) return m.ignoreMessage()
          else {
          hint = isCak.jawaban.replace(hintRegex, '_')
          return m.reply(hint)
          }
      } else if (isFamily) {
-         if (!isFamily) return ignoreMessage()
+         if (!isFamily) return m.ignoreMessage()
          else {
          hint = isFamily.jawaban.replace(hintRegex, '_')
          return m.reply(hint)
          }
      } else if (isSiapa) {
-         if (!isSiapa) return ignoreMessage()
+         if (!isSiapa) return m.ignoreMessage()
          else {
          hint = isSiapa.answer.replace(hintRegex, '_')
          return m.reply(hint)
          }
-     } else return ignoreMessage()
+     } else return m.ignoreMessage()
 
   } else if (/^nyerah$/i.test(command)) {
      var isMath
@@ -2594,36 +2609,36 @@ ${Math.floor(Math.random() * 50)} Zamrud
      try { isFamily = JSON.parse(await fs.readFileSync('./tmp/family100.json')) } catch (e) { isFamily = false }
      try { isSiapa = JSON.parse(await fs.readFileSync('./tmp/siapakahaku.json')) } catch (e) { isSiapa = false }
      if (isMath) {
-         if (!isMath) return ignoreMessage()
+         if (!isMath) return m.ignoreMessage()
          else {
          await fs.rmSync('./tmp/math.json')
          return m.reply(`*Menyerah!*\n\nGame: Math\nSoal: Berapa hasil dari *${isMath.str}*?\nBonus: ${isMath.bonus} poin\nJawaban: ${isMath.result}`)
          }
      } else if (isTebak) {
-         if (!isTebak) return ignoreMessage()
+         if (!isTebak) return m.ignoreMessage()
          else {
          await fs.rmSync('./tmp/tebakgambar.json')
          return m.reply(`*Menyerah!*\n\nGame: Tebak Gambar\nSoal: ${isTebak.soal}\nBonus: ${isTebak.bonus} poin\nJawaban: ${isTebak.jawaban}`)
          }
      } else if (isCak) {
-         if (!isCak) return ignoreMessage()
+         if (!isCak) return m.ignoreMessage()
          else {
          await fs.rmSync('./tmp/caklontong.json')
          return m.reply(`*Menyerah!*\n\nGame: Cak Lontong\nSoal: ${isCak.soal}\nBonus: ${isCak.bonus} poin\nJawaban: ${isCak.jawaban}\nDetail: ${isCak.desc.split('(')[1].split(')')[0]}`)
          }
      } else if (isFamily) {
-         if (!isFamily) return ignoreMessage()
+         if (!isFamily) return m.ignoreMessage()
          else {
          await fs.rmSync('./tmp/family100.json')
          return m.reply(`*Menyerah!*\n\nGame: Family 100\nSoal: ${isFamily.soal}\nBonus: ${isFamily.bonus} poin\nJawaban: ${isFamily.jawaban.split('\n').join(', ')}`)
          }
      } else if (isSiapa) {
-         if (!isSiapa) return ignoreMessage()
+         if (!isSiapa) return m.ignoreMessage()
          else {
          await fs.rmSync('./tmp/siapakahaku.json')
          return m.reply(`*Menyerah!*\n\nGame: Siapakah Aku\nSoal: ${isSiapa.question}\nBonus: ${isSiapa.bonus} poin\nJawaban: ${isSiapa.answer}`)
          }
-     } else return ignoreMessage()
+     } else return m.ignoreMessage()
 
   } else if (/^ss(web)?f?$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notUrl)
@@ -2932,7 +2947,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
   	 if (!isGroup) return m.reply(loghandler.wait, loghandler.groupOnly)
        var type = (text || '').toLowerCase()
        var isEnable = /^enable$/i.test(command)
-       var options = ['antidelete', 'antilink', 'antitoxic', 'antivirtex', 'antiflood'].map(v => `- ${v}`).join('\n')
+       var options = ['antidelete', 'antilink', 'antitoxic', 'antivirtex', 'antiflood']
        switch (type) {
        	case 'antidelete':
            await fs.writeFileSync('./tmp/antidelete.txt', isEnable.toString())
@@ -2949,8 +2964,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
            case 'antiflood':
            await fs.writeFileSync('./tmp/antiflood.txt', isEnable.toString())
               break
-           default:
-           return m.reply(loghandler.wait, `List Opsi:\n${options}\n\nContoh:\n${usedPrefix + command} antilink`)
+           default: return m.reply(loghandler.wait, `List Opsi:\n${options.map(v => `- ${v}`).join('\n')}\n\nContoh:\n${usedPrefix + command} antilink`)
        }
          return m.reply(loghandler.wait, `*${type}* berhasil di${isEnable ? 'nyala' : 'mati'}kan untuk bot ini`)
 
@@ -3129,7 +3143,7 @@ Kata sandi: superiorman_
        })
 
   } else if (/^intro(maker)?$/i.test(command)) {
-       if (!isPrems) return m.reply(loghandler.wait, loghandler.premiumOnly)
+       if (!isPremium) return m.reply(loghandler.wait, loghandler.premiumOnly)
        if (!text) return m.reply(loghandler.wait, loghandler.notText)
        var buffer = await (await fetch(`https://raw.githubusercontent.com/RC047/media/main/intromaker/${text.toLowerCase()}.webm`)).buffer()
        var result = await saveToMedia(buffer, { ext: 'mp4' })
@@ -3141,7 +3155,7 @@ Kata sandi: superiorman_
          return m.reply(loghandler.wait, 'Hasil:\n\n' + result)
 
   } else if (/^join$/i.test(command)) {
-       if (!isPrems) return m.reply(loghandler.wait, loghandler.premiumOnly)
+       if (!isPremium) return m.reply(loghandler.wait, loghandler.premiumOnly)
        if (isGroup) return m.reply(loghandler.wait, loghandler.privateOnly)
        if (!text) return m.reply(loghandler.wait, loghandler.notUrl)
        if (!/^(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})$/i.test(text)) return m.reply(loghandler.wait, loghandler.invalidLink)
@@ -3149,7 +3163,7 @@ Kata sandi: superiorman_
          return m.reply(loghandler.wait, '[!] Request anda telah dikirim!\nSilahkan tunggu hingga Owner menyetujuinya')
 
   } else if (/^premium$/i.test(command)) {
-       if (isPrems) return m.reply(loghandler.wait, 'Nomor anda sudah Premium :D')
+       if (isPremium) return m.reply(loghandler.wait, 'Nomor anda sudah Premium :D')
        var str = `
 ╭─「 PREMIUM 」
 │
@@ -3185,11 +3199,11 @@ Kata sandi: superiorman_
          return m.reply(loghandler.wait, result)
 
   } else if (/^spamchat$/i.test(command)) {
+  	 if (!isPremium) return m.reply(loghandler.wait, loghandler.premiumOnly)
        if (!text) return m.reply(loghandler.wait, loghandler.notNumber)
        var [jumlah, pesan] = text.split('|')
        if (!jumlah) return m.reply(loghandler.wait, loghandler.notLength)
        if (isNaN(jumlah)) return m.reply(loghandler.wait, loghandler.numberOnly)
-       if (jumlah * 1 > 10 && !isPrems) return m.reply(loghandler.wait, loghandler.limited)
        if (jumlah * 1 > 100) return m.reply(loghandler.wait, loghandler.overLength)
        if (!pesan) return m.reply(loghandler.wait, loghandler.notText)
        var result = ''
