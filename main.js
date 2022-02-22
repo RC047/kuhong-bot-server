@@ -692,7 +692,7 @@ ${'```' + package.description + '```'}
       if (!isURL(text)) return m.reply(loghandler.wait, loghandler.invalidLink)
       var [url, body] = text.split('|')
       var res = await fetch(url, { method: command.toUpperCase(), body: body ? body : null })
-      if (res.status !== 200) return m.reply(loghandler.wait, `Gagal ${/^get$/i.test(command) ? 'mendapatkan' : 'memposting'}\n(${url})\n\nServer Merespon: ${res.status}\nPesan: ${res.statusText}`)
+      if (res.status !== 200) return m.reply(loghandler.wait, `Gagal ${/^get$/i.test(command) ? 'mendapatkan' : 'memposting'}\n(${url})\n\n${res.statusText} (${res.status})`)
       var result = ''
       if (!/text|json/i.test(res.headers.get('content-type'))) result = 'Hasil:\n\n' + await saveToMedia(await res.buffer())
       else result = await res.text()
