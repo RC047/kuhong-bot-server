@@ -37,15 +37,14 @@ m.reply.toString = () => 'function reply() { [native code] }'
 var package = require('./package.json')
 var config = require('./config.json')
 var { apikey } = config
-var prefix = new RegExp('^[' + (m.query.prefix ? m.query.prefix : 'zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-') + ']', 'gi')
 var botName = m.query.name ? m.query.name : config.botName
 var owner = m.query.phone ? m.query.phone.replace(/[-+<>@]/g, '').replace(/ +/g, '') : config.owner
 var gc_link = m.query.linkgc ? m.query.linkgc : 'https://chat.whatsapp.com/HDOZX7OoFYK1bTwftkY5Si'
 var donate_link = m.query.donate ? m.query.donate : 'https://saweria.co/donate/RC047'
 var jadwal = m.query.jadwal ? m.query.jadwal : '07:00 - 21:00'
-var welcome = m.query.welcome ? m.query.welcome : `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.query.prefix ? m.query.prefix.slice(0, 1) : '!'}* untuk memulai Bot ini.`
 
 var date = new Date()
+var prefix = new RegExp('^[' + (m.query.prefix ? m.query.prefix : 'zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-') + ']', 'gi')
 var readMore = String.fromCharCode(8206).repeat(4001)
 var isApikey = new RegExp(apikey.kuhong + '|' + apikey.xteam + '|' + apikey.zeks + '|' + apikey.zekais + '|' + '|' + apikey.imgbb + '|' + apikey.removebg, 'gi')
 var isGroupLink = /(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})/gi
@@ -335,6 +334,7 @@ var listMenu = {
 try {
   if (m.isWelcome) {
   	if (!senderMessage) return m.ignoreMessage()
+      var welcome = m.query.welcome ? m.query.welcome : `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.query.prefix ? m.query.prefix.slice(0, 1) : '!'}* untuk memulai Bot ini.`
         return m.reply(welcome)
   } else if (m.simiMode) {
       if (!senderMessage) return m.ignoreMessage()
