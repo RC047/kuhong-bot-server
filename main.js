@@ -37,12 +37,13 @@ m.reply.toString = () => 'function reply() { [native code] }'
 var package = require('./package.json')
 var config = require('./config.json')
 var { apikey } = config
+var prefix = new RegExp('^[' + (m.query.prefix ? m.query.prefix : 'zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-') + ']', 'gi')
 var botName = m.query.name ? m.query.name : config.botName
 var owner = m.query.phone ? m.query.phone.replace(/[-+<>@]/g, '').replace(/ +/g, '') : config.owner
 var gc_link = m.query.linkgc ? m.query.linkgc : 'https://chat.whatsapp.com/HDOZX7OoFYK1bTwftkY5Si'
 var donate_link = m.query.donate ? m.query.donate : 'https://saweria.co/donate/RC047'
 var jadwal = m.query.jadwal ? m.query.jadwal : '07:00 - 21:00'
-var prefix = new RegExp('^[' + (m.query.prefix ? m.query.prefix : 'zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-') + ']', 'gi')
+var welcome = m.query.welcome ? m.query.welcome : `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.query.prefix ? m.query.prefix.slice(0, 1) : '!'}* untuk memulai Bot ini.`
 
 var date = new Date()
 var readMore = String.fromCharCode(8206).repeat(4001)
@@ -313,7 +314,6 @@ var listMenu = {
 'removebg <image url>'
      ],
     owners: [
-'setwelcome <text>',
 'exec <bash>',
 'eval <functions>'
      ],
@@ -335,7 +335,6 @@ var listMenu = {
 try {
   if (m.isWelcome) {
   	if (!senderMessage) return m.ignoreMessage()
-      var welcome = config.welcome.replace('%salam', salam).replace('%sender', senderName.startsWith('+') ? '\n' : ' ' + senderName).replace('%command', prefix.test(senderMessage) ? usedPrefix : m.query.prefix ? m.query.prefix.slice(0, 1) : '!' + pickRandom(listMenu.main))
         return m.reply(welcome)
   } else if (m.simiMode) {
       if (!senderMessage) return m.ignoreMessage()
@@ -533,12 +532,6 @@ ${'```' + package.description + '```'}
       var result = `*「 IZIN AFK 」*\n\nNama: ${senderName}\nAlasan: ${text}`
       await fs.writeFileSync('./tmp/' + senderName + '_afk.json', stringify({ name: senderName, reason: text.trim() }))
     	return m.reply(result)
-
-  } else if (/^set(welcome)$/i.test(command)) {
-  	if (!isOwner) return m.reply(loghandler.wait, loghandler.ownerOnly)
-      if (!text) return m.reply(loghandler.wait, loghandler.notText)
-      await fs.writeFileSync('./config.json', stringify(config).replace(config.welcome, text))
-        return m.reply(loghandler.wait, '*Welcome berhasil diatur*\n\n(%salam) untuk salam\n(%sender) untuk nama pengirim\n(%command) untuk perintah bot')
 
   } else if (/^e(xec(ute)?|val)$/i.test(command)) {
   	if (!isOwner) return m.reply(loghandler.wait, loghandler.ownerOnly)
