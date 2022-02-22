@@ -3,7 +3,7 @@
    "premium": [],
    "botName": "Kuhong Bot",
    "prefix": "zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-",
-   "welcome": "Selamat %salam *%senderName*!\n\nSilahkan ketik *%command* untuk memulai Bot ini.",
+   "welcome": "Selamat %salam *%sender*!\n\nSilahkan ketik *%command* untuk memulai Bot ini.",
    "apikey": {
        "kuhong": "8RiU6O-yrLpgVep",
        "xteam": "7cac32071f2eb2ff",
