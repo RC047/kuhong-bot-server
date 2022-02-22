@@ -41,14 +41,15 @@ var simiMode = req.body.simi ? req.body.simi : req.query.simi,
 try {
 req.reply = (...message) => {
   var botName = req.query.name ? req.query.name : user.botName;
-  if (!message) message = new Array('')
+  if (!message) message = new Array('');
   else {
      for (var i = message.reverse().length; i > -1; i--) {
-     if (message[i]) console.info(`${botName}:\n${util.format(message[i])}`)
+     if (message[i]) console.info(`${botName}:\n${util.format(message[i])}`);
      }
   }
     return res.status(200).json({ status: res.statusCode || false, replies: message.reverse().map(v => new Object({ message: util.format(v) })) });
 }
+req.ignoreMessage = () => req.reply('');
 req.isWelcome = isWelcome == 'true' ? true : false;
 req.simiMode = simiMode == 'true' ? true : false;
 req.battery = '%battery%';
