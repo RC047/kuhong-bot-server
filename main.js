@@ -4,7 +4,7 @@ var path = require('path')
 var cp = require('child_process')
 var axios = require('axios')
 var translate = require('translate-google-api')
-var googleIt = require('google-it')
+var google = require('google-it')
 var gis = require('g-i-s')
 var barcode = require('barcode')
 var qrcode = require('qrcode')
@@ -685,27 +685,18 @@ ${'```' + package.description + '```'}
 
   } else if (/^hide(tag|text)$/i.test(command)) {
       if (!isGroup) return m.reply(loghandler.wait, loghandler.groupOnly)
-      return m.reply(loghandler.wait, '' + text ? text : readMore + '')
+        return m.reply(loghandler.wait, '' + text ? text : readMore + '')
 
   } else if (/^(ge|pos)t$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notUrl)
       if (!isURL(text)) return m.reply(loghandler.wait, loghandler.invalidLink)
-      if (/^post$/i.test(command)) {
-        var [url, body] = text.split('|')
-        var res = await fetch(url, { method: 'POST', body: body ? body : null })
-        if (res.status !== 200) return m.reply(loghandler.wait, `Gagal untuk memposting (${url})\n\nServer Merespon: ${res.status}\nPesan: ${res.statusText}`)
-        var result = ''
-        if (!/text|json/i.test(res.headers.get('content-type'))) result = 'Hasil:\n\n' + await saveToMedia(await res.buffer())
-        else result = await res.text()
-          return m.reply(loghandler.wait, result)
-      } else {
-    	var res = await fetch(text)
-        if (res.status !== 200) return m.reply(loghandler.wait, `Gagal untuk mendapatkan (${url})\n\nServer Merespon: ${res.status}\nPesan: ${res.statusText}`)
-        var result = ''
-        if (!/text|json/i.test(res.headers.get('content-type'))) result = 'Hasil:\n\n' + await saveToMedia(await res.buffer())
-        else result = await res.text()
-          return m.reply(loghandler.wait, result)
-       }
+      var [url, body] = text.split('|')
+      var res = await fetch(url, { method: command.toUpperCase(), body: body ? body : null })
+      if (res.status !== 200) return m.reply(loghandler.wait, `Gagal ${/^get$/i.test(command) ? 'mendapatkan' : 'memposting'}\n(${url})\n\nServer Merespon: ${res.status}\nPesan: ${res.statusText}`)
+      var result = ''
+      if (!/text|json/i.test(res.headers.get('content-type'))) result = 'Hasil:\n\n' + await saveToMedia(await res.buffer())
+      else result = await res.text()
+        return m.reply(loghandler.wait, result)
 
   } else if (/^b(rainly|elajar)$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
@@ -938,7 +929,7 @@ ${'```' + package.description + '```'}
 
   } else if (/^google(search)?$/i.test(command)) {
         if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
-        var res = await googleIt({ query: text })
+        var res = await google({ query: text })
         var result = res.map(v => `*${v.title}*\n\n${v.link}\n${v.snippet}`).join('\n\n========================\n\n')
           return m.reply(loghandler.wait, result)
 
@@ -2473,9 +2464,9 @@ ${Math.floor(Math.random() * 50)} Zamrud
       	await fs.writeFileSync('./tmp/caklontong.json', stringify(res))
           return m.reply(loghandler.wait, `${res.soal}\nBonus: ${res.bonus} poin\n\nJawab menggunakan perintah *${usedPrefix}jawab*\nKetik *${usedPrefix}hint* untuk bantuan\nKetik *${usedPrefix}nyerah* untuk menyerah`)
       } else if (/^family100$/i.test(command)) {
-      	var isFamily
-          try { isFamily = JSON.parse(await fs.readFileSync('./tmp/family100.json')) } catch (e) { isFamily = false }
-          if (isFamily) return m.reply(loghandler.wait, `*Masih ada soal belum terjawab!*\n\n${isFamily.soal}\nBonus: ${isFamily.bonus} poin\n\nJawab menggunakan perintah *${usedPrefix}jawab*\nKetik *${usedPrefix}hint* untuk bantuan\nKetik *${usedPrefix}nyerah* untuk menyerah`)
+      	var isFamily100
+          try { isFamily100 = JSON.parse(await fs.readFileSync('./tmp/family100.json')) } catch (e) { isFamily100 = false }
+          if (isFamily100) return m.reply(loghandler.wait, `*Masih ada soal belum terjawab!*\n\n${isFamily100.soal}\nBonus: ${isFamily100.bonus} poin\n\nJawab menggunakan perintah *${usedPrefix}jawab*\nKetik *${usedPrefix}hint* untuk bantuan\nKetik *${usedPrefix}nyerah* untuk menyerah`)
       	res.bonus = 5000
       	await fs.writeFileSync('./tmp/family100.json', stringify(res))
           return m.reply(loghandler.wait, `${res.soal}\nBonus: ${res.bonus} poin\n\nJawab menggunakan perintah *${usedPrefix}jawab*\nKetik *${usedPrefix}hint* untuk bantuan\nKetik *${usedPrefix}nyerah* untuk menyerah`)
@@ -2492,12 +2483,12 @@ ${Math.floor(Math.random() * 50)} Zamrud
   	var isMath
       var isTebak
       var isCak
-      var isFamily
+      var isFamily100
       var isSiapa
       try { isMath = JSON.parse(await fs.readFileSync('./tmp/math.json')) } catch (e) { isMath = false }
       try { isTebak = JSON.parse(await fs.readFileSync('./tmp/tebakgambar.json')) } catch (e) { isTebak = false }
       try { isCak = JSON.parse(await fs.readFileSync('./tmp/caklontong.json')) } catch (e) { isCak = false }
-      try { isFamily = JSON.parse(await fs.readFileSync('./tmp/family100.json')) } catch (e) { isFamily = false }
+      try { isFamily100 = JSON.parse(await fs.readFileSync('./tmp/family100.json')) } catch (e) { isFamily100 = false }
       try { isSiapa = JSON.parse(await fs.readFileSync('./tmp/siapakahaku.json')) } catch (e) { isSiapa = false }
       if (isMath) {
       	var jawaban = text
@@ -2530,7 +2521,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
 	          await fs.rmSync('./tmp/caklontong.json')
 	          return m.reply(`*Jawaban Benar!*\nDetail: ${res.desc.split('(')[1].split(')')[0]}\n\n+${res.bonus} poin`)
           } else return m.reply('*Jawaban Salah!*')
-      } else if (isFamily) {
+      } else if (isFamily100) {
       	var jawaban = text
           if (!jawaban) return m.reply(loghandler.wait, 'Silahkan masukan jawaban')
           var res
@@ -2556,14 +2547,14 @@ ${Math.floor(Math.random() * 50)} Zamrud
      var isMath
      var isTebak
      var isCak
-     var isFamily
+     var isFamily100
      var isSiapa
      var hint = ''
      var hintRegex = /[15790bcdfghjklmnpqrstvwxyz]/g
      try { isMath = JSON.parse(await fs.readFileSync('./tmp/math.json')) } catch (e) { isMath = false }
      try { isTebak = JSON.parse(await fs.readFileSync('./tmp/tebakgambar.json')) } catch (e) { isTebak = false }
      try { isCak = JSON.parse(await fs.readFileSync('./tmp/caklontong.json')) } catch (e) { isCak = false }
-     try { isFamily = JSON.parse(await fs.readFileSync('./tmp/family100.json')) } catch (e) { isFamily = false }
+     try { isFamily100 = JSON.parse(await fs.readFileSync('./tmp/family100.json')) } catch (e) { isFamily100 = false }
      try { isSiapa = JSON.parse(await fs.readFileSync('./tmp/siapakahaku.json')) } catch (e) { isSiapa = false }
      if (isMath) {
          if (!isMath) return m.ignoreMessage()
@@ -2583,10 +2574,10 @@ ${Math.floor(Math.random() * 50)} Zamrud
          hint = isCak.jawaban.replace(hintRegex, '_')
          return m.reply(hint)
          }
-     } else if (isFamily) {
-         if (!isFamily) return m.ignoreMessage()
+     } else if (isFamily100) {
+         if (!isFamily100) return m.ignoreMessage()
          else {
-         hint = isFamily.jawaban.replace(hintRegex, '_')
+         hint = isFamily100.jawaban.replace(hintRegex, '_')
          return m.reply(hint)
          }
      } else if (isSiapa) {
@@ -2601,12 +2592,12 @@ ${Math.floor(Math.random() * 50)} Zamrud
      var isMath
      var isTebak
      var isCak
-     var isFamily
+     var isFamily100
      var isSiapa
      try { isMath = JSON.parse(await fs.readFileSync('./tmp/math.json')) } catch (e) { isMath = false }
      try { isTebak = JSON.parse(await fs.readFileSync('./tmp/tebakgambar.json')) } catch (e) { isTebak = false }
      try { isCak = JSON.parse(await fs.readFileSync('./tmp/caklontong.json')) } catch (e) { isCak = false }
-     try { isFamily = JSON.parse(await fs.readFileSync('./tmp/family100.json')) } catch (e) { isFamily = false }
+     try { isFamily100 = JSON.parse(await fs.readFileSync('./tmp/family100.json')) } catch (e) { isFamily100 = false }
      try { isSiapa = JSON.parse(await fs.readFileSync('./tmp/siapakahaku.json')) } catch (e) { isSiapa = false }
      if (isMath) {
          if (!isMath) return m.ignoreMessage()
@@ -2626,11 +2617,11 @@ ${Math.floor(Math.random() * 50)} Zamrud
          await fs.rmSync('./tmp/caklontong.json')
          return m.reply(`*Menyerah!*\n\nGame: Cak Lontong\nSoal: ${isCak.soal}\nBonus: ${isCak.bonus} poin\nJawaban: ${isCak.jawaban}\nDetail: ${isCak.desc.split('(')[1].split(')')[0]}`)
          }
-     } else if (isFamily) {
-         if (!isFamily) return m.ignoreMessage()
+     } else if (isFamily100) {
+         if (!isFamily100) return m.ignoreMessage()
          else {
          await fs.rmSync('./tmp/family100.json')
-         return m.reply(`*Menyerah!*\n\nGame: Family 100\nSoal: ${isFamily.soal}\nBonus: ${isFamily.bonus} poin\nJawaban: ${isFamily.jawaban.split('\n').join(', ')}`)
+         return m.reply(`*Menyerah!*\n\nGame: Family 100\nSoal: ${isFamily100.soal}\nBonus: ${isFamily100.bonus} poin\nJawaban: ${isFamily100.jawaban.split('\n').join(', ')}`)
          }
      } else if (isSiapa) {
          if (!isSiapa) return m.ignoreMessage()
