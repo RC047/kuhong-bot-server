@@ -335,7 +335,7 @@ var listMenu = {
 try {
   if (m.isWelcome) {
   	if (!senderMessage) return m.ignoreMessage()
-      var welcome = config.welcome.replace('%salam', salam).replace('%sender', senderName.startsWith('+') ? '\n' : ' ' + senderName).replace('%command', prefix.test(senderMessage) ? usedPrefix : m.query.prefix.length == 1 ? m.query.prefix : '!' + pickRandom(listMenu.main))
+      var welcome = config.welcome.replace('%salam', salam).replace('%sender', senderName.startsWith('+') ? '\n' : ' ' + senderName).replace('%command', prefix.test(senderMessage) ? usedPrefix : m.query.prefix ? m.query.prefix.slice(0, 1) : '!' + pickRandom(listMenu.main))
         return m.reply(welcome)
   } else if (m.simiMode) {
       if (!senderMessage) return m.ignoreMessage()
