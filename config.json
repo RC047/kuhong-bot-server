@@ -2,7 +2,6 @@
    "owner": ["62895337278647"],
    "premium": [],
    "botName": "Kuhong Bot",
-   "welcome": "Selamat %salam *%sender*!\n\nSilahkan ketik *%command* untuk memulai Bot ini.",
    "apikey": {
        "kuhong": "8RiU6O-yrLpgVep",
        "xteam": "7cac32071f2eb2ff",
