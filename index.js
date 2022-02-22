@@ -7,14 +7,14 @@ var cheerio = require('cheerio');
 var cors = require('cors');
 var secure = require('ssl-express-www');
 var bodyParser = require('body-parser');
-var { obfuscate } = require('js-confuser');
 
-var PORT = process.env.PORT || 3000;
-var { arrayRegex } = require('./lib/js/functions.js');
+var { encryptHtml, encryptScript, arrayRegex } = require('./lib/js/functions.js');
 var user = require('./config.json');
 var main = require('./main.js');
-var index = './public/js/index.js';
+var PORT = process.env.PORT || 3000;
 
+
+encryptScript(fs.readFileSync('./public/js/index.js').toString()).then(data => fs.writeFileSync('./public/js/index.js', data));
 app.enable('trust proxy');
 app.set('json spaces', 2);
 app.use(cors());
@@ -22,12 +22,10 @@ app.use(secure);
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended: true }));
-obfuscate(fs.readFileSync(index).toString(), { target: 'browser', minify: true }).then(data => fs.writeFileSync(index, data));
-
 
 app.all('/', async (req, res, next) => {
 
-if (req.method !== 'POST') return res.status(200).sendFile(process.cwd() + '/index.html');
+if (req.method !== 'POST') return res.status(200).send(await encryptHtml(await fs.readFileSync('./index.html').toString()));
 var simiMode = req.body.simi ? req.body.simi : req.query.simi,
     appPackageName = req.body.appPackageName,
     messengerPackageName = req.body.messengerPackageName,
