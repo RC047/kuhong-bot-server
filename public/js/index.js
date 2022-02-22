@@ -1,6 +1,8 @@
 // Use Strict
 window.setTimeout('runScripts();', 1);
 window.setTimeout('getFunFact();', 1);
+window.setTimeout('checkErorr();', 5000);
+
 
 function runScripts() {
 navigator.getBattery().then(status => {
@@ -17,11 +19,22 @@ navigator.getBattery().then(status => {
 window.setTimeout('runScripts();', 1);
 }
 
+function checkError() {
+var status = document.getElementById('status').textContent;
+if (status == 'Detecting...') {
+    document.querySelector('body').remove();
+    return document.write('<div style="text-align:center"><h1>Server is undergoing Maintenance</h1><br><h4>Report:<br><a href="https://wa.me/62895337278647" target="_blank">https://wa.me/62895337278647</a></h4></div>');
+    } else if (status == 'Offline') {
+    document.querySelector('body').remove();
+    return document.write('<h1 style="text-align:center">Server is Offline!</h1>');
+    }
+}
+
 function getFunFact() {
 var json = fetchURI('https://recoders-area.caliph.repl.co/api/fakta');
 var result = '';
 if (json.status !== 200) result = 'Jangan lupa follow creator kita "RC047"!';
 else result = json.data.result;
-document.getElementById('fact').textContent = result;
+document.getElementById('fun-fact').textContent = result;
 window.setTimeout('getFunFact();', 25000);
 }
