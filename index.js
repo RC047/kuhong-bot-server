@@ -72,7 +72,7 @@ await main.handler(req, {
    appPackageName: appPackageName,
    messengerPackageName: messengerPackageName,
    isOwner: isTestMessage || arrayRegex(user.owner).test(senderName),
-   isPrems: isTestMessage || arrayRegex(user.premium).test(senderName),
+   isPremium: isTestMessage || arrayRegex(user.premium).test(senderName),
    isGroup: isGroup,
    senderMessage: senderMessage,
    messageType: messageType,
