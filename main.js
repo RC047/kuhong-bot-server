@@ -333,8 +333,8 @@ var listMenu = {
 
 try {
   if (m.isWelcome) {
-  	if (!senderMessage) return m.ignoreMessage()
-      var welcome = m.query.welcome ? m.query.welcome : `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.query.prefix ? m.query.prefix.slice(0, 1) : '!'}* untuk memulai Bot ini.`
+      if (!senderMessage) return m.ignoreMessage()
+      var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.query.prefix ? m.query.prefix.slice(0, 1) : '!'}* untuk memulai Bot ini.`
         return m.reply(welcome)
   } else if (m.simiMode) {
       if (!senderMessage) return m.ignoreMessage()
