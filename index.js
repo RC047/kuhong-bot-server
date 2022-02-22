@@ -25,10 +25,10 @@ app.use(bodyParser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended:
 app.all('/', async (req, res, next) => {
 
 if (req.method !== 'POST') return res.status(200).sendFile(process.cwd() + '/index.html');
-var simiMode = req.body.simi ? req.body.simi : req.query.simi,
+var isWelcome = req.body.welcome ? req.body.welcome : req.query.welcome,
+    simiMode = req.body.simi ? req.body.simi : req.query.simi,
     appPackageName = req.body.appPackageName,
     messengerPackageName = req.body.messengerPackageName,
-    isWelcome = req.body.welcome ? req.body.welcome : req.query.welcome,
     isGroup = req.body.query.isGroup,
     senderMessage = decodeURIComponent(req.body.query.message),
     groupName = isGroup ? req.body.query.sender : '',
