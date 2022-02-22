@@ -13,8 +13,6 @@ var user = require('./config.json');
 var main = require('./main.js');
 var PORT = process.env.PORT || 3000;
 
-
-encryptScript(fs.readFileSync('./public/js/index.js').toString()).then(data => fs.writeFileSync('./public/js/index.js', data));
 app.enable('trust proxy');
 app.set('json spaces', 2);
 app.use(cors());
@@ -23,9 +21,10 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended: true }));
 
+
 app.all('/', async (req, res, next) => {
 
-if (req.method !== 'POST') return res.status(200).send(await encryptHtml(await fs.readFileSync('./index.html').toString()));
+if (req.method !== 'POST') return res.status(200).sendFile(process.cwd() + '/index.html');
 var simiMode = req.body.simi ? req.body.simi : req.query.simi,
     appPackageName = req.body.appPackageName,
     messengerPackageName = req.body.messengerPackageName,
@@ -88,8 +87,7 @@ await main.handler(req, {
   }
 });
 
+fs.writeFileSync('./index.html', encryptHtml(fs.readFileSync('./index.html').toString()));
+fs.writeFileSync('./public/js/index.js', encryptScript(fs.readFileSync('./public/js/index.js').toString()));
 app.use((req, res, next) => res.status(404).send(`<pre>Halaman <strong>${req.url}</strong> tidak dapat ditemukan disini...</pre>`));
 app.listen(PORT, () => console.info('Server running on port', PORT));
-
-
-// console.log(user)
