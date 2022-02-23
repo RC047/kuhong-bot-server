@@ -105,7 +105,7 @@ var loghandler = {
 }
 
 var listMenu = {
-    main: [
+	main: [
 'help',
 'menu',
 'start',
@@ -188,6 +188,7 @@ var listMenu = {
 'google <query>',
 'ytsearch <query>',
 'shopee <query>',
+'kisahnabi <query>',
 'wiki <query>',
 'kbbi <query>',
 'subreddit <query>',
@@ -225,6 +226,7 @@ var listMenu = {
 'anime <query>',
 'character <query>',
 'manga <query>',
+'loli',
 'waifu',
 'neko',
 'megumin',
@@ -333,7 +335,7 @@ var listMenu = {
 
 try {
   if (m.isWelcome) {
-      if (!senderMessage) return m.ignoreMessage()
+  	if (!senderMessage) return m.ignoreMessage()
       var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.query.prefix ? m.query.prefix.slice(0, 1) : '!'}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
         return m.reply(welcome)
   } else if (m.simiMode) {
@@ -826,7 +828,7 @@ ${'```' + package.description + '```'}
         else if (/^bisa(kah)?/i.test(text)) answer = pickRandom(['Iya', 'Bisa', 'Tentu saja bisa', 'Tentu bisa', 'Sudah pasti', 'Sudah pasti bisa', 'Tidak', 'Tidak bisa', 'Tentu tidak', 'tentu tidak bisa', 'Sudah pasti tidak'])
         else if (/^berapa(kah)?/i.test(text)) answer = Math.floor(Math.random() * 10000)
         else return m.reply(loghandler.wait, '*Kata tanya yang tersedia:* apa, kapan, siapa, kenapa, bisa dan berapa')
-          return m.reply(loghandler.wait, `Pertanyaan: ${text}\nJawaban: ${answer}`)
+          return m.reply(loghandler.wait, `Pertanyaan: ${text.replace(/@/g, '')}\nJawaban: ${answer}`)
 
   } else if (/^((custom|cs)?(harta)?tahta)$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notText)
@@ -2248,7 +2250,9 @@ Tamat..
       var a = Math.floor(Math.random() * emojis.length)
       var b = Math.floor(Math.random() * emojis.length)
       var c = Math.floor(Math.random() * emojis.length)
-      var x = [], y = [], z = []
+      var x = []
+      var y = []
+      var z = []
       for (var i = 0; i < 3; i++) {
           x[i] = emojis[a]
           a++
@@ -2264,19 +2268,21 @@ Tamat..
           c++
           if (c == emojis.length) c = 0
       }
-      var end, poin
-      if (a == b && b == c) end = 'JACKPOT!!!', poin = 10000
-      else if (a == b || a == c || b == c) end = 'Dikit Lagi!', poin = 500
-      else end = 'Kamu Kalah!, Yang Sabar yaa. Anggap aja ini Ujian :)', poin = 5
+      var end = '...'
+      var poin = 0
+      if (a == b && b == c) poin = 10000, end = `JACKPOT!!!\n+${poin} poin`
+      else if (a == b || a == c || b == c) end = 'Dikit Lagi!'
+      else end = 'Kamu Kalah!, Yang Sabar yaa. Anggap aja ini Ujian :)'
         return m.reply(loghandler.wait, `${x[0]} | ${y[0]} | ${z[0]}\n${x[1]} | ${y[1]} | ${z[1]} <===\n${x[2]} | ${y[2]} | ${z[2]}\n\n${end}`)
 
   } else if (/^((how|cek)(gay|pintar|bodoh?|cantik|ganteng|baper|gabut|gila|lesbi|stress?|bucin|jones?|sad(boy|girl)?|tolol|sange))$/i.test(command)) {
-      var result = `${text ? text : 'Kamu'} itu *${Math.floor(Math.random() * 100)}%* ${command.slice(3)}!`
+      var result = `*${text ? text : 'Kamu'}* itu ${Math.floor(Math.random() * 100)}% ${command.slice(3)}!`
         return m.reply(loghandler.wait, result.replace(/@/g, ''))
 
-  } else if (/^waifu|neko|megumin$/i.test(command)) {
+  } else if (/^(waifu|neko|megumin|loli)$/i.test(command)) {
       var json = await (await fetch(`https://api.waifu.pics/sfw/${command}`)).json()
       if (!json.url) return m.reply(loghandler.wait, 'Server Error!')
+      if (/^loli$/i.test(command)) json.url = pickRandom(await (await fetch('https://raw.githubusercontent.com/Caliph91/txt/main/loli.json')).json())
         return m.reply(loghandler.wait, 'Hasil:\n\n' + json.url)
 
   } else if (/^hentai$/i.test(command)) {
@@ -2882,10 +2888,20 @@ ${Math.floor(Math.random() * 50)} Zamrud
 
   } else if (/^carigrup$/i.test(command)) {
        if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
-       var json = await (await fetch(`https://api.xteam.xyz/search/grupwa?q=${text}&apikey=${apikey.xteam}`)).json()
-       if (!json.result) return m.reply(loghandler.wait, `Pencarian Grup *${text}* tidak ditemukan!`)
-       var result = json.result.map(v => `Nama: ${v.subject}\nLink:\n${v.link}`).join('\n\n========================\n\n')
+       await axios.get(`https://ngarang.com/link-grup-wa/daftar-link-grup-wa.php?search=${text}&searchby=name`)
+       .then(res => {
+       var json = []
+       var $ = cheerio.load(res.data)
+       $('div.wa-chat-body').each(function (c, d) {
+           var link = $(d).find('a').attr('href')
+           var subject = $(d).find('div.wa-chat-title-text').text().trim()
+           var hasil = { subject: subject, link: link }
+           json.push(hasil)
+       })
+       if (!json[0].subject) return m.reply(loghandler.wait, `Pencarian Grup *${text}* tidak ditemukan!`)
+       var result = json.map(v => `Nama: ${v.subject}\nLink:\n${v.link}`).join('\n\n========================\n\n')
          return m.reply(loghandler.wait, result)
+      })
 
   } else if (/^detik|kompas|liputan6|tribun|jalantikus$/i.test(command)) {
        var json = await (await fetch(`https://api.xteam.xyz/news/${command}?apikey=${apikey.xteam}`)).json()
@@ -3179,7 +3195,7 @@ Kata sandi: superiorman_
          return m.reply(loghandler.wait, result)
 
   } else if (/^jadibot$/i.test(command)) {
-       var result = `Silahkan menuju situs web ini dan setelah itu download script botnya:\n\nUntuk seperti tutorial, screenshot, apk autoresponder, ada diweb ini ok!\n\nLink:\nhttps://kuhong-bot.herokuapp.com`
+       var result = `Silahkan menuju situs web ini dan setelah itu download script botnya:\n\nUntuk seperti tutorial, screenshot, apk autoresponder, ada diweb ini ok!\n\nLink:\n${m.get('Host')}`
          return m.reply(loghandler.wait, result)
 
   } else if (/^spamchat$/i.test(command)) {
@@ -3193,6 +3209,13 @@ Kata sandi: superiorman_
        var result = ''
        for (var i = jumlah * 1; i > 0; i--) result += pesan + '\',\''
          return eval(`m.reply('${result.slice(0, result.length - 3)}')`)
+
+  } else if (/^kisahnabi$/i.test(command)) {
+  	 var res = await fetch(`https://raw.githubusercontent.com/shansekai/My-SQL-Results/main/kisahnabi/${text}.json`)
+       if (res.status !== 200) return m.reply(loghandler.wait, `Nama nabi *${text}* tidak dapat ditemukan!\n\nPastikan anda memasukan nama nabinya dengan benar`)
+       var json = await res.json()
+       var result = `Kisah: ${json.name}\nTempat Kelahiran: ${json.tmp} (${json.thn_kelahiran})\nUsia: ${json.usia}\nThumb:\n${json.image_url}\n\n${json.description}`
+         return m.reply(loghandler.wait, result)
 
   } else return m.reply(loghandler.wait, loghandler.notCommand)
 } catch (e) {
