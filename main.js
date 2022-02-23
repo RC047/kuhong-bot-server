@@ -32,7 +32,7 @@ var { saveToMedia, math, modes, encryptHtml, encryptScript, escapeFull, getZodia
 
 async function handler(m, { appPackageName, messengerPackageName, isOwner, isPremium, isGroup, senderMessage, messageType, groupName, senderName, usedPrefix, command, text }) {
 
-handler.toString = () => 'function handler() { [native code] }'
+handler.toString = () => 'async function handler() { [native code] }'
 m.reply.toString = () => 'function reply() { [native code] }'
 var package = require('./package.json')
 var config = require('./config.json')
@@ -812,8 +812,10 @@ ${'```' + package.description + '```'}
       var format = val.replace(/Math\.PI/g, 'π').replace(/Math\.E/g, 'e').replace(/\//g, '÷').replace(/\*×/g, '×')
       try {
       var result = (new Function('return ' + val))()
+      var isMath
       if (!result) result = result
-        return m.reply(loghandler.wait, `${text} = ${result}`)
+      try { isMath = JSON.parse(await fs.readFileSync('./tmp/math.json')) } catch (e) { isMath = false }
+        return m.reply(loghandler.wait, `${isMath ? 'Hmmm...ngecheat?\n\n' : ''}${text} = ${result}`)
       } catch (e) {
         return m.reply(loghandler.wait, 'Format salah, hanya 0-9 dan Simbol -, +, *, /, ×, ÷, π, e, (, ) yang disupport')
       }
@@ -2281,8 +2283,8 @@ Tamat..
 
   } else if (/^(waifu|neko|megumin|loli)$/i.test(command)) {
       var json = await (await fetch(`https://api.waifu.pics/sfw/${command}`)).json()
-      if (!json.url) return m.reply(loghandler.wait, 'Server Error!')
       if (/^loli$/i.test(command)) json.url = pickRandom(await (await fetch('https://raw.githubusercontent.com/Caliph91/txt/main/loli.json')).json())
+      if (!json.url) return m.reply(loghandler.wait, '404 Not Found')
         return m.reply(loghandler.wait, 'Hasil:\n\n' + json.url)
 
   } else if (/^hentai$/i.test(command)) {
@@ -2295,9 +2297,9 @@ Tamat..
       if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
       var image = util.promisify(gis)
       var result = await image(text)
-      var { url } = pickRandom(result) || {}
+      var { url } = pickRandom(result)
       if (!url) return m.reply(loghandler.wait, 'Gambar tidak dapat ditemukan!')
-        return m.reply(loghandler.wait, 'Hasil Pencarian: ' + text + '\n\nUrl:\n' + url)
+        return m.reply(loghandler.wait, `Hasil Pencarian: *${text}*\n\nUrl:\n${url}`)
 
   } else if (/^(info)?anime$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
@@ -2443,9 +2445,9 @@ ${Math.floor(Math.random() * 50)} Zamrud
  	 try {
       var res = pickRandom(JSON.parse(await fs.readFileSync(`./lib/json/${type}.json`))).result
       } catch (e) {
-      var status = await fetch(`https://zekais-api.herokuapp.com/${type}?apikey=${apikey.zekais}`)
-      if (!status.ok) return m.reply(loghandler.wait, 'Soal tidak dapat ditemukan!')
-      res = await status.json()
+      var data = await fetch(`https://zekais-api.herokuapp.com/${type}?apikey=${apikey.zekais}`)
+      if (!data.ok) return m.reply(loghandler.wait, 'Soal tidak dapat ditemukan!')
+      res = await data.json()
       }
       if (!res.soal) return m.reply(loghandler.wait, 'Soal tidak dapat ditemukan!')
       if (/^tebakgambar$/i.test(command)) {
@@ -2543,6 +2545,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
       }
 
   } else if (/^hint$/i.test(command)) {
+     if (!isPremium) return m.reply(loghandler.wait, loghandler.premiumOnly)
      var isMath
      var isTebak
      var isCak
@@ -2559,31 +2562,31 @@ ${Math.floor(Math.random() * 50)} Zamrud
          if (!isMath) return m.ignoreMessage()
          else {
          hint = isMath.result.toString().replace(hintRegex, '_')
-         return m.reply(hint)
+         return m.reply(loghandler.wait, hint)
          }
      } else if (isTebak) {
          if (!isTebak) return m.ignoreMessage()
          else {
          hint = isTebak.jawaban.replace(hintRegex, '_')
-         return m.reply(hint)
+         return m.reply(loghandler.wait, hint)
          }
      } else if (isCak) {
          if (!isCak) return m.ignoreMessage()
          else {
          hint = isCak.jawaban.replace(hintRegex, '_')
-         return m.reply(hint)
+         return m.reply(loghandler.wait, hint)
          }
      } else if (isFamily100) {
          if (!isFamily100) return m.ignoreMessage()
          else {
          hint = isFamily100.jawaban.replace(hintRegex, '_')
-         return m.reply(hint)
+         return m.reply(loghandler.wait, hint)
          }
      } else if (isSiapa) {
          if (!isSiapa) return m.ignoreMessage()
          else {
          hint = isSiapa.answer.replace(hintRegex, '_')
-         return m.reply(hint)
+         return m.reply(loghandler.wait, hint)
          }
      } else return m.ignoreMessage()
 
@@ -2602,31 +2605,31 @@ ${Math.floor(Math.random() * 50)} Zamrud
          if (!isMath) return m.ignoreMessage()
          else {
          await fs.rmSync('./tmp/math.json')
-         return m.reply(`*Menyerah!*\n\nGame: Math\nSoal: Berapa hasil dari *${isMath.str}*?\nBonus: ${isMath.bonus} poin\nJawaban: ${isMath.result}`)
+         return m.reply(loghandler.wait, `*Menyerah!*\n\nGame: Math\nSoal: Berapa hasil dari *${isMath.str}*?\nBonus: ${isMath.bonus} poin\nJawaban: ${isMath.result}`)
          }
      } else if (isTebak) {
          if (!isTebak) return m.ignoreMessage()
          else {
          await fs.rmSync('./tmp/tebakgambar.json')
-         return m.reply(`*Menyerah!*\n\nGame: Tebak Gambar\nSoal: ${isTebak.soal}\nBonus: ${isTebak.bonus} poin\nJawaban: ${isTebak.jawaban}`)
+         return m.reply(loghandler.wait, `*Menyerah!*\n\nGame: Tebak Gambar\nSoal: ${isTebak.soal}\nBonus: ${isTebak.bonus} poin\nJawaban: ${isTebak.jawaban}`)
          }
      } else if (isCak) {
          if (!isCak) return m.ignoreMessage()
          else {
          await fs.rmSync('./tmp/caklontong.json')
-         return m.reply(`*Menyerah!*\n\nGame: Cak Lontong\nSoal: ${isCak.soal}\nBonus: ${isCak.bonus} poin\nJawaban: ${isCak.jawaban}\nDetail: ${isCak.desc.split('(')[1].split(')')[0]}`)
+         return m.reply(loghandler.wait, `*Menyerah!*\n\nGame: Cak Lontong\nSoal: ${isCak.soal}\nBonus: ${isCak.bonus} poin\nJawaban: ${isCak.jawaban}\nDetail: ${isCak.desc.split('(')[1].split(')')[0]}`)
          }
      } else if (isFamily100) {
          if (!isFamily100) return m.ignoreMessage()
          else {
          await fs.rmSync('./tmp/family100.json')
-         return m.reply(`*Menyerah!*\n\nGame: Family 100\nSoal: ${isFamily100.soal}\nBonus: ${isFamily100.bonus} poin\nJawaban: ${isFamily100.jawaban.split('\n').join(', ')}`)
+         return m.reply(loghandler.wait, `*Menyerah!*\n\nGame: Family 100\nSoal: ${isFamily100.soal}\nBonus: ${isFamily100.bonus} poin\nJawaban: ${isFamily100.jawaban.split('\n').join(', ')}`)
          }
      } else if (isSiapa) {
          if (!isSiapa) return m.ignoreMessage()
          else {
          await fs.rmSync('./tmp/siapakahaku.json')
-         return m.reply(`*Menyerah!*\n\nGame: Siapakah Aku\nSoal: ${isSiapa.question}\nBonus: ${isSiapa.bonus} poin\nJawaban: ${isSiapa.answer}`)
+         return m.reply(loghandler.wait, `*Menyerah!*\n\nGame: Siapakah Aku\nSoal: ${isSiapa.question}\nBonus: ${isSiapa.bonus} poin\nJawaban: ${isSiapa.answer}`)
          }
      } else return m.ignoreMessage()
 
@@ -3211,7 +3214,7 @@ Kata sandi: superiorman_
          return eval(`m.reply('${result.slice(0, result.length - 3)}')`)
 
   } else if (/^kisahnabi$/i.test(command)) {
-  	 if (!text) return m.reply(loghandler.wait, loghandler.notText)
+  	 if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
   	 var res = await fetch(`https://raw.githubusercontent.com/shansekai/My-SQL-Results/main/kisahnabi/${text}.json`)
        if (res.status !== 200) return m.reply(loghandler.wait, `Nama nabi *${text}* tidak dapat ditemukan!\n\nPastikan anda memasukan nama nabinya dengan benar`)
        var json = await res.json()
