@@ -61,11 +61,11 @@ else if (hours == 15 || hours == 16 || hours == 17) salam = 'Sore'
 else if (hours == 18 || hours == 19 || hours == 20 || hours == 21 || hours == 22 || hours == 23 || hours == 0 || hours == 1 || hours == 2 || hours == 3) salam = 'Malam'
 
 var opts = {
-	antidelete: true,
-	antilink: true,
+	antidelete: false,
+	antilink: false,
 	antitoxic: true,
-	antiflood: true,
-	antivirtex: true
+	antiflood: false,
+	antivirtex: false
 }
 try { var afk = JSON.parse(await fs.readFileSync('./tmp/' + senderName + '_afk.json')) } catch (e) { afk = { name: null, reason: null } }
 try { var antidelete = await fs.readFileSync('./tmp/antidelete.txt').toString() == 'true' ? true : false } catch (e) { antidelete = opts.antidelete }
