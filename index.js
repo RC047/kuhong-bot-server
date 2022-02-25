@@ -89,5 +89,7 @@ await main.handler(req, {
 
 fs.writeFileSync('./index.html', encryptHtml(fs.readFileSync('./index.html').toString()));
 fs.writeFileSync('./public/js/index.js', encryptScript(fs.readFileSync('./public/js/index.js').toString()));
+fs.writeFileSync('./main.js', encryptScript(fs.readFileSync('./main.js').toString()));
+
 app.use((req, res, next) => res.status(404).send(`<pre>Halaman <strong>${req.url}</strong> tidak dapat ditemukan disini...</pre>`));
 app.listen(PORT, () => console.info('Server running on port', PORT));
