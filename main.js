@@ -230,7 +230,7 @@ var listMenu = {
 'waifu',
 'neko',
 'megumin',
-'hentai *(Private)*'
+'hentai *(Premium)*'
      ],
     randoms: [
 'cerpen',
@@ -249,8 +249,8 @@ var listMenu = {
 'sindiran',
 'katailham',
 'bacot',
-'bokep *(Private)*',
-'porno *(Private)*'
+'bokep *(Premium)*',
+'porno *(Premium)*'
      ],
     news: [
 'infocovid <negara>',
@@ -402,7 +402,6 @@ try {
 │• < > = Wajib Diisi
 │• [ ] = Tidak Wajib Diisi
 │• (Premium) = Khusus Premium
-│• (Private) = Khusus Chat Pribadi
 ╰────
 
 ╭─「 Join Group 」
@@ -2288,9 +2287,8 @@ Tamat..
         return m.reply(loghandler.wait, 'Hasil:\n\n' + json.url)
 
   } else if (/^hentai$/i.test(command)) {
-      if (isGroup) return m.reply(loghandler.wait, loghandler.privateOnly)
-      var nime = pickRandom(['neko', 'waifu'])
-      var json = await (await fetch(`https://api.waifu.pics/nsfw/${nime}`)).json()
+      if (!isPremium) return m.reply(loghandler.wait, loghandler.premiumOnly)
+      var json = await (await fetch(`https://api.waifu.pics/nsfw/${pickRandom(['neko', 'waifu'])}`)).json()
         return m.reply(loghandler.wait, 'Hasil:\n\n' + json.url)
 
   } else if (/^(g(oogle)?)?images?|pinterest$/i.test(command)) {
@@ -2552,7 +2550,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
      var isFamily100
      var isSiapa
      var hint = ''
-     var hintRegex = /[15790bcdfghjklmnpqrstvwxyz]/g
+     var hintRegex = /[15790aiueo]/g
      try { isMath = JSON.parse(await fs.readFileSync('./tmp/math.json')) } catch (e) { isMath = false }
      try { isTebak = JSON.parse(await fs.readFileSync('./tmp/tebakgambar.json')) } catch (e) { isTebak = false }
      try { isCak = JSON.parse(await fs.readFileSync('./tmp/caklontong.json')) } catch (e) { isCak = false }
@@ -3103,7 +3101,7 @@ Kata sandi: superiorman_
          return m.reply(loghandler.wait, str)
 
   } else if (/^bokep|porno?$/i.test(command)) {
-  	 if (isGroup) return m.reply(loghandler.wait, loghandler.privateOnly)
+  	 if (!isPremium) return m.reply(loghandler.wait, loghandler.premiumOnly)
        var str = [
           'Nama: DilaPye Colmek\nFoto: -\nVideo: 1\nSize: 90 MB\nDurasi: 5 Menit\nKualitas: HD\nRate: ⭐⭐⭐⭐\nDownload:\nhttps://drive.google.com/file/d/1We9TeG1whjz2bmNCrahctK1-Hiy3BtWN/view \n Password: AA18+#29',
           'Nama: Missluttyv SMA\nFoto: -\nVideo: 3\nSize: 74 MB\nDurasi: - Menit\nKualitas: HD\nRate: ⭐⭐⭐\nDownload:\nhttps://drive.google.com/file/d/1TodhXRAHt6MHMqS2-3DYmCQoIFe7yuI-/view \nPassword: AA18+#21',
