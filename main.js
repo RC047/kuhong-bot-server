@@ -334,11 +334,11 @@ var listMenu = {
 }
 
 try {
-  if (m.isWelcome) {
+  if (m.welcome) {
       if (!senderMessage) return m.ignoreMessage()
       var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.query.prefix ? m.query.prefix.slice(0, 1) : '!'}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
         return m.reply(welcome)
-  } else if (m.simiMode) {
+  } else if (m.simi) {
       if (!senderMessage) return m.ignoreMessage()
       var tmp = await (await fetch(`https://raw.githubusercontent.com/herokuapp-com/kuhong-api/main/api/simsimi.json`)).json()
       var { result } = pickRandom(tmp) || 'Simi nggak paham apa maksudmu'
@@ -382,7 +382,7 @@ try {
       var weton = ['Pahing', 'Pon', 'Wage', 'Kliwon', 'Legi'][Math.floor(d / 84600000) % 5]
       var islamic = Intl.DateTimeFormat('id-TN-u-ca-islamic', { day: 'numeric', month: 'long', year: 'numeric' }).format(d)
       var menu = `
-╭─「 ${botName} 」
+╭─ *「 ${botName} 」*
 │
 │ _Selamat *${salam}*!_
 │• Name: ${senderName}${isGroup ? '\n│• Group: ' + groupName : ''}
@@ -398,69 +398,69 @@ try {
 │• Total Replies: ${m.replyCount.all}
 ╰────
 
-╭─「 Information 」
+╭─ *「 Information 」*
 │• < > = Wajib Diisi
 │• [ ] = Tidak Wajib Diisi
 │• (Premium) = Khusus Premium
 ╰────
 
-╭─「 Join Group 」
+╭─ *「 Join Group 」*
 │${gc_link}
 ╰────
 ${readMore}
-╭─「 Main Menu 」
+╭─ *「 Main Menu 」
 ${listMenu.main.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─「 Downloaders Menu 」
+╭─ *「 Downloaders Menu 」
 ${listMenu.downloaders.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─「 Makers Menu 」
+╭─ *「 Makers Menu 」
 ${listMenu.makers.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─「 Groups Menu 」
+╭─ *「 Groups Menu 」
 ${listMenu.groups.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─「 Games Menu 」
+╭─ *「 Games Menu 」
 ${listMenu.games.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─「 Searchs Menu 」
+╭─ *「 Searchs Menu 」
 ${listMenu.searchs.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─「 Primbons Menu 」
+╭─ *「 Primbons Menu 」
 ${listMenu.primbons.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─「 Animes Menu 」
+╭─ *「 Animes Menu 」
 ${listMenu.animes.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─「 Randoms Menu 」
+╭─ *「 Randoms Menu 」
 ${listMenu.randoms.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─「 News Menu 」
+╭─ *「 News Menu 」
 ${listMenu.news.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─「 Encrypts Menu 」
+╭─ *「 Encrypts Menu 」
 ${listMenu.encrypts.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─「 Tools Menu 」
+╭─ *「 Tools Menu 」
 ${listMenu.tools.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─「 Owners Menu 」
+╭─ *「 Owners Menu 」
 ${listMenu.owners.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─「 Others Menu 」
+╭─ *「 Others Menu 」
 ${listMenu.others.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
@@ -494,7 +494,7 @@ ${'```' + package.description + '```'}
       }, { speed: 0, total: 0, times: { user: 0, nice: 0, sys: 0, idle: 0, irq: 0 }})
       var neww = performance.now()
       var result = `
-╭─「 STATUS BOT 」
+╭─ *「 STATUS BOT 」*
 │
 │• Name: ${botName}
 │• Device: ${m.get('User-Agent').split('(')[1] ? m.get('User-Agent').replace(/[;]/g, '').split('(')[1].split(')')[0] : m.get('User-Agent').replace(/[;]/g, '')}
@@ -1628,7 +1628,7 @@ ${'```' + package.description + '```'}
 
   } else if (/^modapk|apkdownload$/i.test(command)) {
       var result = `
-╭─「 MOD APK 」
+╭─ *「 MOD APK 」*
 │
 │• Minecraft (Original)
 │https://www.mediafire.com/file/z9vqj628w494sso/Minecraft_1.17_By_RC047.apk/file
@@ -1660,7 +1660,7 @@ ${'```' + package.description + '```'}
 │https://www.mediafire.com/download/0y2bba69f6wakuh
 ╰────
 
-╭─「 TEMPLATE 」
+╭─ *「 TEMPLATE 」*
 │
 │• Template MineImator
 │http://www.mediafire.com/file/cxa8io0j0i3a0x4/Mine-Imator_%2528Template_Pika_Gamer%2529_Edited.zip/file
@@ -1718,7 +1718,7 @@ ${'```' + package.description + '```'}
 │https://realsht.mobi/MvYbm
 ╰────
 
-╭─「 FONT 」
+╭─ *「 FONT 」*
 │
 │• Kumpulan Font Untuk Quotes
 │https://realsht.mobi/JkmXx
@@ -1736,7 +1736,7 @@ ${'```' + package.description + '```'}
 
   } else if (/^dona(te|si)$/i.test(command)) {
     var str = `
-╭─「 ${command.toUpperCase()} 」
+╭─ *「 ${command.toUpperCase()} 」*
 │
 │• Pulsa: +${owner}
 │• ${capital(new URL(donate_link).host).split('.')[0]}:
@@ -2344,7 +2344,7 @@ Tamat..
 
   } else if (/^kodebahasa$/i.test(command)) {
       var result = `
-╭─「 KODE BAHASA 」
+╭─ *「 KODE BAHASA 」*
 │
 │• af : Afrikaans
 │• sq : Albanian
@@ -3166,7 +3166,7 @@ Kata sandi: superiorman_
   } else if (/^premium$/i.test(command)) {
        if (isPremium) return m.reply(loghandler.wait, 'Nomor anda sudah Premium :D')
        var str = `
-╭─「 PREMIUM 」
+╭─ *「 PREMIUM 」*
 │
 │• Mingguan: 5K
 │• Bulanan: 15K
