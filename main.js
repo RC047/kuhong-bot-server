@@ -46,7 +46,7 @@ var jadwal = m.query.jadwal ? m.query.jadwal : '07:00 - 21:00'
 var date = new Date()
 var prefix = new RegExp('^[' + (m.query.prefix ? m.query.prefix : 'zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-') + ']', 'gi')
 var readMore = String.fromCharCode(8206).repeat(4001)
-var isApikey = new RegExp(apikey.kuhong + '|' + apikey.xteam + '|' + apikey.zeks + '|' + apikey.zekais + '|' + '|' + apikey.imgbb + '|' + apikey.removebg, 'gi')
+var isApikey = new RegExp(apikey.kuhong + '|' + apikey.xteam + '|' + apikey.zeks + '|' + apikey.zekais + '|' + apikey.imgbb + '|' + apikey.removebg, 'gi')
 var isGroupLink = /(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})/gi
 var isToxic = /(a(s[uw]|nj(([ie])?ng|([ie])r)?)|me?me?k|ko?nto?l|ba?bi|fu?ce?k|ta(e|i)k?|ba?ngsa?(t|d)|(ba?)?ji?nga?n|g([iueo])?bl([iueo])?(k|g)|col(i|ay)|an?jg|nge?nto?d|tod|tolol|(ng)?ewe(an)?|jemb(u|o)(d|t))/gi
 var isVirtex = //gi
@@ -212,7 +212,7 @@ var listMenu = {
 'epep <user id>',
 'resep <query>',
 'masakan <query>',
-'minecraft <type|server>'
+'minecraft <type|ip>'
      ],
     primbons: [
 'artinama <nama>',
@@ -663,6 +663,7 @@ ${'```' + package.description + '```'}
       var [text, jumlah] = text.split('|')
       if (!jumlah) return m.reply(loghandler.wait, loghandler.notLength)
       if (isNaN(jumlah)) return m.reply(loghandler.wait, loghandler.numberOnly)
+      if (jumlah * 1 > 1000) return m.reply(loghandler.wait, loghandler.overLength)
     	return m.reply(loghandler.wait, text.repeat(jumlah * 1))
 
   } else if (/^reverse$/i.test(command)) {
@@ -802,7 +803,7 @@ ${'```' + package.description + '```'}
       if (!text) return m.reply(loghandler.wait, loghandler.notLang)
       var [lang, text] = text.split('|')
       if (!text) return m.reply(loghandler.wait, loghandler.notText)
-      if (text.length > 500) return m.reply(loghandler.wait, loghandler.overText)
+      if (text.length > 1000) return m.reply(loghandler.wait, loghandler.overText)
       var result = await saveToMedia(await tts(text, lang))
         return m.reply(loghandler.wait, 'Hasil:\n\n' + result)
 
@@ -3213,11 +3214,11 @@ Kata sandi: superiorman_
          return eval(`m.reply('${result.slice(0, result.length - 3)}')`)
 
   } else if (/^kisahnabi$/i.test(command)) {
-       if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
-       var res = await fetch(`https://raw.githubusercontent.com/shansekai/My-SQL-Results/main/kisahnabi/${text.toLowerCase()}.json`)
+  	 if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
+  	 var res = await fetch(`https://raw.githubusercontent.com/shansekai/My-SQL-Results/main/kisahnabi/${text.toLowerCase()}.json`)
        if (res.status !== 200) return m.reply(loghandler.wait, `Nama nabi *${text}* tidak dapat ditemukan!\n\nPastikan anda memasukan nama nabinya dengan benar`)
        var json = await res.json()
-       var result = `Kisah: ${json.name}\nTempat Kelahiran: ${json.tmp} (Tahun ${json.thn_kelahiran})\nUsia: ${json.usia}\nThumb:\n${json.image_url}\n\n\n${json.description}`
+       var result = `Kisah: ${json.name}\nTempat Kelahiran: ${json.tmp} (${json.thn_kelahiran})\nUsia: ${json.usia}\nThumb:\n${json.image_url}\n\n\n${json.description}`
          return m.reply(loghandler.wait, result)
 
   } else return m.reply(loghandler.wait, loghandler.notCommand)
