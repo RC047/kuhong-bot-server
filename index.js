@@ -6,7 +6,7 @@ var fs = require('fs');
 var cheerio = require('cheerio');
 var cors = require('cors');
 var secure = require('ssl-express-www');
-var bodyParser = require('body-parser');
+var parser = require('body-parser');
 
 var { encryptHtml, encryptScript, arrayRegex } = require('./lib/js/functions.js');
 var user = require('./config.json');
@@ -18,15 +18,15 @@ app.set('json spaces', 2);
 app.use(cors());
 app.use(secure);
 app.use(express.static('public'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended: true }));
+app.use(parser.json());
+app.use(parser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended: true }));
 
 
 app.all('/', async (req, res, next) => {
 
 if (req.method !== 'POST') return res.status(200).sendFile(__dirname + '/index.html');
 var isWelcome = req.body.welcome ? req.body.welcome : req.query.welcome,
-    simiMode = req.body.simi ? req.body.simi : req.query.simi,
+    isSimi = req.body.simi ? req.body.simi : req.query.simi,
     appPackageName = req.body.appPackageName,
     messengerPackageName = req.body.messengerPackageName,
     isGroup = req.body.query.isGroup,
@@ -47,8 +47,8 @@ req.reply = (...message) => {
     return res.status(200).json({ status: res.statusCode || false, replies: message.reverse().map(v => new Object({ message: util.format(v) })) });
 }
 req.ignoreMessage = () => req.reply('');
-req.isWelcome = isWelcome == 'true' ? true : false;
-req.simiMode = simiMode == 'true' ? true : false;
+req.welcome = isWelcome == 'true' ? true : false;
+req.simi = isSimi == 'true' ? true : false;
 req.battery = '%battery%';
 req.time = '%hour_of_day%:%minute%:%second%';
 req.date = '%day_of_week% %day_of_month_short% %month_name% %year%';
