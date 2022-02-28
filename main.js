@@ -408,59 +408,59 @@ try {
 │${gc_link}
 ╰────
 ${readMore}
-╭─ *「 Main Menu 」
+╭─ *「 Main Menu 」*
 ${listMenu.main.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Downloaders Menu 」
+╭─ *「 Downloaders Menu 」*
 ${listMenu.downloaders.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Makers Menu 」
+╭─ *「 Makers Menu 」*
 ${listMenu.makers.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Groups Menu 」
+╭─ *「 Groups Menu 」*
 ${listMenu.groups.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Games Menu 」
+╭─ *「 Games Menu 」*
 ${listMenu.games.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Searchs Menu 」
+╭─ *「 Searchs Menu 」*
 ${listMenu.searchs.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Primbons Menu 」
+╭─ *「 Primbons Menu 」*
 ${listMenu.primbons.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Animes Menu 」
+╭─ *「 Animes Menu 」*
 ${listMenu.animes.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Randoms Menu 」
+╭─ *「 Randoms Menu 」*
 ${listMenu.randoms.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 News Menu 」
+╭─ *「 News Menu 」*
 ${listMenu.news.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Encrypts Menu 」
+╭─ *「 Encrypts Menu 」*
 ${listMenu.encrypts.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Tools Menu 」
+╭─ *「 Tools Menu 」*
 ${listMenu.tools.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Owners Menu 」
+╭─ *「 Owners Menu 」*
 ${listMenu.owners.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Others Menu 」
+╭─ *「 Others Menu 」*
 ${listMenu.others.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
@@ -473,7 +473,8 @@ ${'```' + package.description + '```'}
       return m.reply(loghandler.wait, menu)
 
   } else if (/^owner$/i.test(command)) {
-      return m.reply(loghandler.wait, `Owner Bot:\nhttps://wa.me/${owner}?text=Halo+bang+jago%21`)
+  	var str = 'Halo bang jago!'
+        return m.reply(loghandler.wait, `Owner Bot:\nhttps://wa.me/${owner}?text=${encodeURIComponent(str)}`)
 
   } else if (/^s(tatus|peed)|ping$/i.test(command)) {
   	var old = performance.now()
@@ -3212,11 +3213,11 @@ Kata sandi: superiorman_
          return eval(`m.reply('${result.slice(0, result.length - 3)}')`)
 
   } else if (/^kisahnabi$/i.test(command)) {
-  	 if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
-  	 var res = await fetch(`https://raw.githubusercontent.com/shansekai/My-SQL-Results/main/kisahnabi/${text}.json`)
+       if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
+       var res = await fetch(`https://raw.githubusercontent.com/shansekai/My-SQL-Results/main/kisahnabi/${text.toLowerCase()}.json`)
        if (res.status !== 200) return m.reply(loghandler.wait, `Nama nabi *${text}* tidak dapat ditemukan!\n\nPastikan anda memasukan nama nabinya dengan benar`)
        var json = await res.json()
-       var result = `Kisah: ${json.name}\nTempat Kelahiran: ${json.tmp} (${json.thn_kelahiran})\nUsia: ${json.usia}\nThumb:\n${json.image_url}\n\n\n${json.description}`
+       var result = `Kisah: ${json.name}\nTempat Kelahiran: ${json.tmp} (Tahun ${json.thn_kelahiran})\nUsia: ${json.usia}\nThumb:\n${json.image_url}\n\n\n${json.description}`
          return m.reply(loghandler.wait, result)
 
   } else return m.reply(loghandler.wait, loghandler.notCommand)
