@@ -24,7 +24,7 @@ var status = document.getElementById('status').textContent;
 if (status == 'Detecting...') {
     document.querySelector('body').remove();
     return document.write('<div style="text-align:center"><h1>Server is undergoing Maintenance</h1><br><h4>Report:<br><a href="https://wa.me/62895337278647" target="_blank">https://wa.me/62895337278647</a></h4></div>');
-    } else if (status == 'Offline') {
+} else if (status == 'Offline') {
     document.querySelector('body').remove();
     return document.write('<h1 style="text-align:center">Server is Offline!</h1>');
     }
