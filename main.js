@@ -337,6 +337,7 @@ try {
   if (m.welcome) {
       if (!senderMessage) return m.ignoreMessage()
       var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.query.prefix ? m.query.prefix.slice(0, 1) : '!'}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
+      if (isGroup) welcome = `Selamat ${salam} Member Grup\n*${groupName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.query.prefix ? m.query.prefix.slice(0, 1) : '!'}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
         return m.reply(welcome)
   } else if (m.simi) {
       if (!senderMessage) return m.ignoreMessage()
@@ -401,7 +402,6 @@ try {
 ╭─ *「 Information 」*
 │• < > = Wajib Diisi
 │• [ ] = Tidak Wajib Diisi
-│• (Premium) = Khusus Premium
 ╰────
 
 ╭─ *「 Join Group 」*
@@ -2243,8 +2243,7 @@ Tamat..
   } else if (/^resep|masak(an)?$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
       var res = await (await fetch(`https://masak-apa.tomorisakura.vercel.app/api/search/?q=${text}`)).json()
-      var random = Math.floor(Math.random() * 10)
-      var json = await (await fetch(`https://masak-apa.tomorisakura.vercel.app/api/recipe/${res.results[random].key}`)).json()
+      var json = await (await fetch(`https://masak-apa.tomorisakura.vercel.app/api/recipe/${pickRandom(res.results).key}`)).json()
       var hasil = `Title: ${json.results.title}\nAuthor: ${json.results.author.user}\nThumb: ${json.results.thumb}\nDipublikasikan: ${json.results.author.datePublished}\nTingkat: ${json.results.dificulty}\nWaktu: ${json.results.times}\nPorsi: ${json.results.servings}\n\nBahan-bahan:\n${json.results.ingredient[0].replace(/,/g, '\n')}\n\nLangkah2:\n${json.results.step[0].replace(/,/g, '\n').replace(/.,/g, '\n')}`
         return m.reply(loghandler.wait, hasil)
 
