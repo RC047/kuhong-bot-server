@@ -2725,11 +2725,11 @@ ${Math.floor(Math.random() * 50)} Zamrud
   } else if (/^film$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
       var res = await axios.get(`http://149.56.24.226/?s=${text}`, {
-                headers: { 
-                  'cache-control': 'no-transform',
-                  'content-type': 'text/html; charset=UTF-8',
-                  'User-Agent': m.get('User-Agent'),
-                }
+           headers: { 
+                 'cache-control': 'no-transform',
+                 'content-type': 'text/html; charset=UTF-8',
+                 'User-Agent': m.get('User-Agent'),
+           }
        })
        var hasil = []
        var $ = cheerio.load(res.data)
@@ -2894,9 +2894,9 @@ ${Math.floor(Math.random() * 50)} Zamrud
        .then(res => {
        var json = []
        var $ = cheerio.load(res.data)
-       $('div.wa-chat-body').each(function (c, d) {
-           var link = $(d).find('a').attr('href')
-           var subject = $(d).find('div.wa-chat-title-text').text().trim()
+       $('div.wa-chat-body').each(function (a, b) {
+           var link = $(b).find('a').attr('href')
+           var subject = $(b).find('div.wa-chat-title-text').text().trim()
            var hasil = { subject: subject.split('. ')[1].split('*')[0], link: link }
            json.push(hasil)
        })
@@ -3226,9 +3226,9 @@ Kata sandi: superiorman_
   var err = e.message ? e.message : e
   if (isApikey.test(err)) {
       err = err.replace(isApikey, function (match) {
-      var censored = ''
-      for (var i = 0; i < match.length; i++) censored += '*'
-      return censored
+          var censored = ''
+          for (var i = 0; i < match.length; i++) censored += '*'
+          return censored
       })
    }
   return m.reply(loghandler.wait, `*「 ERROR 」*\n\n${util.format(err)}`)
