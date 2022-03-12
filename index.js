@@ -43,7 +43,7 @@ req.reply = (...message) => {
      if (message[i]) console.info(`${botName}:\n${util.format(message[i])}`);
      }
   }
-    return res.status(200).json({ status: res.statusCode || false, replies: message.reverse().map(v => new Object({ message: util.format(v) })) });
+    return res.status(200).json({ status: res.statusCode, replies: message.reverse().map(v => new Object({ message: util.format(v) })) });
 }
 req.ignoreMessage = () => req.reply('');
 req.welcome = isWelcome == 'true' ? true : false;
