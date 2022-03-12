@@ -325,7 +325,7 @@ var listMenu = {
 
 try {
   if (m.get('SELF_MODE') == 'true') {
-  	if (senderName !== owner) return m.ignoreMessage()
+  	if (!isOwner) return m.ignoreMessage()
   } else if (m.welcome) {
       if (!senderMessage) return m.ignoreMessage()
       var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.get('BOT_PREFIX') ? m.get('BOT_PREFIX').slice(0, 1) : '!'}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
