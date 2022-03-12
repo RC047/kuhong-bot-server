@@ -37,7 +37,7 @@ m.reply.toString = () => 'function reply() { [native code] }'
 var package = require('./package.json')
 var { apikey } = require('./config.json')
 var botName = m.get('BOT_NAME')
-var owner = m.get('OWNER_NUMBER')
+var owner = m.get('OWNER_NUMBER').replace(/[-+<>@]/g, '').replace(/ +/g, '')
 var group_link = m.get('GROUP_LINK')
 var donate_link = m.get('DONATE_LINK')
 var jadwal = m.get('BOT_SCHEDULE')
