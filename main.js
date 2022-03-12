@@ -35,16 +35,15 @@ async function handler(m, { appPackageName, messengerPackageName, isOwner, isPre
 handler.toString = () => 'async function handler() { [native code] }'
 m.reply.toString = () => 'function reply() { [native code] }'
 var package = require('./package.json')
-var config = require('./config.json')
-var { apikey } = config
-var botName = m.query.name ? m.query.name : config.botName
-var owner = m.query.phone ? m.query.phone.replace(/[-+<>@]/g, '').replace(/ +/g, '') : config.owner
-var gc_link = m.query.linkgc ? m.query.linkgc : 'https://chat.whatsapp.com/HDOZX7OoFYK1bTwftkY5Si'
-var donate_link = m.query.donate ? m.query.donate : 'https://saweria.co/donate/RC047'
-var jadwal = m.query.jadwal ? m.query.jadwal : '07:00 - 21:00'
+var { apikey } = require('./config.json')
+var botName = m.get('BOT_NAME')
+var owner = m.get('OWNER_NUMBER')
+var group_link = m.get('GROUP_LINK')
+var donate_link = m.get('DONATE_LINK')
+var jadwal = m.get('BOT_SCHEDULE')
 
 var date = new Date()
-var prefix = new RegExp('^[' + (m.query.prefix ? m.query.prefix : 'zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-') + ']', 'gi')
+var prefix = new RegExp('^[' + (m.get('BOT_PREFIX') == 'Multi' ? m.get('BOT_PREFIX') : 'zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-') + ']', 'gi')
 var readMore = String.fromCharCode(8206).repeat(4001)
 var isApikey = new RegExp(apikey.kuhong + '|' + apikey.xteam + '|' + apikey.zeks + '|' + apikey.zekais + '|' + apikey.imgbb + '|' + apikey.removebg, 'gi')
 var isGroupLink = /(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})/gi
@@ -61,19 +60,12 @@ else if (hours == 15 || hours == 16 || hours == 17) salam = 'Sore'
 else if (hours == 18 || hours == 19 || hours == 20 || hours == 21 || hours == 22 || hours == 23 || hours == 0 || hours == 1 || hours == 2 || hours == 3) salam = 'Malam'
 
 var opts = {
-	antidelete: false,
-	antilink: false,
-	antitoxic: true,
-	antiflood: false,
-	antivirtex: false
+	antidelete: m.get('ANTI_DELETE'),
+	antilink: m.get('ANTI_LINK'),
+	antitoxic: m.get('ANTI_TOXIC'),
+	antiflood: m.get('ANTI_FLOOD'),
+	antivirtex: m.get('ANTI_VIRTEX')
 }
-try { var afk = JSON.parse(await fs.readFileSync('./tmp/' + senderName + '_afk.json')) } catch (e) { afk = { name: null, reason: null } }
-try { var antidelete = await fs.readFileSync('./tmp/antidelete.txt').toString() == 'true' ? true : false } catch (e) { antidelete = opts.antidelete }
-try { var antilink = await fs.readFileSync('./tmp/antilink.txt').toString() == 'true' ? true : false } catch (e) { antilink = opts.antilink }
-try { var antitoxic = await fs.readFileSync('./tmp/antitoxic.txt').toString() == 'true' ? true : false } catch (e) { antitoxic = opts.antitoxic }
-try { var antiflood = await fs.readFileSync('./tmp/antiflood.txt').toString() == 'true' ? true : false } catch (e) { antiflood = opts.antiflood }
-try { var antivirtex = await fs.readFileSync('./tmp/antivirtex.txt').toString() == 'true' ? true : false } catch (e) { antivirtex = opts.antivirtex }
-
 var loghandler = {
     notCommand: `*「 NOT FOUND 」*\n\nMaaf *${senderName}*,,\nPerintah *${usedPrefix + command}* tidak terdaftar di *${usedPrefix}menu*`,
     wait: 'Mohon tunggu sebentar...',
@@ -103,7 +95,6 @@ var loghandler = {
     overLength: 'Jumlah terlalu banyak!',
     imageOnly: 'Hanya dapat digunakan untuk Gambar!'
 }
-
 var listMenu = {
     main: [
 'help',
@@ -137,8 +128,6 @@ var listMenu = {
      ],
     groups: [
 'afk <alasan>',
-'enable <option>',
-'disable <option>',
 'hidetag [text]',
 'hidetext [text]'
      ],
@@ -334,12 +323,14 @@ var listMenu = {
 }
 
 try {
-  if (m.welcome) {
+  if (m.get('SELF_MODE') == 'true') {
+  	if (senderName !== owner) return m.ignoreMessage()
+  } else if (m.welcome) {
       if (!senderMessage) return m.ignoreMessage()
-      var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.query.prefix ? m.query.prefix.slice(0, 1) : '!'}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
-      if (isGroup) welcome = `Selamat ${salam} Member Grup\n*${groupName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.query.prefix ? m.query.prefix.slice(0, 1) : '!'}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
+      var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.get('BOT_PREFIX') ? m.get('BOT_PREFIX').slice(0, 1) : '!'}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
+      if (isGroup) welcome = `Selamat ${salam} Member Grup\n*${groupName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.get('BOT_PREFIX') ? m.get('BOT_PREFIX').slice(0, 1) : '!'}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
         return m.reply(welcome)
-  } else if (m.simi) {
+  } else if (m.get('SIMI_MODE') == 'true') {
       if (!senderMessage) return m.ignoreMessage()
       var tmp = await (await fetch(`https://raw.githubusercontent.com/herokuapp-com/kuhong-api/main/api/simsimi.json`)).json()
       var { result } = pickRandom(tmp) || 'Simi nggak paham apa maksudmu'
@@ -356,19 +347,19 @@ try {
       return m.reply(`*「 BERHENTI AFK 」*\n\nSelamat datang kembali *${afk.name}!*\nudah beres ${afk.reason}nya kan?`)
   } else if (isGroup && afk.name !== null && senderMessage.includes(afk.name == null ? Math.floor(Math.random() * 10000) : afk.name)) {
       return m.reply(`*「 SEDANG AFK 」*\n\nSshhh!!! Jangan ganggu dia!\nDianya lagi ${afk.reason} dulu katanya`)
-  } else if (isGroup && antilink && isGroupLink.test(senderMessage)) {
+  } else if (isGroup && opts.antilink && isGroupLink.test(senderMessage)) {
       var matched = senderMessage.match(isGroupLink).join('\n')
       return m.reply(`*「 ANTI LINK 」*\n\nDari: ${senderName}\nMember: ${groupName}\nLink:\n${matched}\nPesan:\n${senderMessage}\n\n\n_Sebelum share link mohon izin keadmin dulu ya!_`)
-  } else if (isGroup && antitoxic && isToxic.test(senderMessage)) {
+  } else if (isGroup && opts.antitoxic && isToxic.test(senderMessage)) {
       var matched = senderMessage.match(isToxic).join(', ')
-      if (/masuk|lanjutkan|banjir|(per)?panjang|asupan/i.test(senderMessage)) return m.ignoreMessage()
+      if (/masuk|lanjut|banjir|(per)?panjang|asupan|cewe/i.test(senderMessage)) return m.ignoreMessage()
       if (prefix.test(senderMessage)) return m.ignoreMessage()
       return m.reply(`*「 ANTI TOXIC 」*\n\nDari: ${senderName}\nMember: ${groupName}\nKata Kasar: ${matched}\nPesan:\n${senderMessage}\n\n\n_Biasakan Jangan Toxic ya!_`)
-  } else if (isGroup && antidelete && senderMessage == 'Pesan ini telah dihapus') {
+  } else if (isGroup && opts.antidelete && senderMessage == 'Pesan ini telah dihapus') {
       return m.reply(`*「 ANTI DELETE 」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi menghapus pesan!_`)
-  } else if (isGroup && antivirtex && isVirtex.test(senderMessage) && senderMessage.length > 1000) {
+  } else if (isGroup && opts.antivirtex && isVirtex.test(senderMessage) && senderMessage.length > 1000) {
       return m.reply(`*「 ANTI VIRTEX 」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi mengirim virtex!_`)
-  } else if (isGroup && antiflood && senderMessage.length > 1000) {
+  } else if (isGroup && opts.antiflood && senderMessage.length > 5000) {
       return m.reply(`*「 ANTI FLOOD  」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi mengirim pesan terlalu panjang!_`)
   } else if (/^kuhong$/i.test(senderMessage)) {
       return m.reply('Yaa Aku Disini??\n\nIngin Memulai Bot? Ketik !help atau !menu yaa ;)')
@@ -405,7 +396,7 @@ try {
 ╰────
 
 ╭─ *「 Join Group 」*
-│${gc_link}
+│${group_link}
 ╰────
 ${readMore}
 ╭─ *「 Main Menu 」*
@@ -467,7 +458,7 @@ ${listMenu.others.map(v => `│• ${usedPrefix + v}`).join('\n')}
 
 User ID:
 _${await createHash('md5').update(senderName).digest('hex')}_
-*${m.query.name ? m.query.name.toLowerCase().replace(/ +/g, '-') : package.name}@^${m.appVersion}*
+*${botName.toLowerCase().replace(/ +/g, '-')}@^${m.appVersion}*
 ${'```' + package.description + '```'}
 `.trim()
       return m.reply(loghandler.wait, menu)
@@ -2944,31 +2935,6 @@ ${Math.floor(Math.random() * 50)} Zamrud
        if (!isURL(text)) return m.reply(loghandler.wait, loghandler.invalidLink)
        var json = await (await fetch(`https://api.xteam.xyz/shorturl/bitly?url=${text}&apikey=${apikey.xteam}`)).json()
          return m.reply(loghandler.wait, 'Hasil:\n\n' + json.result.link)
-
-  } else if (/^(ena|disa)ble$/i.test(command)) {
-  	 if (!isGroup) return m.reply(loghandler.wait, loghandler.groupOnly)
-       var type = (text || '').toLowerCase()
-       var isEnable = /^enable$/i.test(command)
-       var options = ['antidelete', 'antilink', 'antitoxic', 'antivirtex', 'antiflood']
-       switch (type) {
-       	case 'antidelete':
-           await fs.writeFileSync('./tmp/antidelete.txt', isEnable.toString())
-              break
-           case 'antilink':
-           await fs.writeFileSync('./tmp/antilink.txt', isEnable.toString())
-              break
-           case 'antitoxic':
-           await fs.writeFileSync('./tmp/antitoxic.txt', isEnable.toString())
-              break
-           case 'antivirtex':
-           await fs.writeFileSync('./tmp/antivirtex.txt', isEnable.toString())
-              break
-           case 'antiflood':
-           await fs.writeFileSync('./tmp/antiflood.txt', isEnable.toString())
-              break
-           default: return m.reply(loghandler.wait, `List Opsi:\n${options.map(v => `- ${v}`).join('\n')}\n\nContoh:\n${usedPrefix + command} antilink`)
-       }
-         return m.reply(loghandler.wait, `*${type}* berhasil di${isEnable ? 'nyala' : 'mati'}kan untuk bot ini`)
 
   } else if (/^akungratis$/i.test(command)) {
   	var str = `
