@@ -43,7 +43,7 @@ var donate_link = m.get('DONATE_LINK')
 var jadwal = m.get('BOT_SCHEDULE')
 
 var date = new Date()
-var prefix = new RegExp('^[' + (m.get('BOT_PREFIX') == 'Multi' ? m.get('BOT_PREFIX') : 'zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-') + ']', 'gi')
+var prefix = new RegExp('^[' + m.get('BOT_PREFIX') + ']', 'gi')
 var readMore = String.fromCharCode(8206).repeat(4001)
 var isApikey = new RegExp(apikey.kuhong + '|' + apikey.xteam + '|' + apikey.zeks + '|' + apikey.zekais + '|' + apikey.imgbb + '|' + apikey.removebg, 'gi')
 var isGroupLink = /(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})/gi
