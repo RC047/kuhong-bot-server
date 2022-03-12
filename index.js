@@ -69,7 +69,7 @@ var text = senderMessage.split(command + ' ')[1] ? senderMessage.split(command +
 await main.handler(req, {
    appPackageName: appPackageName,
    messengerPackageName: messengerPackageName,
-   isOwner: isTestMessage || arrayRegex(user.owner).test(senderName),
+   isOwner: isTestMessage || new RegExp(req.get('OWNER_NUMBER')).test(senderName),
    isPremium: isTestMessage || arrayRegex(user.premium).test(senderName),
    isGroup: isGroup,
    senderMessage: senderMessage,
