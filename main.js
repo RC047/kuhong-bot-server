@@ -61,11 +61,11 @@ else if (hours == 18 || hours == 19 || hours == 20 || hours == 21 || hours == 22
 
 try { var afk = JSON.parse(await fs.readFileSync('./tmp/' + senderName + '_afk.json')) } catch (e) { afk = { name: null, reason: null } }
 var opts = {
-	antidelete: m.get('ANTI_DELETE'),
-	antilink: m.get('ANTI_LINK'),
-	antitoxic: m.get('ANTI_TOXIC'),
-	antiflood: m.get('ANTI_FLOOD'),
-	antivirtex: m.get('ANTI_VIRTEX')
+	antidelete: /^(true|enable|on|1)$/i.test(m.get('ANTI_DELETE')),
+	antilink: /^(true|enable|on|1)$/i.test(m.get('ANTI_LINK')),
+	antitoxic: /^(true|enable|on|1)$/i.test(m.get('ANTI_TOXIC')),
+	antiflood: /^(true|enable|on|1)$/i.test(m.get('ANTI_FLOOD')),
+	antivirtex: /^(true|enable|on|1)$/i.test(m.get('ANTI_VIRTEX'))
 }
 var loghandler = {
     notCommand: `*「 NOT FOUND 」*\n\nMaaf *${senderName}*,,\nPerintah *${usedPrefix + command}* tidak terdaftar di *${usedPrefix}menu*`,
@@ -324,14 +324,13 @@ var listMenu = {
 }
 
 try {
-  if (m.get('SELF_MODE') == 'true') {
-  	if (!isOwner) return m.ignoreMessage()
-  } else if (m.welcome) {
+  if (/^(true|enable|on|1)$/i.test(m.get('SELF_MODE'))) { if (!isOwner) return m.ignoreMessage() }
+  if (m.welcome) {
       if (!senderMessage) return m.ignoreMessage()
       var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.get('BOT_PREFIX') ? m.get('BOT_PREFIX').slice(0, 1) : '!'}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
       if (isGroup) welcome = `Selamat ${salam} Member Grup\n*${groupName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.get('BOT_PREFIX') ? m.get('BOT_PREFIX').slice(0, 1) : '!'}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
         return m.reply(welcome)
-  } else if (m.get('SIMI_MODE') == 'true') {
+  } else if (/^(true|enable|on|1)$/i.test(m.get('SIMI_MODE'))) {
       if (!senderMessage) return m.ignoreMessage()
       var tmp = await (await fetch(`https://raw.githubusercontent.com/herokuapp-com/kuhong-api/main/api/simsimi.json`)).json()
       var { result } = pickRandom(tmp) || 'Simi nggak paham apa maksudmu'
@@ -381,6 +380,7 @@ try {
 │• Name: ${senderName}${isGroup ? '\n│• Group: ' + groupName : ''}
 │• Location: ${isGroup ? 'Group' : 'Private'} Chat
 │• Prefix: [ ${usedPrefix} ]
+│• Mode: ${/^(true|enable|on|1)$/i.test(m.get('SELF_MODE')) ? 'Self' : 'Public'}
 │• Jadwal: ${jadwal}
 │• Time: ${m.time}
 │• Uptime: ${muptime(process.uptime())}
@@ -492,6 +492,7 @@ ${'```' + package.description + '```'}
 │• Name: ${botName}
 │• Device: ${m.get('User-Agent').split('(')[1] ? m.get('User-Agent').replace(/[;]/g, '').split('(')[1].split(')')[0] : m.get('User-Agent').replace(/[;]/g, '')}
 │• Server: ${m.get('Host')}
+│• Mode: ${/^(true|enable|on|1)$/i.test(m.get('SELF_MODE')) ? 'Self' : 'Public'}
 │• Library: AutoResponder
 │• Application: ${messengerPackageName}
 │• Type: Text Only (Non Media)
