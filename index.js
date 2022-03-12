@@ -25,8 +25,7 @@ app.use(parser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended: tru
 app.all('/', async (req, res, next) => {
 
 if (req.method !== 'POST') return res.status(200).sendFile(__dirname + '/index.html');
-var isWelcome = req.body.welcome ? req.body.welcome : req.query.welcome,
-    appPackageName = req.body.appPackageName,
+var appPackageName = req.body.appPackageName,
     messengerPackageName = req.body.messengerPackageName,
     isGroup = req.body.query.isGroup,
     senderMessage = util.format(req.body.query.message),
@@ -46,7 +45,6 @@ req.reply = (...message) => {
     return res.status(200).json({ status: res.statusCode, replies: message.reverse().map(v => new Object({ message: util.format(v) })) });
 }
 req.ignoreMessage = () => req.reply('');
-req.welcome = isWelcome == 'true' ? true : false;
 req.battery = '%battery%';
 req.time = '%hour_of_day%:%minute%:%second%';
 req.date = '%day_of_week% %day_of_month_short% %month_name% %year%';
