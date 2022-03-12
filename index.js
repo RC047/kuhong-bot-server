@@ -36,7 +36,7 @@ var isWelcome = req.body.welcome ? req.body.welcome : req.query.welcome,
 
 try {
 req.reply = (...message) => {
-  var botName = req.query.name ? req.query.name : user.botName;
+  var botName = req.get('BOT_NAME')
   if (!message) message = new Array('');
   else {
      for (var i = message.reverse().length; i > -1; i--) {
