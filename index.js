@@ -26,7 +26,6 @@ app.all('/', async (req, res, next) => {
 
 if (req.method !== 'POST') return res.status(200).sendFile(__dirname + '/index.html');
 var isWelcome = req.body.welcome ? req.body.welcome : req.query.welcome,
-    isSimi = req.body.simi ? req.body.simi : req.query.simi,
     appPackageName = req.body.appPackageName,
     messengerPackageName = req.body.messengerPackageName,
     isGroup = req.body.query.isGroup,
@@ -48,7 +47,6 @@ req.reply = (...message) => {
 }
 req.ignoreMessage = () => req.reply('');
 req.welcome = isWelcome == 'true' ? true : false;
-req.simi = isSimi == 'true' ? true : false;
 req.battery = '%battery%';
 req.time = '%hour_of_day%:%minute%:%second%';
 req.date = '%day_of_week% %day_of_month_short% %month_name% %year%';
