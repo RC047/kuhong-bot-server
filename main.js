@@ -32,18 +32,26 @@ var { saveToMedia, math, modes, encryptHtml, encryptScript, escapeFull, getZodia
 
 async function handler(m, { appPackageName, messengerPackageName, isOwner, isPremium, isGroup, senderMessage, messageType, groupName, senderName, usedPrefix, command, text }) {
 
+String.prototype.toNumber = function() { return Number(this.toString()) }
 handler.toString = () => 'function handler() { [native code] }'
 m.reply.toString = () => 'function reply() { [native code] }'
+
 var package = require('./package.json')
 var { apikey } = require('./config.json')
-var botName = m.get('BOT_NAME')
-var owner = m.get('OWNER_NUMBER').replace(/[-+<>@]/g, '').replace(/ +/g, '')
-var group_link = m.get('GROUP_LINK')
-var donate_link = m.get('DONATE_LINK')
-var jadwal = m.get('BOT_SCHEDULE')
+var botName = m.get('BOT_NAME') || 'WhatsApp Bot'
+var owner = (m.get('OWNER_NUMBER') || '62895337278647').replace(/[-+<>@]/g, '').replace(/ +/g, '')
+var jadwal = m.get('BOT_SCHEDULE') || '-'
+var group_link = m.get('GROUP_LINK') || '-'
+var donate_link = m.get('DONATE_LINK') || '-'
+var gh_link = m.get('GITHUB_LINK') || '-'
+var yt_link = m.get('YOUTUBE_LINK') || '-'
+var ig_link = m.get('INSTAGRAM_LINK') || '-'
+var fb_link = m.get('FACEBOOK_LINK') || '-'
+var twt_link = m.get('TWITTER_LINK') || '-'
+var tt_link = m.get('TIKTOK_LINK') || '-'
 
 var date = new Date()
-var prefix = new RegExp('^[' + m.get('BOT_PREFIX') + ']', 'gi')
+var prefix = new RegExp('^[' + m.get('BOT_PREFIX') || '!' + ']', 'gi')
 var readMore = String.fromCharCode(8206).repeat(4001)
 var isApikey = new RegExp(apikey.kuhong + '|' + apikey.xteam + '|' + apikey.zeks + '|' + apikey.zekais + '|' + apikey.imgbb + '|' + apikey.removebg, 'gi')
 var isGroupLink = /(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})/gi
@@ -61,12 +69,12 @@ else if (hours == 18 || hours == 19 || hours == 20 || hours == 21 || hours == 22
 
 try { var afk = JSON.parse(await fs.readFileSync('./tmp/' + senderName + '_afk.json')) } catch (e) { afk = { name: null, reason: null } }
 var opts = {
-	antidelete: /^(true|enable|on|1)$/i.test(m.get('ANTI_DELETE')),
-	antilink: /^(true|enable|on|1)$/i.test(m.get('ANTI_LINK')),
-	antitoxic: /^(true|enable|on|1)$/i.test(m.get('ANTI_TOXIC')),
-	antiflood: /^(true|enable|on|1)$/i.test(m.get('ANTI_FLOOD')),
-	antivirtex: /^(true|enable|on|1)$/i.test(m.get('ANTI_VIRTEX')),
-	antisticker: /^(true|enable|on|1)$/i.test(m.get('ANTI_STICKER'))
+	antidelete: /^true|enable|on|1$/i.test(m.get('ANTI_DELETE')),
+	antilink: /^true|enable|on|1$/i.test(m.get('ANTI_LINK')),
+	antitoxic: /^true|enable|on|1$/i.test(m.get('ANTI_TOXIC')),
+	antiflood: /^true|enable|on|1$/i.test(m.get('ANTI_FLOOD')),
+	antivirtex: /^true|enable|on|1$/i.test(m.get('ANTI_VIRTEX')),
+	antisticker: /^true|enable|on|1$/i.test(m.get('ANTI_STICKER'))
 }
 var loghandler = {
     notCommand: `*「 NOT FOUND 」*\n\nMaaf *${senderName}*,,\nPerintah *${usedPrefix + command}* tidak terdaftar di *${usedPrefix}menu*`,
@@ -117,8 +125,8 @@ var listMenu = {
 'intro <text> *(Premium)*',
 'attp <text>',
 'ttp <text>',
-'textpro <effect|text|[text2]>',
-'photooxy <effect|text|[text2]>',
+'textpro <effect|text|text2>',
+'photooxy <effect|text|text2>',
 'barcode <text>',
 'qrcode <text>',
 'tahta <text>',
@@ -152,21 +160,21 @@ var listMenu = {
 'suitjawa <pilihan>',
 'mining',
 'mine',
-'howgay [nama]',
-'howbucin [nama]',
-'howtolol [nama]',
-'howganteng [nama]',
-'howcantik [nama]',
-'howsad [nama]',
-'howpintar [nama]',
-'howbodoh [nama]',
-'howbaper [nama]',
-'howgila [nama]',
-'howgabut [nama]',
-'howlesbi [nama]',
-'howstres [nama]',
-'howjones [nama]',
-'howsange [nama]'
+'howgay <nama>',
+'howbucin <nama>',
+'howtolol <nama>',
+'howganteng <nama>',
+'howcantik <nama>',
+'howsad <nama>',
+'howpintar <nama>',
+'howbodoh <nama>',
+'howbaper <nama>',
+'howgila <nama>',
+'howgabut <nama>',
+'howlesbi <nama>',
+'howstres <nama>',
+'howjones <nama>',
+'howsange <nama>'
      ],
     searchs: [
 'tiktokstalk <username>',
@@ -283,6 +291,7 @@ var listMenu = {
 'reverse <text>',
 'readmore <text|text2>',
 'spoiler <text|text2>',
+'empty',
 'spamchat <jumlah|pesan> *(Premium)*',
 'spamcall <nomor hp>',
 'spamsms <nomor hp>',
@@ -325,17 +334,16 @@ var listMenu = {
 }
 
 try {
-  if (/^(true|enable|on|1)$/i.test(m.get('SELF_MODE'))) { if (!isOwner) return m.ignoreMessage() }
-  var day = date.getDay()
-  var target = 0
-  if (/^(true|enable|on|1)$/i.test(m.get('WELCOME_MESSAGE')) && day == target) {
+  if (/^true|enable|on|1$/i.test(m.get('SELF_MODE'))) { if (!isOwner) return m.ignoreMessage() }
+  try { var target = await fs.readFileSync('./tmp/welcome.txt').toNumber() } catch (e) { target = 0 }
+  if (/^true|enable|on|1$/i.test(m.get('WELCOME_MESSAGE')) && date.getDay() == target) {
       if (!senderMessage) return m.ignoreMessage()
       var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.get('BOT_PREFIX') ? m.get('BOT_PREFIX').slice(0, 1) : '!'}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
       if (isGroup) welcome = `Selamat ${salam} Member Grup\n*${groupName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.get('BOT_PREFIX') ? m.get('BOT_PREFIX').slice(0, 1) : '!'}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
-      target += 1 // set per day
-      if (target > 6) target = 0
+      await fs.writeFileSync('./tmp/welcome.txt', (target + 1).toString())
+      if (target > 6) await fs.writeFileSync('./tmp/welcome.txt', '0')
         return m.reply(welcome)
-  } else if (/^(true|enable|on|1)$/i.test(m.get('SIMI_MODE'))) {
+  } else if (/^true|enable|on|1$/i.test(m.get('SIMI_MODE'))) {
       if (!senderMessage) return m.ignoreMessage()
       var tmp = await (await fetch(`https://raw.githubusercontent.com/herokuapp-com/kuhong-api/main/api/simsimi.json`)).json()
       var { result } = pickRandom(tmp) || 'Simi nggak paham apa maksudmu'
@@ -381,13 +389,13 @@ try {
       var weton = ['Pahing', 'Pon', 'Wage', 'Kliwon', 'Legi'][Math.floor(d / 84600000) % 5]
       var islamic = Intl.DateTimeFormat('id-TN-u-ca-islamic', { day: 'numeric', month: 'long', year: 'numeric' }).format(d)
       var menu = `
-╭─ *「 ${botName} 」*
+╭─ *「 ${botName.toUpperCase()} 」*
 │
 │ _Selamat *${salam}*!_
 │• Name: ${senderName}${isGroup ? '\n│• Group: ' + groupName : ''}
 │• Location: ${isGroup ? 'Group' : 'Private'} Chat
+│• Mode: ${/^true|enable|on|1$/i.test(m.get('SELF_MODE')) ? 'Self' : 'Public'}
 │• Prefix: [ ${usedPrefix} ]
-│• Mode: ${/^(true|enable|on|1)$/i.test(m.get('SELF_MODE')) ? 'Self' : 'Public'}
 │• Jadwal: ${jadwal}
 │• Time: ${m.time}
 │• Uptime: ${muptime(process.uptime())}
@@ -398,68 +406,73 @@ try {
 │• Total Replies: ${m.replyCount.all}
 ╰────
 
-╭─ *「 Information 」*
-│• < > = Wajib Diisi
-│• [ ] = Tidak Wajib Diisi
+╭─ *「 SOCIAL MEDIA 」*
+│
+│• GitHub: ${gh_link}
+│• YouTube: ${yt_link}
+│• Instagram: ${ig_link}
+│• FaceBook: ${fb_link}
+│• Twitter: ${twt_link}
+│• Tiktok: ${tt_link}
 ╰────
 
-╭─ *「 Join Group 」*
+╭─ *「 JOIN GROUP 」*
 │${group_link}
 ╰────
 ${readMore}
-╭─ *「 Main Menu 」*
+╭─ *「 MAIN MENU 」*
 ${listMenu.main.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Downloaders Menu 」*
+╭─ *「 DOWNLOADERS MENU 」*
 ${listMenu.downloaders.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Makers Menu 」*
+╭─ *「 MAKERS MENU 」*
 ${listMenu.makers.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Groups Menu 」*
+╭─ *「 GROUPS MENU 」*
 ${listMenu.groups.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Games Menu 」*
+╭─ *「 GAMES MENU 」*
 ${listMenu.games.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Searchs Menu 」*
+╭─ *「 SEARCHS MENU 」*
 ${listMenu.searchs.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Primbons Menu 」*
+╭─ *「 PRIMBONS MENU 」*
 ${listMenu.primbons.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Animes Menu 」*
+╭─ *「 ANIMES MENU 」*
 ${listMenu.animes.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Randoms Menu 」*
+╭─ *「 RANDOMS MENU 」*
 ${listMenu.randoms.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 News Menu 」*
+╭─ *「 NEWS MENU 」*
 ${listMenu.news.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Encrypts Menu 」*
+╭─ *「 ENCRYPTS MENU 」*
 ${listMenu.encrypts.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Tools Menu 」*
+╭─ *「 TOOLS MENU 」*
 ${listMenu.tools.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Owners Menu 」*
+╭─ *「 OWNERS MENU 」*
 ${listMenu.owners.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 Others Menu 」*
+╭─ *「 OTHERS MENU 」*
 ${listMenu.others.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
@@ -472,8 +485,8 @@ ${'```' + package.description + '```'}
       return m.reply(loghandler.wait, menu)
 
   } else if (/^owner$/i.test(command)) {
-  	var str = 'Halo bang jago!'
-        return m.reply(loghandler.wait, `Owner Bot:\nhttps://wa.me/${owner}?text=${encodeURIComponent(str)}`)
+  	var str = `Owner Bot:\nhttps://wa.me/${owner}?text=${encodeURIComponent('Halo bang jago!')}`
+        return m.reply(loghandler.wait, result)
 
   } else if (/^s(tatus|peed)|ping$/i.test(command)) {
   	var old = performance.now()
@@ -497,9 +510,9 @@ ${'```' + package.description + '```'}
 ╭─ *「 STATUS BOT 」*
 │
 │• Name: ${botName}
-│• Device: ${m.get('User-Agent').replace(/[;]/g, '').split('(')[1].split(')')[0] || 'Unknown'}
+│• Device: ${(m.get('User-Agent') || 'Unknown').replace(/[;]/g, '').split('(')[1].split(')')[0]}
 │• Server: ${m.get('Host')}
-│• Mode: ${/^(true|enable|on|1)$/i.test(m.get('SELF_MODE')) ? 'Self' : 'Public'}
+│• Mode: ${/^true|enable|on|1$/i.test(m.get('SELF_MODE')) ? 'Self' : 'Public'}
 │• Library: AutoResponder
 │• Application: ${messengerPackageName}
 │• Type: Text Only (Non Media)
@@ -663,8 +676,8 @@ ${'```' + package.description + '```'}
       var [text, jumlah] = text.split('|')
       if (!jumlah) return m.reply(loghandler.wait, loghandler.notLength)
       if (isNaN(jumlah)) return m.reply(loghandler.wait, loghandler.numberOnly)
-      if (jumlah * 1 > 1000) return m.reply(loghandler.wait, loghandler.overLength)
-    	return m.reply(loghandler.wait, text.repeat(jumlah * 1))
+      if (jumlah.toNumber() > 1000) return m.reply(loghandler.wait, loghandler.overLength)
+    	return m.reply(loghandler.wait, text.repeat(jumlah.toNumber()))
 
   } else if (/^reverse$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notText)
@@ -736,7 +749,7 @@ ${'```' + package.description + '```'}
   } else if (/^randombytes?$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notLength)
       if (isNaN(text)) return m.reply(loghandler.wait, loghandler.numberOnly)
-      var result = await randomBytes(text * 1)
+      var result = await randomBytes(text.toNumber())
     	return m.reply(loghandler.wait, result)
 
   } else if (/^binary$/i.test(command)) {
@@ -774,7 +787,7 @@ ${'```' + package.description + '```'}
     	return m.reply(loghandler.wait, `IQ Anda sebesar ${iq}!`)
 
   } else if (/^dadu$/i.test(command)) {
-      var dadu = Math.floor(Math.random() * 12)
+      var dadu = Math.floor(Math.random() * 2)
     	return m.reply(loghandler.wait, `Kamu mendapatkan angka ${dadu}!`)
 
   } else if (/^(al)?quran$/i.test(command)) {
@@ -797,7 +810,7 @@ ${'```' + package.description + '```'}
       await msu.status(server).then(res => {
       return m.reply(loghandler.wait, `IP/Host: ${res.host}\nPort: ${res.port}\nVersion: ${res.version}\nProtocol Version: ${res.protocolVersion}\nOnline Player: ${res.onlinePlayers}\nMax Player: ${res.maxPlayers}\nMotd: ${res.description.descriptionText}`)
       })
-      } else return m.reply(loghandler.wait, `Tipe yang tersedia adalah bedrock dan java\n\nContoh:\n${usedPrefix}minecraft bedrock|play.nethergames.org`)
+      } else return m.reply(loghandler.wait, `Tipe yang tersedia adalah bedrock dan java\n\nContoh:\n${usedPrefix + command} bedrock|play.nethergames.org`)
 
   } else if (/^tts$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notLang)
@@ -1546,9 +1559,9 @@ ${'```' + package.description + '```'}
   } else if (/^tggljadian|jadian$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notDate)
       if (!text.includes('-')) return m.reply(loghandler.wait, 'Gunakan "-" disetiap tanggalnya\n\nContoh: 27-10-04')
-      var tggl = text.split('-')[0] * 1
-      var bln = text.split('-')[1] * 1
-      var thn = text.split('-')[2] * 1
+      var tggl = text.split('-')[0].toNumber()
+      var bln = text.split('-')[1].toNumber()
+      var thn = text.split('-')[2].toNumber()
       if (isNaN(tggl)) return m.reply(loghandler.wait, loghandler.numberOnly)
       else if (isNaN(bln)) return m.reply(loghandler.wait, loghandler.numberOnly)
       else if (isNaN(thn)) return m.reply(loghandler.wait, loghandler.numberOnly)
@@ -1565,9 +1578,9 @@ ${'```' + package.description + '```'}
       if (!dates) return m.reply(loghandler.wait, loghandler.notDate)
       if (isNaN(dates.slice(0, 1))) return m.reply(loghandler.wait, loghandler.numberOnly)
       if (!dates.includes('-')) return m.reply(loghandler.wait, 'Gunakan "-" disetiap tanggalnya\n\nContoh: 27-10-04')
-      var tggl = dates.split('-')[0] * 1
-      var bln = dates.split('-')[1] * 1
-      var thn = dates.split('-')[2] * 1
+      var tggl = dates.split('-')[0].toNumber()
+      var bln = dates.split('-')[1].toNumber()
+      var thn = dates.split('-')[2].toNumber()
       if (isNaN(tggl)) return m.reply(loghandler.wait, loghandler.numberOnly)
       else if (isNaN(bln)) return m.reply(loghandler.wait, loghandler.numberOnly)
       else if (isNaN(thn)) return m.reply(loghandler.wait, loghandler.numberOnly)
@@ -1628,7 +1641,7 @@ ${'```' + package.description + '```'}
             return m.reply(loghandler.wait, hasil)
       }
 
-  } else if (/^modapk|apkdownload$/i.test(command)) {
+  } else if (/^(mod)?(apk)?download$/i.test(command)) {
       var result = `
 ╭─ *「 MOD APK 」*
 │
@@ -3181,10 +3194,10 @@ Kata sandi: superiorman_
        var [jumlah, pesan] = text.split('|')
        if (!jumlah) return m.reply(loghandler.wait, loghandler.notLength)
        if (isNaN(jumlah)) return m.reply(loghandler.wait, loghandler.numberOnly)
-       if (jumlah * 1 > 100) return m.reply(loghandler.wait, loghandler.overLength)
+       if (jumlah.toNumber() > 100) return m.reply(loghandler.wait, loghandler.overLength)
        if (!pesan) return m.reply(loghandler.wait, loghandler.notText)
        var result = ''
-       for (var i = jumlah * 1; i > 0; i--) result += pesan + '\',\''
+       for (var i = jumlah.toNumber(); i > 0; i--) result += pesan + '\',\''
          return eval(`m.reply('${result.slice(0, result.length - 3)}')`)
 
   } else if (/^kisahnabi$/i.test(command)) {
@@ -3194,6 +3207,10 @@ Kata sandi: superiorman_
        var json = await res.json()
        var result = `Kisah: ${json.name}\nTempat Kelahiran: ${json.tmp} (${json.thn_kelahiran})\nUsia: ${json.usia}\nThumb:\n${json.image_url}\n\n\n${json.description}`
          return m.reply(loghandler.wait, result)
+
+  } else if (/^blank|empty|kosong$/i.test(command)) {
+  	var result = String.fromCharCode(8206)
+  	  return m.reply(loghandler.wait, result)
 
   } else return m.reply(loghandler.wait, loghandler.notCommand)
 } catch (e) {
