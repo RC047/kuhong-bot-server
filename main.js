@@ -335,13 +335,13 @@ var listMenu = {
 
 try {
   if (/^true|enable|on|1$/i.test(m.get('SELF_MODE'))) { if (!isOwner) return m.ignoreMessage() }
-  try { var target = await fs.readFileSync('./tmp/welcome.txt').toString().toNumber() } catch (e) { target = 0 }
-  if (/^true|enable|on|1$/i.test(m.get('WELCOME_MESSAGE')) && date.getDay() == target) {
+  try { var target = await fs.readFileSync('./tmp/' + senderName + '_welcome.txt').toString() } catch (e) { target = '0' }
+  if (/^true|enable|on|1$/i.test(m.get('WELCOME_MESSAGE')) && date.getDay() == target.toNumber()) {
       if (!senderMessage) return m.ignoreMessage()
       var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : pickRandom(m.get('BOT_PREFIX').split(''))}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
       if (isGroup) welcome = `Selamat ${salam} Member Grup\n*${groupName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : pickRandom(m.get('BOT_PREFIX').split(''))}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
-      await fs.writeFileSync('./tmp/welcome.txt', (target + 1).toString())
-      if (target > 6) await fs.writeFileSync('./tmp/welcome.txt', '0')
+      await fs.writeFileSync('./tmp/' + senderName + '_welcome.txt', (target.toNumber() + 1).toString())
+      if (target.toNumber() > 6) await fs.writeFileSync('./tmp/' + senderName + '_welcome.txt', '0')
         return m.reply(welcome)
   } else if (/^true|enable|on|1$/i.test(m.get('SIMI_MODE'))) {
       if (!senderMessage) return m.ignoreMessage()
