@@ -35,7 +35,7 @@ var appPackageName = req.body.appPackageName,
 
 try {
 req.reply = (...message) => {
-  var botName = req.get('BOT_NAME')
+  var botName = req.get('BOT_NAME') || 'WhatsApp Bot'
   if (!message) message = new Array('');
   else {
      for (var i = message.reverse().length; i > -1; i--) {
