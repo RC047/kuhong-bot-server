@@ -32,7 +32,7 @@ var { saveToMedia, math, modes, encryptHtml, encryptScript, escapeFull, getZodia
 
 async function handler(m, { appPackageName, messengerPackageName, isOwner, isPremium, isGroup, senderMessage, messageType, groupName, senderName, usedPrefix, command, text }) {
 
-handler.toString = () => 'async function handler() { [native code] }'
+handler.toString = () => 'function handler() { [native code] }'
 m.reply.toString = () => 'function reply() { [native code] }'
 var package = require('./package.json')
 var { apikey } = require('./config.json')
@@ -65,7 +65,8 @@ var opts = {
 	antilink: /^(true|enable|on|1)$/i.test(m.get('ANTI_LINK')),
 	antitoxic: /^(true|enable|on|1)$/i.test(m.get('ANTI_TOXIC')),
 	antiflood: /^(true|enable|on|1)$/i.test(m.get('ANTI_FLOOD')),
-	antivirtex: /^(true|enable|on|1)$/i.test(m.get('ANTI_VIRTEX'))
+	antivirtex: /^(true|enable|on|1)$/i.test(m.get('ANTI_VIRTEX')),
+	antisticker: /^(true|enable|on|1)$/i.test(m.get('ANTI_STICKER'))
 }
 var loghandler = {
     notCommand: `*「 NOT FOUND 」*\n\nMaaf *${senderName}*,,\nPerintah *${usedPrefix + command}* tidak terdaftar di *${usedPrefix}menu*`,
@@ -325,10 +326,14 @@ var listMenu = {
 
 try {
   if (/^(true|enable|on|1)$/i.test(m.get('SELF_MODE'))) { if (!isOwner) return m.ignoreMessage() }
-  if (m.welcome) {
+  var day = date.getDay()
+  var target = 0
+  if (/^(true|enable|on|1)$/i.test(m.get('WELCOME_MESSAGE')) && day == target) {
       if (!senderMessage) return m.ignoreMessage()
       var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.get('BOT_PREFIX') ? m.get('BOT_PREFIX').slice(0, 1) : '!'}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
       if (isGroup) welcome = `Selamat ${salam} Member Grup\n*${groupName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.get('BOT_PREFIX') ? m.get('BOT_PREFIX').slice(0, 1) : '!'}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
+      target += 1 // set per day
+      if (target > 6) target = 0
         return m.reply(welcome)
   } else if (/^(true|enable|on|1)$/i.test(m.get('SIMI_MODE'))) {
       if (!senderMessage) return m.ignoreMessage()
@@ -347,20 +352,22 @@ try {
       return m.reply(`*「 BERHENTI AFK 」*\n\nSelamat datang kembali *${afk.name}!*\nudah beres ${afk.reason}nya kan?`)
   } else if (isGroup && afk.name !== null && senderMessage.includes(afk.name == null ? Math.floor(Math.random() * 10000) : afk.name)) {
       return m.reply(`*「 SEDANG AFK 」*\n\nSshhh!!! Jangan ganggu dia!\nDianya lagi ${afk.reason} dulu katanya`)
+  } else if (isGroup && opts.antidelete && senderMessage == 'Pesan ini telah dihapus') {
+      return m.reply(`*「 ANTI DELETE 」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi menghapus pesan!_`)
   } else if (isGroup && opts.antilink && isGroupLink.test(senderMessage)) {
       var matched = senderMessage.match(isGroupLink).join('\n')
       return m.reply(`*「 ANTI LINK 」*\n\nDari: ${senderName}\nMember: ${groupName}\nLink:\n${matched}\nPesan:\n${senderMessage}\n\n\n_Sebelum share link mohon izin keadmin dulu ya!_`)
   } else if (isGroup && opts.antitoxic && isToxic.test(senderMessage)) {
       var matched = senderMessage.match(isToxic).join(', ')
-      if (/masuk|lanjut|banjir|(per)?panjang|asupan|cewe/i.test(senderMessage)) return m.ignoreMessage()
+      if (/masuk|lanjut|banjir|panjang|asupan|cewe/i.test(senderMessage)) return m.ignoreMessage()
       if (prefix.test(senderMessage)) return m.ignoreMessage()
       return m.reply(`*「 ANTI TOXIC 」*\n\nDari: ${senderName}\nMember: ${groupName}\nKata Kasar: ${matched}\nPesan:\n${senderMessage}\n\n\n_Biasakan Jangan Toxic ya!_`)
-  } else if (isGroup && opts.antidelete && senderMessage == 'Pesan ini telah dihapus') {
-      return m.reply(`*「 ANTI DELETE 」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi menghapus pesan!_`)
-  } else if (isGroup && opts.antivirtex && isVirtex.test(senderMessage) && senderMessage.length > 1000) {
-      return m.reply(`*「 ANTI VIRTEX 」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi mengirim virtex!_`)
   } else if (isGroup && opts.antiflood && senderMessage.length > 5000) {
-      return m.reply(`*「 ANTI FLOOD  」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi mengirim pesan terlalu panjang!_`)
+      return m.reply(`*「 ANTI FLOOD  」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi mengirimkan pesan terlalu panjang!_`)
+  } else if (isGroup && opts.antivirtex && isVirtex.test(senderMessage) && senderMessage.length > 1000) {
+      return m.reply(`*「 ANTI VIRTEX 」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi mengirimkan virtex!_`)
+  } else if (isGroup && opts.antisticker && messageType == 'sticker') {
+      return m.reply(`*「 ANTI STICKER 」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi mengirimkan sticker!_`)
   } else if (/^kuhong$/i.test(senderMessage)) {
       return m.reply('Yaa Aku Disini??\n\nIngin Memulai Bot? Ketik !help atau !menu yaa ;)')
   } else if (/^p$/i.test(senderMessage)) {
@@ -490,7 +497,7 @@ ${'```' + package.description + '```'}
 ╭─ *「 STATUS BOT 」*
 │
 │• Name: ${botName}
-│• Device: ${m.get('User-Agent').split('(')[1] ? m.get('User-Agent').replace(/[;]/g, '').split('(')[1].split(')')[0] : m.get('User-Agent').replace(/[;]/g, '')}
+│• Device: ${m.get('User-Agent').replace(/[;]/g, '').split('(')[1].split(')')[0] || 'Unknown'}
 │• Server: ${m.get('Host')}
 │• Mode: ${/^(true|enable|on|1)$/i.test(m.get('SELF_MODE')) ? 'Self' : 'Public'}
 │• Library: AutoResponder
