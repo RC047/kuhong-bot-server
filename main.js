@@ -51,7 +51,7 @@ var twt_link = m.get('TWITTER_LINK') || '-'
 var tt_link = m.get('TIKTOK_LINK') || '-'
 
 var date = new Date()
-var prefix = new RegExp('^[' + m.get('BOT_PREFIX') || '!' + ']', 'gi')
+var prefix = new RegExp('^[' + (m.get('BOT_PREFIX') || '!') + ']', 'gi')
 var readMore = String.fromCharCode(8206).repeat(4001)
 var isApikey = new RegExp(apikey.kuhong + '|' + apikey.xteam + '|' + apikey.zeks + '|' + apikey.zekais + '|' + apikey.imgbb + '|' + apikey.removebg, 'gi')
 var isGroupLink = /(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})/gi
@@ -291,7 +291,7 @@ var listMenu = {
 'reverse <text>',
 'readmore <text|text2>',
 'spoiler <text|text2>',
-'empty',
+'blank',
 'spamchat <jumlah|pesan> *(Premium)*',
 'spamcall <nomor hp>',
 'spamsms <nomor hp>',
