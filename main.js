@@ -32,7 +32,7 @@ var { saveToMedia, math, modes, encryptHtml, encryptScript, escapeFull, getZodia
 
 async function handler(m, { appPackageName, messengerPackageName, isOwner, isPremium, isGroup, senderMessage, messageType, groupName, senderName, usedPrefix, command, text }) {
 
-String.prototype.toNumber = function() { return Number(this.toString()) }
+String.prototype.toNumber = function() { return Number(this) }
 handler.toString = () => 'function handler() { [native code] }'
 m.reply.toString = () => 'function reply() { [native code] }'
 
@@ -335,7 +335,7 @@ var listMenu = {
 
 try {
   if (/^true|enable|on|1$/i.test(m.get('SELF_MODE'))) { if (!isOwner) return m.ignoreMessage() }
-  try { var target = await fs.readFileSync('./tmp/welcome.txt').toNumber() } catch (e) { target = 0 }
+  try { var target = await fs.readFileSync('./tmp/welcome.txt').toString().toNumber() } catch (e) { target = 0 }
   if (/^true|enable|on|1$/i.test(m.get('WELCOME_MESSAGE')) && date.getDay() == target) {
       if (!senderMessage) return m.ignoreMessage()
       var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : m.get('BOT_PREFIX') ? m.get('BOT_PREFIX').slice(0, 1) : '!'}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
