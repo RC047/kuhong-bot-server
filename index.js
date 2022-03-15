@@ -25,13 +25,13 @@ app.use(parser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended: tru
 app.all('/', async (req, res, next) => {
 
 if (req.method !== 'POST') return res.status(200).sendFile(__dirname + '/index.html');
-var appPackageName = req.body.appPackageName,
-    messengerPackageName = req.body.messengerPackageName,
-    isGroup = req.body.query.isGroup,
-    senderMessage = util.format(req.body.query.message),
-    groupName = isGroup ? req.body.query.sender : '',
-    senderName = isGroup ? req.body.query.groupParticipant : req.body.query.sender,
-    isTestMessage = req.body.query.isTestMessage;
+var appPackageName = req.body.appPackageName;
+var messengerPackageName = req.body.messengerPackageName;
+var isGroup = req.body.query.isGroup || false;
+var senderMessage = util.format(req.body.query.message);
+var groupName = isGroup ? req.body.query.sender : '';
+var senderName = isGroup ? req.body.query.groupParticipant : req.body.query.sender;
+var isTestMessage = req.body.query.isTestMessage;
 
 try {
 req.reply = (...message) => {
