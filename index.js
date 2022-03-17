@@ -57,7 +57,6 @@ req.replyCount = {
   all: '%reply_count_overall%'
 }
 
-if (!isGroup) isGroup = false
 var messageType = /^📷+(Foto|Image|Pictures?)?/gi.test(senderMessage) ? 'image' : /^🎥+(Vid(i|e)o)?/gi.test(senderMessage) ? 'video' : /^🎵+(Audio)?/gi.test(senderMessage) ? 'audio' : /^💟+(Stic?ker)?/gi.test(senderMessage) ? 'sticker' : 'text';
 console.info(`${senderName}${isGroup ? ' (' + groupName + ')' : ''} [${messageType}]:\n${senderMessage}`);
 if (messageType !== 'text') senderMessage = senderMessage.slice(3)
