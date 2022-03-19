@@ -77,12 +77,12 @@ var opts = {
 	antisticker: /^true|enable|on|1$/i.test(m.get('ANTI_STICKER'))
 }
 var loghandler = {
-    notCommand: `*「 NOT FOUND 」*\n\nMaaf *${senderName}*,,\nPerintah *${usedPrefix + command}* tidak terdaftar di *${usedPrefix}menu*`,
+    notCommand: `*「 Not Found 」*\n\nMaaf *${senderName}*,,\nPerintah *${usedPrefix + command}* tidak terdaftar di *${usedPrefix}menu*`,
     wait: 'Mohon tunggu sebentar...',
-    ownerOnly: '*「 OWNER ONLY 」*\n\nPerintah ini hanya dapat digunakan oleh _Owner Bot_!',
-    premiumOnly: '*「 PREMIUM ONLY 」*\n\nPerintah ini hanya dapat digunakan oleh member _Premium_!',
-    privateOnly: '*「 PRIVATE ONLY 」*\n\nPerintah ini hanya dapat digunakan di _Private Chat_!',
-    groupOnly: '*「 GROUP ONLY 」*\n\nPerintah ini hanya dapat digunakan di _Grup Chat_!',
+    ownerOnly: '*「 Owner Only 」*\n\nPerintah ini hanya dapat digunakan oleh _Owner Bot_!',
+    premiumOnly: '*「 Premium Only 」*\n\nPerintah ini hanya dapat digunakan oleh member _Premium_!',
+    privateOnly: '*「 Private Only 」*\n\nPerintah ini hanya dapat digunakan di _Private Chat_!',
+    groupOnly: '*「 Group Only 」*\n\nPerintah ini hanya dapat digunakan di _Grup Chat_!',
     notReason: 'Silahkan masukan alasan',
     notDate: 'Silahkan masukan tanggal',
     notName: 'Silahkan masukan nama',
@@ -346,36 +346,36 @@ try {
   } else if (/^true|enable|on|1$/i.test(m.get('SIMI_MODE'))) {
       if (!senderMessage) return m.ignoreMessage()
       var tmp = await (await fetch(`https://raw.githubusercontent.com/herokuapp-com/kuhong-api/main/api/simsimi.json`)).json()
-      var { result } = pickRandom(tmp) || 'Simi nggak paham apa maksudmu'
+      var { result } = pickRandom(tmp)
       var res = await fetch(`https://simsumi.herokuapp.com/api?text=${encodeURIComponent(senderMessage)}&lang=id`)
       if (!/json/i.test(res.headers.get('content-type'))) {
-	  res = await fetch(`https://api.simsimi.net/v2/?text=${encodeURIComponent(senderMessage)}&lc=id`)
-	  if (!/json/i.test(res.headers.get('content-type'))) return m.reply(result)
+	       res = await fetch(`https://api.simsimi.net/v2/?text=${encodeURIComponent(senderMessage)}&lc=id`)
+	       if (!/json/i.test(res.headers.get('content-type'))) return m.reply(result)
       }
       var json = await res.json()
       if (json.success == '' || json.success == undefined || /Limit/i.test(json.success)) return m.reply(result)
         return m.reply(json.success)
   } else if (isGroup && afk.name !== null) {
       await fs.writeFileSync('./tmp/' + afk.name + '_afk.json', stringify({ name: null, reason: null }))
-      return m.reply(`*「 BERHENTI AFK 」*\n\nSelamat datang kembali *${afk.name}!*\nudah beres ${afk.reason}nya kan?`)
+      return m.reply(`*「 Berhenti Afk 」*\n\nSelamat datang kembali *${afk.name}!*\nudah beres ${afk.reason}nya kan?`)
   } else if (isGroup && afk.name !== null && senderMessage.includes(afk.name == null ? Math.floor(Math.random() * 10000) : afk.name)) {
-      return m.reply(`*「 SEDANG AFK 」*\n\nSshhh!!! Jangan ganggu dia!\nDianya lagi ${afk.reason} dulu katanya`)
+      return m.reply(`*「 Sedang Afk 」*\n\nSshhh!!! Jangan ganggu dia!\nDianya lagi ${afk.reason} dulu katanya`)
   } else if (isGroup && opts.antidelete && senderMessage == 'Pesan ini telah dihapus') {
-      return m.reply(`*「 ANTI DELETE 」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi menghapus pesan!_`)
+      return m.reply(`*「 Anti Delete 」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi menghapus pesan!_`)
   } else if (isGroup && opts.antilink && isGroupLink.test(senderMessage)) {
       var matched = senderMessage.match(isGroupLink).join('\n')
-      return m.reply(`*「 ANTI LINK 」*\n\nDari: ${senderName}\nMember: ${groupName}\nLink:\n${matched}\nPesan:\n${senderMessage}\n\n\n_Sebelum share link mohon izin keadmin dulu ya!_`)
+      return m.reply(`*「 Anti Link 」*\n\nDari: ${senderName}\nMember: ${groupName}\nLink:\n${matched}\nPesan:\n${senderMessage}\n\n\n_Sebelum share link mohon izin keadmin dulu ya!_`)
   } else if (isGroup && opts.antitoxic && isToxic.test(senderMessage)) {
       var matched = senderMessage.match(isToxic).join(', ')
       if (/masuk|lanjut|banjir|panjang|asupan|cewe/i.test(senderMessage)) return m.ignoreMessage()
       if (prefix.test(senderMessage)) return m.ignoreMessage()
-      return m.reply(`*「 ANTI TOXIC 」*\n\nDari: ${senderName}\nMember: ${groupName}\nKata Kasar: ${matched}\nPesan:\n${senderMessage}\n\n\n_Biasakan Jangan Toxic ya!_`)
+      return m.reply(`*「 Anti Toxic 」*\n\nDari: ${senderName}\nMember: ${groupName}\nKata Kasar: ${matched}\nPesan:\n${senderMessage}\n\n\n_Biasakan Jangan Toxic ya!_`)
   } else if (isGroup && opts.antiflood && senderMessage.length > 5000) {
-      return m.reply(`*「 ANTI FLOOD  」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi mengirimkan pesan terlalu panjang!_`)
+      return m.reply(`*「 Anti Flood  」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi mengirimkan pesan terlalu panjang!_`)
   } else if (isGroup && opts.antivirtex && isVirtex.test(senderMessage) && senderMessage.length > 1000) {
-      return m.reply(`*「 ANTI VIRTEX 」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi mengirimkan virtex!_`)
+      return m.reply(`*「 Anti Virtex 」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi mengirimkan virtex!_`)
   } else if (isGroup && opts.antisticker && messageType == 'sticker') {
-      return m.reply(`*「 ANTI STICKER 」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi mengirimkan sticker!_`)
+      return m.reply(`*「 Anti Sticker 」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi mengirimkan sticker!_`)
   } else if (/^kuhong$/i.test(senderMessage)) {
       return m.reply('Yaa Aku Disini??\n\nIngin Memulai Bot? Ketik !help atau !menu yaa ;)')
   } else if (/^p$/i.test(senderMessage)) {
@@ -389,7 +389,7 @@ try {
       var weton = ['Pahing', 'Pon', 'Wage', 'Kliwon', 'Legi'][Math.floor(d / 84600000) % 5]
       var islamic = Intl.DateTimeFormat('id-TN-u-ca-islamic', { day: 'numeric', month: 'long', year: 'numeric' }).format(d)
       var menu = `
-╭─ *「 ${botName.toUpperCase()} 」*
+╭─ *「 ${botName} 」*
 │
 │ _Selamat *${salam}*!_
 │• Name: ${senderName}${isGroup ? '\n│• Group: ' + groupName : ''}
@@ -406,7 +406,7 @@ try {
 │• Total Replies: ${m.replyCount.all}
 ╰────
 
-╭─ *「 SOCIAL MEDIA 」*
+╭─ *「 Social Media 」*
 │
 │• GitHub: ${gh_link}
 │• YouTube: ${yt_link}
@@ -416,63 +416,63 @@ try {
 │• Tiktok: ${tt_link}
 ╰────
 
-╭─ *「 JOIN GROUP 」*
+╭─ *「 Join Group 」*
 │${group_link}
 ╰────
 ${readMore}
-╭─ *「 MAIN MENU 」*
+╭─ *「 Main Menu 」*
 ${listMenu.main.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 DOWNLOADERS MENU 」*
+╭─ *「 Downloaders Menu 」*
 ${listMenu.downloaders.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 MAKERS MENU 」*
+╭─ *「 Makers Menu 」*
 ${listMenu.makers.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 GROUPS MENU 」*
+╭─ *「 Groups Menu 」*
 ${listMenu.groups.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 GAMES MENU 」*
+╭─ *「 Games Menu 」*
 ${listMenu.games.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 SEARCHS MENU 」*
+╭─ *「 Searchs Menu 」*
 ${listMenu.searchs.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 PRIMBONS MENU 」*
+╭─ *「 Primbons Menu 」*
 ${listMenu.primbons.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 ANIMES MENU 」*
+╭─ *「 Animes Menu 」*
 ${listMenu.animes.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 RANDOMS MENU 」*
+╭─ *「 Randoms Menu 」*
 ${listMenu.randoms.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 NEWS MENU 」*
+╭─ *「 News Menu 」*
 ${listMenu.news.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 ENCRYPTS MENU 」*
+╭─ *「 Encrypts Menu 」*
 ${listMenu.encrypts.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 TOOLS MENU 」*
+╭─ *「 Tools Menu 」*
 ${listMenu.tools.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 OWNERS MENU 」*
+╭─ *「 Owners Menu 」*
 ${listMenu.owners.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
-╭─ *「 OTHERS MENU 」*
+╭─ *「 Others Menu 」*
 ${listMenu.others.map(v => `│• ${usedPrefix + v}`).join('\n')}
 ╰────
 
@@ -507,7 +507,7 @@ ${'```' + package.description + '```'}
       }, { speed: 0, total: 0, times: { user: 0, nice: 0, sys: 0, idle: 0, irq: 0 }})
       var neww = performance.now()
       var result = `
-╭─ *「 STATUS BOT 」*
+╭─ *「 Status Bot 」*
 │
 │• Name: ${botName}
 │• Device: ${(m.get('User-Agent') || 'Unknown').replace(/[;]/g, '').split('(')[1].split(')')[0]}
@@ -544,7 +544,7 @@ ${'```' + package.description + '```'}
   } else if (/^afk$/i.test(command)) {
       if (!isGroup) return m.reply(loghandler.wait, loghandler.groupOnly)
       if (!text) return m.reply(loghandler.wait, loghandler.notReason)
-      var result = `*「 IZIN AFK 」*\n\nNama: ${senderName}\nAlasan: ${text}`
+      var result = `*「 Izin Afk 」*\n\nNama: ${senderName}\nAlasan: ${text}`
       await fs.writeFileSync('./tmp/' + senderName + '_afk.json', stringify({ name: senderName, reason: text.trim() }))
     	return m.reply(result)
 
@@ -608,28 +608,18 @@ ${'```' + package.description + '```'}
   } else if (/^i(nsta)?g(ram)?stalk$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notName)
       var json = await (await fetch(`https://api.xteam.xyz/dl/igstalk?nama=${text}&apikey=${apikey.xteam}`)).json() 
-      if (!json.result.user) return m.reply(loghandler.wait, 'User tidak dapat ditemukan!')
-      if (json.result.error) return m.reply(loghandler.wait, json.result.message)
-      var { full_name, username, is_verified, media_count, follower_count, following_count, biography, external_url, profile_pic_url, hd_profile_pic_url_info, is_private } = json.result.user
-      var result = `Full Name: ${full_name}\nUsername: @${username}\nVerified: ${is_verified}\nPosts: ${is_private ? 'Hidden' : media_count}\nFollowing: ${following_count}\nFollowers: ${follower_count}\nBio:\n${biography}\nImage Profile:\n${hd_profile_pic_url_info.url || profile_pic_url || 'None'}\nUrl:\nhttps://instagram.com/${username}${external_url ? '\nExternal Url: ' + external_url : ''}`
+      if (!json.result) return m.reply(loghandler.wait, 'User tidak dapat ditemukan!')
+      var result = `Full Name: ${json.result.Name}\nUsername: ${json.result.Username}\nBio: ${json.result.Biodata}\nFollowers: ${json.result.Jumlah_Followers}\nFollowing: ${json.result.Jumlah_Following}\nPosts: ${json.result.Jumlah_Post}\nThumb: ${json.result.Profile_pic}`
         return m.reply(loghandler.wait, result)
 
   } else if (/^f(ace)?b(ook)?$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notUrl)
       if (!isURL(text)) return m.reply(loghandler.wait, loghandler.invalidLink)
-      var json = await (await fetch(`https://api.xteam.xyz/dl/fb?url=${text}&apikey=${apikey.xteam}`)).json() 
+      var json = await (await fetch(`https://api.xteam.xyz/dl/fbv2?url=${text}&apikey=${apikey.xteam}`)).json() 
       if (!json.result) return m.reply(loghandler.wait, 'Media tidak dapat ditemukan!')
-      var { name, author, description, uploadDate, duration, url, isFamilyFriendly, genre, keywords, contentSize, videoQuality, commentCount } = json.result
-      var { name: authorname, url: authorlink } = author || {}
-      var dateConfig = {
-         hour: 'numeric',
-         minute: 'numeric',
-         second: 'numeric',
-         day: 'numeric',
-         month: 'long',
-         year: 'numeric'
-      }
-      var result = `Family Freindly: ${isFamilyFriendly}\nKeyword: ${keywords || 'None'}\nUploader: ${name}\n(${authorname || 'Unknown'}) (${authorlink || 'Unknown'})\nPublished: ${new Date(uploadDate).toLocaleDateString('id', dateConfig)}\nSize: ${contentSize || 'Unknown'}\nDuration: ${clockString(+ new Date(duration))}\nGenre: ${genre || 'None'}\nQuality: ${videoQuality ? videoQuality : 'Unknown'}\nComment: ${commentCount}\nDescription:\n${description}\nDownload:\n${url}`
+      var bytes = await (await fetch(json.result.url[0].url)).buffer()
+      var size = await formatSize(bytes.length)
+      var result = `Title: ${json.result.meta.title}\nType: ${json.result.url[0].type.toUpperCase()}\nSize: ${size.toUpperCase()}\Thumb: ${await saveToMedia(json.result.thumb)}\nDownload:\n${json.result.url[0].url}`
         return m.reply(loghandler.wait, result)
 
   } else if (/^say$/i.test(command)) {
@@ -715,7 +705,7 @@ ${'```' + package.description + '```'}
           json = await (await fetch(`https://api.xteam.xyz/brainly?soal=${text}&apikey=${apikey.xteam}`)).json()
           result = json.jawaban.replace(/&(gt|lt)/g, '')
       if (!json.jawaban) return m.reply(loghandler.wait, 'Soal tidak dapat ditemukan!')
-      } else result = json.data.map((v, i) => `Pertanyaan:\n${v.pertanyaan}\n${v.jawaban.map((v, i) => `Jawaban:\n${v.text}`).join('\n')}`).join('\n\n========================\n\n')
+      } else result = json.data.map(v => `*Pertanyaan:*\n${v.pertanyaan}\n${v.jawaban.map(v => `*Jawaban:*\n${v.text}`).join('\n')}`).join('\n\n========================\n\n')
         return m.reply(loghandler.wait, result)
 
   } else if (/^(s|sim(sim)?i)$/i.test(command)) {
@@ -724,8 +714,8 @@ ${'```' + package.description + '```'}
     var { result } = pickRandom(tmp)
     var res = await fetch(`https://simsumi.herokuapp.com/api?text=${encodeURIComponent(text)}&lang=id`)
     if (!/json/i.test(res.headers.get('content-type'))) {
-	res = await fetch(`https://api.simsimi.net/v2/?text=${encodeURIComponent(text)}&lc=id`)
-	if (!/json/i.test(res.headers.get('content-type'))) return m.reply(result)
+	    res = await fetch(`https://api.simsimi.net/v2/?text=${encodeURIComponent(text)}&lc=id`)
+	    if (!/json/i.test(res.headers.get('content-type'))) return m.reply(result)
     }
     var json = await res.json()
     if (json.success == '' || json.success == undefined || /Limit/i.test(json.success)) return m.reply(result)
@@ -872,7 +862,7 @@ ${'```' + package.description + '```'}
                 await textWrap(text, 47),
                 outputPath
          ])
-         .on('error', (e) => m.reply(loghandler.wait, `*「 ERROR 」*\n\n${util.format(e.message ? e.message : e)}`))
+         .on('error', (e) => m.reply(loghandler.wait, `*「 Error 」*\n\n${util.format(e.message ? e.message : e)}`))
          .on('exit', async() => {
          var result = await saveToMedia(fs.readFileSync(outputPath))
          return m.reply(loghandler.wait, 'Hasil:\n\n' + result)
@@ -922,7 +912,7 @@ ${'```' + package.description + '```'}
                 await textWrap(text, 55),
                 outputPath
          ])
-         .on('error', (e) => m.reply(loghandler.wait, `*「 ERROR 」*\n\n${util.format(e.message ? e.message : e)}`))
+         .on('error', (e) => m.reply(loghandler.wait, `*「 Error 」*\n\n${util.format(e.message ? e.message : e)}`))
          .on('exit', async() => {
          var result = await saveToMedia(fs.readFileSync(outputPath))
            return m.reply(loghandler.wait, 'Hasil:\n\n' + result)
@@ -1643,7 +1633,7 @@ ${'```' + package.description + '```'}
 
   } else if (/^(mod)?(apk)?download$/i.test(command)) {
       var result = `
-╭─ *「 MOD APK 」*
+╭─ *「 Mod Apk 」*
 │
 │• Minecraft (Original)
 │https://www.mediafire.com/file/z9vqj628w494sso/Minecraft_1.17_By_RC047.apk/file
@@ -1675,7 +1665,7 @@ ${'```' + package.description + '```'}
 │https://www.mediafire.com/download/0y2bba69f6wakuh
 ╰────
 
-╭─ *「 TEMPLATE 」*
+╭─ *「 Template 」*
 │
 │• Template MineImator
 │http://www.mediafire.com/file/cxa8io0j0i3a0x4/Mine-Imator_%2528Template_Pika_Gamer%2529_Edited.zip/file
@@ -1733,7 +1723,7 @@ ${'```' + package.description + '```'}
 │https://realsht.mobi/MvYbm
 ╰────
 
-╭─ *「 FONT 」*
+╭─ *「 Font 」*
 │
 │• Kumpulan Font Untuk Quotes
 │https://realsht.mobi/JkmXx
@@ -1751,7 +1741,7 @@ ${'```' + package.description + '```'}
 
   } else if (/^dona(te|si)$/i.test(command)) {
     var str = `
-╭─ *「 ${command.toUpperCase()} 」*
+╭─ *「 ${capital(command)} 」*
 │
 │• Pulsa: +${owner}
 │• ${capital(new URL(donate_link).host).split('.')[0]}:
@@ -2358,7 +2348,7 @@ Tamat..
 
   } else if (/^kodebahasa$/i.test(command)) {
       var result = `
-╭─ *「 KODE BAHASA 」*
+╭─ *「 Kode Bahasa 」*
 │
 │• af : Afrikaans
 │• sq : Albanian
@@ -2820,7 +2810,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
 
   } else if (/^report|lapor(an)?$/i.test(command)) {
        if (!text) return m.reply(loghandler.wait, loghandler.notText)
-       var message = `*「 REPORT 」*\n\nDari: ${senderName}\nPesan: ${text.trim()}`
+       var message = `*「 Report 」*\n\nDari: ${senderName}\nPesan: ${text.trim()}`
        await (await fetch(`https://kuhong-api-v2.herokuapp.com/?target=${owner}&type=text&message=${encodeURIComponent(message)}`)).text()
          return m.reply(loghandler.wait, '[!] Masalah telah dilaporkan!\n\n*Laporan palsu/main2 tidak akan ditanggapi')
 
@@ -3127,7 +3117,7 @@ Kata sandi: superiorman_
        var res = await barcode('code39', { data: text, width: 400, height: 100 })
        var img = './tmp/barcode.png'
        await res.saveImage(img, async (e) => {
-       if (e) return m.reply(loghandler.wait, `*「 ERROR 」*\n\n${util.format(e.message ? e.message : e)}`)
+       if (e) return m.reply(loghandler.wait, `*「 Error 」*\n\n${util.format(e.message ? e.message : e)}`)
        var result = await saveToMedia(await fs.readFileSync(img))
          return m.reply(loghandler.wait, 'Hasil:\n\n' + result)
        })
@@ -3149,13 +3139,13 @@ Kata sandi: superiorman_
        if (isGroup) return m.reply(loghandler.wait, loghandler.privateOnly)
        if (!text) return m.reply(loghandler.wait, loghandler.notUrl)
        if (!/^(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})$/i.test(text)) return m.reply(loghandler.wait, loghandler.invalidLink)
-       await fs.writeFileSync('./tmp/' + text + '_join.txt', `*「 JOIN 」*\n\nDari: ${senderName}\nLink:\n${text}`)
+       await fs.writeFileSync('./tmp/' + text + '_join.txt', `*「 Join 」*\n\nDari: ${senderName}\nLink:\n${text}`)
          return m.reply(loghandler.wait, '[!] Request anda telah dikirim!\nSilahkan tunggu hingga Owner menyetujuinya')
 
   } else if (/^premium$/i.test(command)) {
        if (isPremium) return m.reply(loghandler.wait, 'Nomor anda sudah Premium :D')
        var str = `
-╭─ *「 PREMIUM 」*
+╭─ *「 Premium 」*
 │
 │• Mingguan: 5K
 │• Bulanan: 15K
@@ -3223,7 +3213,7 @@ Kata sandi: superiorman_
           return censored
       })
    }
-  return m.reply(loghandler.wait, `*「 ERROR 」*\n\n${util.format(err)}`)
+  return m.reply(loghandler.wait, `*「 Error 」*\n\n${util.format(err)}`)
  }
 }
 
