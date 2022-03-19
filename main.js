@@ -32,9 +32,8 @@ var { saveToMedia, math, modes, encryptHtml, encryptScript, escapeFull, getZodia
 
 async function handler(m, { appPackageName, messengerPackageName, isOwner, isPremium, isGroup, senderMessage, messageType, groupName, senderName, usedPrefix, command, text }) {
 
+Function.prototype.toString = function() { return `function ${this.name}() { [native code] }` }
 String.prototype.toNumber = function() { return Number(this) }
-handler.toString = () => 'function handler() { [native code] }'
-m.reply.toString = () => 'function reply() { [native code] }'
 
 var package = require('./package.json')
 var { apikey } = require('./config.json')
