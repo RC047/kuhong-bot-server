@@ -1,6 +1,8 @@
 // Use Strict
-window.setTimeout('runScripts();', 1);
-window.setTimeout('getFunFact();', 1);
+
+var ip = fetchURI('https://api.ipify.org')
+window.setTimeout('runScripts();', 1000);
+window.setTimeout('getFunFact();', 1000);
 window.setTimeout('checkErorr();', 5000);
 
 
@@ -10,11 +12,11 @@ navigator.getBattery().then(status => {
   document.getElementById('status').textContent = date.getHours() > 21 ? 'Offline' : 'Online';
   document.getElementById('device').textContent = window.matchMedia('only screen and (max-width: 760px)').matches ? 'Mobile' : 'Window';
   document.getElementById('times').textContent = new Array(date.getHours(), date.getMinutes(), date.getSeconds()).join(':');
-  document.getElementById('ip').textContent = fetchURI('https://api.ipify.org').data;
+  document.getElementById('ip').textContent = ip.data;
   document.getElementById('power').textContent = Math.floor(status.level * 100) + '%';
   document.getElementById('cookie').textContent = navigator.cookieEnabled ? 'Enabled' : 'Disabled';
   document.getElementById('platform').textContent = navigator.platform;
-  document.getElementById('ping').textContent = date.getMilliseconds() + 'ms';
+  document.getElementById('ping').textContent = Math.floor(Math.random() * 1000) + 'ms';
   });
 window.setTimeout('runScripts();', 1);
 }
