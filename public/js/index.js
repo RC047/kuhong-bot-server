@@ -16,7 +16,7 @@ navigator.getBattery().then(status => {
   document.getElementById('power').textContent = Math.floor(status.level * 100) + '%';
   document.getElementById('cookie').textContent = navigator.cookieEnabled ? 'Enabled' : 'Disabled';
   document.getElementById('platform').textContent = navigator.platform;
-  document.getElementById('ping').textContent = Math.floor(Math.random() * 1000) + 'ms';
+  document.getElementById('ping').textContent = Math.floor(Math.random() * 999) + 'ms';
   });
 window.setTimeout('runScripts();', 1000);
 }
