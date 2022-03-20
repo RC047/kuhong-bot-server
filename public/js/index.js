@@ -18,7 +18,7 @@ navigator.getBattery().then(status => {
   document.getElementById('platform').textContent = navigator.platform;
   document.getElementById('ping').textContent = Math.floor(Math.random() * 1000) + 'ms';
   });
-window.setTimeout('runScripts();', 1);
+window.setTimeout('runScripts();', 1000);
 }
 
 function checkError() {
