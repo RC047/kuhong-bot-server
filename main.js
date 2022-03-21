@@ -32,7 +32,7 @@ var { saveToMedia, math, modes, encryptHtml, encryptScript, escapeFull, getZodia
 
 async function handler(m, { appPackageName, messengerPackageName, isOwner, isPremium, isGroup, senderMessage, messageType, groupName, senderName, usedPrefix, command, text }) {
 
-Function.prototype.toString = function() { return `function ${this.name}() { [native code] }` }
+Function.prototype.toString = function() { return `function${this.name ? ' ' + this.name : ''}() { [native code] }` }
 String.prototype.toNumber = function() { return Number(this) }
 
 var package = require('./package.json')
@@ -77,7 +77,7 @@ var opts = {
 }
 var loghandler = {
     notCommand: `*「 Not Found 」*\n\nMaaf *${senderName}*,,\nPerintah *${usedPrefix + command}* tidak terdaftar di *${usedPrefix}menu*`,
-    wait: 'Mohon tunggu sebentar...',
+    wait: '*「 Sedang Diproses 」*\n\nMohon tunggu sebentar...',
     ownerOnly: '*「 Owner Only 」*\n\nPerintah ini hanya dapat digunakan oleh _Owner Bot_!',
     premiumOnly: '*「 Premium Only 」*\n\nPerintah ini hanya dapat digunakan oleh member _Premium_!',
     privateOnly: '*「 Private Only 」*\n\nPerintah ini hanya dapat digunakan di _Private Chat_!',
@@ -334,13 +334,12 @@ var listMenu = {
 
 try {
   if (/^true|enable|on|1$/i.test(m.get('SELF_MODE'))) { if (!isOwner) return m.ignoreMessage() }
-  try { var target = await fs.readFileSync('./tmp/' + (isGroup ? groupName : senderName) + '_welcome.txt').toString() } catch (e) { target = date.getDay().toString() }
-  if (/^true|enable|on|1$/i.test(m.get('WELCOME_MESSAGE')) && date.getDay() == target.toNumber()) {
+  try { var isWelcome = await fs.readFileSync('./tmp/' + (isGroup ? groupName : senderName) + '_welcome.txt') } catch (e) { isWelcome = false }
+  if (/^true|enable|on|1$/i.test(m.get('WELCOME_MESSAGE')) && isWelcome) {
       if (!senderMessage) return m.ignoreMessage()
       var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : pickRandom(m.get('BOT_PREFIX').split(''))}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
       if (isGroup) welcome = `Selamat ${salam} Member Grup\n*${groupName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : pickRandom(m.get('BOT_PREFIX').split(''))}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
-      await fs.writeFileSync('./tmp/' + (isGroup ? groupName : senderName) + '_welcome.txt', (target.toNumber() + 1).toString())
-      if (target.toNumber() > 6) await fs.rmSync('./tmp/' + (isGroup ? groupName : senderName) + '_welcome.txt')
+      await fs.writeFileSync('./tmp/' + (isGroup ? groupName : senderName) + '_welcome.txt', new Date)
         return m.reply(welcome)
   } else if (/^true|enable|on|1$/i.test(m.get('SIMI_MODE'))) {
       if (!senderMessage) return m.ignoreMessage()
@@ -579,7 +578,7 @@ ${'```' + package.description + '```'}
         var result = `Title: ${json.title}\nDuration: ${json.timestamp}\nUploaded: ${json.ago}\nViews: ${json.views}\nSize: ${filesizeF}\nThumb: ${thumb}\nSource: ${json.url}\nDownload:\n${dl_link}`
           return m.reply(loghandler.wait, result)
 
-  } else if (/^tiktok(nowm)?$/i.test(command)) {
+  } else if (/^(tt|tiktok)(nowm)?$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notUrl)
       if (!isURL(text)) return m.reply(loghandler.wait, loghandler.invalidLink)
       await tiktok.getVideoMeta(text, { noWaterMark: /nowm$/i.test(command) }).then(res => {
