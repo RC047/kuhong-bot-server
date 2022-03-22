@@ -66,6 +66,7 @@ else if (hours == 10 || hours == 11 || hours == 12 || hours == 13 || hours == 14
 else if (hours == 15 || hours == 16 || hours == 17) salam = 'Sore'
 else if (hours == 18 || hours == 19 || hours == 20 || hours == 21 || hours == 22 || hours == 23 || hours == 0 || hours == 1 || hours == 2 || hours == 3) salam = 'Malam'
 
+try { var isWelcome = await fs.readFileSync('./tmp/' + (isGroup ? groupName : senderName) + '_welcome.txt') } catch (e) { isWelcome = false }
 try { var afk = JSON.parse(await fs.readFileSync('./tmp/' + senderName + '_afk.json')) } catch (e) { afk = { name: null, reason: null } }
 var opts = {
 	antidelete: /^true|enable|on|1$/i.test(m.get('ANTI_DELETE')),
@@ -110,7 +111,7 @@ var listMenu = {
 'menu',
 'start',
 '?'
-	 ],
+     ],
     downloaders: [
 'ytmp4 <url>',
 'ytmp3 <url>',
@@ -334,8 +335,7 @@ var listMenu = {
 
 try {
   if (/^true|enable|on|1$/i.test(m.get('SELF_MODE'))) { if (!isOwner) return m.ignoreMessage() }
-  try { var isWelcome = await fs.readFileSync('./tmp/' + (isGroup ? groupName : senderName) + '_welcome.txt') } catch (e) { isWelcome = false }
-  if (/^true|enable|on|1$/i.test(m.get('WELCOME_MESSAGE')) && isWelcome) {
+  if (/^true|enable|on|1$/i.test(m.get('WELCOME_MESSAGE')) && isWelcome == false) {
       if (!senderMessage) return m.ignoreMessage()
       var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : pickRandom(m.get('BOT_PREFIX').split(''))}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
       if (isGroup) welcome = `Selamat ${salam} Member Grup\n*${groupName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : pickRandom(m.get('BOT_PREFIX').split(''))}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
