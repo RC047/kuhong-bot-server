@@ -598,9 +598,9 @@ ${'```' + package.description + '```'}
       if (!isURL(text)) return m.reply(loghandler.wait, loghandler.invalidLink)
       var json = await (await fetch(`https://api.xteam.xyz/dl/igv2?url=${text}&apikey=${apikey.xteam}`)).json()
       if (!json.result) return m.reply(loghandler.wait, 'Media tidak dapat ditemukan!')
+      var getURL = (url) => unescape(url.split('&uri=')[1]).split('&filename')[0]
       var bytes = await (await fetch(json.result.url[0].url)).buffer()
-      var size = await formatSize(bytes.length)
-      var result = `Title: ${json.result.meta.title}\nType: ${json.result.url[0].type.toUpperCase()}\nSize: ${size.toUpperCase()}\nThumb: ${await saveToMedia(json.result.thumb)}\nDownload:\n${json.result.url[0].url}`
+      var result = `Title: ${json.result.meta.title}\nType: ${json.result.url[0].type.toUpperCase()}\nSize: ${await formatSize(bytes.length).toUpperCase()}\nThumb: ${getURL(json.result.thumb)}\nDownload:\n${getURL(json.result.url[0].url)}`
         return m.reply(loghandler.wait, result)
 
   } else if (/^i(nsta)?g(ram)?stalk$/i.test(command)) {
@@ -616,8 +616,7 @@ ${'```' + package.description + '```'}
       var json = await (await fetch(`https://api.xteam.xyz/dl/fbv2?url=${text}&apikey=${apikey.xteam}`)).json() 
       if (!json.result) return m.reply(loghandler.wait, 'Media tidak dapat ditemukan!')
       var bytes = await (await fetch(json.result.url[0].url)).buffer()
-      var size = await formatSize(bytes.length)
-      var result = `Title: ${json.result.meta.title}\nType: ${json.result.url[0].type.toUpperCase()}\nSize: ${size.toUpperCase()}\Thumb: ${await saveToMedia(json.result.thumb)}\nDownload:\n${json.result.url[0].url}`
+      var result = `Title: ${json.result.meta.title}\nType: ${json.result.url[0].type.toUpperCase()}\nSize: ${await formatSize(bytes.length).toUpperCase()}\nThumb: ${json.result.thumb}\nDownload:\n${json.result.url[0].url}`
         return m.reply(loghandler.wait, result)
 
   } else if (/^say$/i.test(command)) {
