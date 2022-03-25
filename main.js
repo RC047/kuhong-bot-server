@@ -581,7 +581,9 @@ ${'```' + package.description + '```'}
   } else if (/^(tt|tiktok)(nowm)?$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notUrl)
       if (!isURL(text)) return m.reply(loghandler.wait, loghandler.invalidLink)
-      await tiktok.getVideoMeta(text, { noWaterMark: /nowm$/i.test(command) }).then(res => {
+      var json = await fetch(text)
+      if (!json.url) return m.reply(loghandler.wait, 'Video tidak dapat ditemukan!')
+      await tiktok.getVideoMeta(json.url, { noWaterMark: /nowm$/i.test(command) }).then(res => {
       var result = `Title: ${res.collector[0].text}\nID: ${res.collector[0].id}\nUploader: ${res.collector[0].authorMeta.nickName}\nThumb: ${res.collector[0].imageUrl}\nDownload:\n${res.collector[0].videoUrl}`
         return m.reply(loghandler.wait, result)
       }).catch(() => m.reply(loghandler.wait, 'Video tidak dapat ditemukan!'))
@@ -607,7 +609,7 @@ ${'```' + package.description + '```'}
       if (!text) return m.reply(loghandler.wait, loghandler.notName)
       var json = await (await fetch(`https://api.xteam.xyz/dl/igstalk?nama=${text}&apikey=${apikey.xteam}`)).json() 
       if (!json.result) return m.reply(loghandler.wait, 'User tidak dapat ditemukan!')
-      var result = `Full Name: ${json.result.Name}\nUsername: ${json.result.Username}\nBio: ${json.result.Biodata}\nFollowers: ${json.result.Jumlah_Followers}\nFollowing: ${json.result.Jumlah_Following}\nPosts: ${json.result.Jumlah_Post}\nThumb: ${json.result.Profile_pic}`
+      var result = `Full Name: ${json.result.Name}\nUsername: ${json.result.Username}\nBio: ${json.result.Biodata}\nFollowers: ${json.result.Jumlah_Following.split(' ')[0]}\nFollowing: ${json.result.Jumlah_Followers.split(' ')[0]}\nPosts: ${json.result.Jumlah_Post.split(' ')[0]}\nThumb: ${json.result.Profile_pic}`
         return m.reply(loghandler.wait, result)
 
   } else if (/^f(ace)?b(ook)?$/i.test(command)) {
