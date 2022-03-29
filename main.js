@@ -57,7 +57,7 @@ var isGroupLink = /(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{
 var isToxic = /(a(s[uw]|nj(([ie])?ng|([ie])r)?)|me?me?k|ko?nto?l|ba?bi|fu?ce?k|ta(e|i)k?|ba?ngsa?(t|d)|(ba?)?ji?nga?n|g([iueo])?bl([iueo])?(k|g)|col(i|ay)|an?jg|nge?nto?d|tod|tolol|(ng)?ewe(an)?|jemb(u|o)(d|t))/gi
 var isVirtex = //gi
 var isURL = (url) => /^(http(s)?:\/\/)?(\w+:?\w*@)?(\S+)(:\d+)?((?<=\.)\w+)+(\/([\w#!:.?+=&%@!\-/])*)?/gi.test(url)
-var capital = (str) => str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase()
+var capitalText = (str) => str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase()
 var replaceAll = (str, find, replace) => str.replace(new RegExp(find, 'g'), replace)
 var hours = date.getHours() + 7
 var salam = 'Pagi'
@@ -581,9 +581,9 @@ ${'```' + package.description + '```'}
   } else if (/^(tt|tiktok)(nowm)?$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notUrl)
       if (!isURL(text)) return m.reply(loghandler.wait, loghandler.invalidLink)
-      var json = await fetch(text)
-      if (!json.url) return m.reply(loghandler.wait, 'Video tidak dapat ditemukan!')
-      await tiktok.getVideoMeta(json.url, { noWaterMark: /nowm$/i.test(command) }).then(res => {
+      var test = await fetch(text)
+      if (!test.url) return m.reply(loghandler.wait, 'Video tidak dapat ditemukan!')
+      await tiktok.getVideoMeta(test.url, { noWaterMark: /nowm$/i.test(command) }).then(res => {
       var result = `Title: ${res.collector[0].text}\nID: ${res.collector[0].id}\nUploader: ${res.collector[0].authorMeta.nickName}\nThumb: ${res.collector[0].imageUrl}\nDownload:\n${res.collector[0].videoUrl}`
         return m.reply(loghandler.wait, result)
       }).catch(() => m.reply(loghandler.wait, 'Video tidak dapat ditemukan!'))
@@ -1740,10 +1740,10 @@ ${'```' + package.description + '```'}
 
   } else if (/^dona(te|si)$/i.test(command)) {
     var str = `
-╭─ *「 ${capital(command)} 」*
+╭─ *「 ${capitalText(command)} 」*
 │
 │• Pulsa: +${owner}
-│• ${capital(new URL(donate_link).host).split('.')[0]}:
+│• ${capitalText(new URL(donate_link).host).split('.')[0]}:
 │${donate_link}
 ╰────
 `.trim()
