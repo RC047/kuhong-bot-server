@@ -922,7 +922,7 @@ ${'```' + package.description + '```'}
         var res = await yts(text)
         var result = res.all.map(v => {
         switch (v.type) {
-             case 'video': return `Title: ${v.title}\nUploader: ${v.author.name}\nDuration: ${v.timestamp}\nUploaded: ${v.ago}\nViews: ${v.views.toLocaleString()}\nUrl: ${v.url}\nThumb:\n${v.thumbnail}`
+             case 'video': return `Title: ${v.title}\nUploader: ${v.author.name}\nDuration: ${v.timestamp}\nUploaded: ${v.ago}\nViews: ${v.views.toLocaleString('id-ID')}\nUrl: ${v.url}\nThumb:\n${v.thumbnail}`
              case 'channel': return `Channel: ${v.name}\nSubscribers: ${v.subCountLabel ? v.subCountLabel : 'Hidden'}\nVideos: ${v.videoCountLabel}\nUrl: ${v.url}\nThumb:\n${v.thumbnail}`
         }}).filter(v => v).join('\n\n========================\n\n')
           return m.reply(loghandler.wait, result)
@@ -2937,7 +2937,7 @@ ${Math.floor(Math.random() * 50)} Zamrud
           locations: ['Bandung', 'Jakarta', 'Jawa', 'Jawa Barat', 'Jabodetabek', 'Aceh', 'Banjarmasin', 'Depok', 'Maluku', 'Kupang', 'Semarang', 'Kalimantan', 'Sumatra', 'Sulawesi', 'Yogyakarta', 'NTT', 'NTB', 'Riau', 'Serang', 'Sumedang', 'Sabang', 'Merauke', 'Jayapura', 'Papua'],
           priceMax: 30000000
        })
-       var result = json.map(v => `Title: ${v.name}\nThumb:\nhttps://cf.shopee.co.id/file/${v.image}\nRating: ${v.itemRating.ratingStar}\nStatus: ${v.itemStatus}\nPrice: ${(v.price / 100000).toLocaleString()}${v.priceBeforeDiscount !== 000000000 ? ' ~' + (v.priceBeforeDiscount / 100000).toLocaleString() + '~' : ''}\nDiscount: ${v.discount}\nSold: ${v.sold}\nStock: ${v.stock}\nTag: ${v.adsKeyword}\nViewers: ${v.viewCount ? v.viewCount.toLocaleString() : null}\nLikes: ${(v.likedCount).toLocaleString()}\nOfficial Shop: ${v.showOfficialShopLabel}\nFlash Sale: ${v.isOnFlashSale}\nLocation: ${v.shopLocation}\nLink: https://shopee.co.id/product/${v.shopid}/${v.itemid}`).join('\n\n========================\n\n')
+       var result = json.map(v => `Title: ${v.name}\nThumb:\nhttps://cf.shopee.co.id/file/${v.image}\nRating: ${v.itemRating.ratingStar}\nStatus: ${v.itemStatus}\nPrice: ${(v.price / 100000).toLocaleString('id-ID')}${v.priceBeforeDiscount !== 000000000 ? ' ~' + (v.priceBeforeDiscount / 100000).toLocaleString('id-ID') + '~' : ''}\nDiscount: ${v.discount}\nSold: ${v.sold}\nStock: ${v.stock}\nTag: ${v.adsKeyword}\nViewers: ${v.viewCount ? v.viewCount.toLocaleString('id-ID') : null}\nLikes: ${(v.likedCount).toLocaleString('id-ID')}\nOfficial Shop: ${v.showOfficialShopLabel}\nFlash Sale: ${v.isOnFlashSale}\nLocation: ${v.shopLocation}\nLink: https://shopee.co.id/product/${v.shopid}/${v.itemid}`).join('\n\n========================\n\n')
          return m.reply(loghandler.wait, result)
 
   } else if (/^bitly$/i.test(command)) {
@@ -3177,7 +3177,7 @@ Kata sandi: superiorman_
          return m.reply(loghandler.wait, result)
 
   } else if (/^spamchat$/i.test(command)) {
-  	 if (!isPremium) return m.reply(loghandler.wait, loghandler.premiumOnly)
+       if (!isPremium) return m.reply(loghandler.wait, loghandler.premiumOnly)
        if (!text) return m.reply(loghandler.wait, loghandler.notNumber)
        var [jumlah, pesan] = text.split('|')
        if (!jumlah) return m.reply(loghandler.wait, loghandler.notLength)
@@ -3189,8 +3189,8 @@ Kata sandi: superiorman_
          return eval(`m.reply('${result.slice(0, result.length - 3)}')`)
 
   } else if (/^kisahnabi$/i.test(command)) {
-  	 if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
-  	 var res = await fetch(`https://raw.githubusercontent.com/shansekai/My-SQL-Results/main/kisahnabi/${text.toLowerCase()}.json`)
+       if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
+       var res = await fetch(`https://raw.githubusercontent.com/shansekai/My-SQL-Results/main/kisahnabi/${text.toLowerCase()}.json`)
        if (res.status !== 200) return m.reply(loghandler.wait, `Nama nabi *${text}* tidak dapat ditemukan!\n\nPastikan anda memasukan nama nabinya dengan benar`)
        var json = await res.json()
        var result = `Kisah: ${json.name}\nTempat Kelahiran: ${json.tmp} (${json.thn_kelahiran})\nUsia: ${json.usia}\nThumb:\n${json.image_url}\n\n\n${json.description}`
