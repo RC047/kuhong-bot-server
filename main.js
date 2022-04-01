@@ -922,8 +922,8 @@ ${'```' + package.description + '```'}
         var res = await yts(text)
         var result = res.all.map(v => {
         switch (v.type) {
-             case 'video': return `Title: ${v.title}\nUrl: ${v.url}\nDuration: ${v.timestamp}\nUploaded: ${v.ago}\nViews: ${v.views}`
-             case 'channel': return `Channel: ${v.name}\nUrl: ${v.url}\nSubscribers: ${v.subCountLabel ? v.subCountLabel + ' (' + v.subCount + ')' : 'Hidden'}\nVideos: ${v.videoCount}`
+             case 'video': return `Title: ${v.title}\nUploader: ${v.author.name}\nDuration: ${v.timestamp}\nUploaded: ${v.ago}\nViews: ${v.views.toLocaleString()}\nUrl: ${v.url}\nThumb:\n${v.thumbnail}`
+             case 'channel': return `Channel: ${v.name}\nSubscribers: ${v.subCountLabel ? v.subCountLabel : 'Hidden'}\nVideos: ${v.videoCountLabel}\nUrl: ${v.url}\nThumb:\n${v.thumbnail}`
         }}).filter(v => v).join('\n\n========================\n\n')
           return m.reply(loghandler.wait, result)
 
@@ -947,8 +947,7 @@ ${'```' + package.description + '```'}
           return m.reply(loghandler.wait, result)
 
   } else if (/^cer(ita)?pen(dek)?$/i.test(command)) {
-        var cerita = ['cerpen-horor-hantu', 'cerpen-bahasa-inggris', 'cerpen-cinta', 'cerpen-cinta-dalam-hati-terpendam', 'cerpen-cinta-islami']
-        var category = cerita[Math.floor(Math.random() * cerita.length)]
+        var category = pickRandom(['cerpen-horor-hantu', 'cerpen-bahasa-inggris', 'cerpen-cinta', 'cerpen-cinta-dalam-hati-terpendam', 'cerpen-cinta-islami'])
         var page = Math.floor(Math.random() * 30)
         var url = `https://cerpenmu.com/category/${category}/page/${page}`
 
@@ -2935,10 +2934,10 @@ ${Math.floor(Math.random() * 50)} Zamrud
           orderBy: shopee.SEARCH.ORDER_BY.PRICE,
           orderType: shopee.SEARCH.ORDER_TYPE.ASC,
           shippings: [shopee.SEARCH.SHIPPING.JNE_REGULAR, shopee.SEARCH.SHIPPING.SI_CEPAT_REG],
-          locations: ['Bandung', 'Jakarta', 'Jawa', 'Jawa Barat', 'Jabodetabek', 'Aceh', 'Banjarmasin', 'Depok', 'Maluku', 'Kupang', 'Semarang', 'Kalimantan', 'Sumatra', 'Sulawesi', 'Yogyakarta', 'NTT', 'NTB', 'Riau', 'Serang', 'Sumedang', 'Jayapura', 'Papua'],
+          locations: ['Bandung', 'Jakarta', 'Jawa', 'Jawa Barat', 'Jabodetabek', 'Aceh', 'Banjarmasin', 'Depok', 'Maluku', 'Kupang', 'Semarang', 'Kalimantan', 'Sumatra', 'Sulawesi', 'Yogyakarta', 'NTT', 'NTB', 'Riau', 'Serang', 'Sumedang', 'Sabang', 'Merauke', 'Jayapura', 'Papua'],
           priceMax: 30000000
        })
-       var result = json.map(v => `Title: ${v.name}\nThumb:\nhttps://cf.shopee.co.id/file/${v.image}\nRating: ${v.itemRating.ratingStar}\nStatus: ${v.itemStatus}\nPrice: ${v.price / 100000}${v.priceBeforeDiscount !== 000000000 ? ' ~' + v.priceBeforeDiscount / 100000 + '~' : ''}\nDiscount: ${v.discount}\nSold: ${v.sold}\nStock: ${v.stock}\nTag: ${v.adsKeyword}\nViewers: ${v.viewCount}\nLikes: ${v.likedCount}\nOfficial Shop: ${v.showOfficialShopLabel}\nFlash Sale: ${v.isOnFlashSale}\nLocation: ${v.shopLocation}\nLink: https://shopee.co.id/product/${v.shopid}/${v.itemid}`).join('\n\n========================\n\n')
+       var result = json.map(v => `Title: ${v.name}\nThumb:\nhttps://cf.shopee.co.id/file/${v.image}\nRating: ${v.itemRating.ratingStar}\nStatus: ${v.itemStatus}\nPrice: ${(v.price / 100000).toLocaleString()}${v.priceBeforeDiscount !== 000000000 ? ' ~' + (v.priceBeforeDiscount / 100000).toLocaleString() + '~' : ''}\nDiscount: ${v.discount}\nSold: ${v.sold}\nStock: ${v.stock}\nTag: ${v.adsKeyword}\nViewers: ${v.viewCount ? v.viewCount.toLocaleString() : null}\nLikes: ${(v.likedCount).toLocaleString()}\nOfficial Shop: ${v.showOfficialShopLabel}\nFlash Sale: ${v.isOnFlashSale}\nLocation: ${v.shopLocation}\nLink: https://shopee.co.id/product/${v.shopid}/${v.itemid}`).join('\n\n========================\n\n')
          return m.reply(loghandler.wait, result)
 
   } else if (/^bitly$/i.test(command)) {
