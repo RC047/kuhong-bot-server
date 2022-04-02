@@ -584,7 +584,7 @@ ${'```' + package.description + '```'}
       var test = await fetch(text)
       if (!test.url) return m.reply(loghandler.wait, 'Video tidak dapat ditemukan!')
       await tiktok.getVideoMeta(test.url, { noWaterMark: /nowm$/i.test(command) }).then(res => {
-      var result = `Title: ${res.collector[0].text}\nID: ${res.collector[0].id}\nUploader: ${res.collector[0].authorMeta.nickName}\nThumb: ${res.collector[0].imageUrl}\nDownload:\n${res.collector[0].videoUrl}`
+      var result = `Title: ${res.collector[0].text}\nID: ${res.collector[0].id}\nUploaded: ${res.collector[0].createTime.toLocaleString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}\nViews: ${res.collector[0].playCount.toLocaleString('id-ID')}\nThumb: ${res.collector[0].imageUrl}\nDownload:\n${/nowm$/i.test(command) ? res.collector[0].videoUrlNoWaterMark : res.collector[0].videoUrl}`
         return m.reply(loghandler.wait, result)
       }).catch(() => m.reply(loghandler.wait, 'Video tidak dapat ditemukan!'))
 
@@ -3177,7 +3177,7 @@ Kata sandi: superiorman_
          return m.reply(loghandler.wait, result)
 
   } else if (/^spamchat$/i.test(command)) {
-       if (!isPremium) return m.reply(loghandler.wait, loghandler.premiumOnly)
+  	 if (!isPremium) return m.reply(loghandler.wait, loghandler.premiumOnly)
        if (!text) return m.reply(loghandler.wait, loghandler.notNumber)
        var [jumlah, pesan] = text.split('|')
        if (!jumlah) return m.reply(loghandler.wait, loghandler.notLength)
@@ -3189,8 +3189,8 @@ Kata sandi: superiorman_
          return eval(`m.reply('${result.slice(0, result.length - 3)}')`)
 
   } else if (/^kisahnabi$/i.test(command)) {
-       if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
-       var res = await fetch(`https://raw.githubusercontent.com/shansekai/My-SQL-Results/main/kisahnabi/${text.toLowerCase()}.json`)
+  	 if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
+  	 var res = await fetch(`https://raw.githubusercontent.com/shansekai/My-SQL-Results/main/kisahnabi/${text.toLowerCase()}.json`)
        if (res.status !== 200) return m.reply(loghandler.wait, `Nama nabi *${text}* tidak dapat ditemukan!\n\nPastikan anda memasukan nama nabinya dengan benar`)
        var json = await res.json()
        var result = `Kisah: ${json.name}\nTempat Kelahiran: ${json.tmp} (${json.thn_kelahiran})\nUsia: ${json.usia}\nThumb:\n${json.image_url}\n\n\n${json.description}`
