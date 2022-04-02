@@ -584,7 +584,7 @@ ${'```' + package.description + '```'}
       var test = await fetch(text)
       if (!test.url) return m.reply(loghandler.wait, 'Video tidak dapat ditemukan!')
       await tiktok.getVideoMeta(test.url, { noWaterMark: /nowm$/i.test(command) }).then(res => {
-      var result = `Title: ${res.collector[0].text}\nID: ${res.collector[0].id}\nUploaded: ${new Date(new Date + res.collector[0].createTime).toLocaleString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}\nViews: ${res.collector[0].playCount.toLocaleString('id-ID')}\nThumb: ${res.collector[0].imageUrl}\nDownload:\n${/nowm$/i.test(command) ? res.collector[0].videoUrlNoWaterMark : res.collector[0].videoUrl}`
+      var result = `Title: ${res.collector[0].text}\nID: ${res.collector[0].id}\nUploaded: ${new Date(new Date - res.collector[0].createTime).toLocaleString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}\nViews: ${res.collector[0].playCount.toLocaleString('id-ID')}\nThumb: ${res.collector[0].imageUrl}\nDownload:\n${/nowm$/i.test(command) ? res.collector[0].videoUrlNoWaterMark : res.collector[0].videoUrl}`
         return m.reply(loghandler.wait, result)
       }).catch(() => m.reply(loghandler.wait, 'Video tidak dapat ditemukan!'))
 
