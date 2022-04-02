@@ -575,7 +575,7 @@ ${'```' + package.description + '```'}
       var json = res.all.find(video => video.seconds < 3600)
       if (!json) return m.reply(loghandler.wait, 'Lagu tidak ditemukan!')
       var { dl_link, thumb, title, filesize, filesizeF } = await yta(json.url, 'id4')
-        var result = `Title: ${json.title}\nDuration: ${json.timestamp}\nUploaded: ${json.ago}\nViews: ${json.views}\nSize: ${filesizeF}\nThumb: ${thumb}\nSource: ${json.url}\nDownload:\n${dl_link}`
+        var result = `Title: ${json.title}\nDuration: ${json.timestamp}\nUploaded: ${json.ago}\nViews: ${json.views.toLocaleString('id-ID')}\nSize: ${filesizeF}\nThumb: ${thumb}\nSource: ${json.url}\nDownload:\n${dl_link}`
           return m.reply(loghandler.wait, result)
 
   } else if (/^(tt|tiktok)(nowm)?$/i.test(command)) {
