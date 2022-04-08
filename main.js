@@ -578,7 +578,7 @@ ${'```' + package.description + '```'}
         var result = `Title: ${json.title}\nDuration: ${json.timestamp}\nUploaded: ${json.ago}\nViews: ${json.views.toLocaleString('id-ID')}\nSize: ${filesizeF}\nThumb: ${thumb}\nSource: ${json.url}\nDownload:\n${dl_link}`
           return m.reply(loghandler.wait, result)
 
-  } else if (/^(tt|tiktok)(nowm)?$/i.test(command)) {
+  } else if (/^t(ik)?t(ok)?(nowm)?$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notUrl)
       if (!isURL(text)) return m.reply(loghandler.wait, loghandler.invalidLink)
       var test = await fetch(text)
@@ -588,7 +588,7 @@ ${'```' + package.description + '```'}
         return m.reply(loghandler.wait, result)
       }).catch(() => m.reply(loghandler.wait, 'Video tidak dapat ditemukan!'))
 
-  } else if (/^tiktokstalk$/i.test(command)) {
+  } else if (/^t(ik)?t(ok)?stalk$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notName)
       await tiktok.getUserProfileInfo(text).then(res => {
       var result = `Nickname: ${res.user.nickname}\nUser ID: ${res.user.id}\nAvatar: ${res.user.avatarLarger}\nFollowers: ${res.stats.followerCount}\nFollowing: ${res.stats.followingCount}\nVideos: ${res.stats.videoCount}\nVerified: ${res.user.verified}\nSignature: ${res.user.signature}`
@@ -690,7 +690,7 @@ ${'```' + package.description + '```'}
       if (!isURL(text)) return m.reply(loghandler.wait, loghandler.invalidLink)
       var [url, body] = text.split('|')
       var res = await fetch(url, { method: command.toUpperCase(), body: body ? body : null })
-      if (res.status !== 200) return m.reply(loghandler.wait, `Gagal ${/^get$/i.test(command) ? 'mendapatkan' : 'memposting'}\n(${url})\n\n${res.statusText} (${res.status})`)
+      if (res.status !== 200) return m.reply(loghandler.wait, `Failed to ${command.toUpperCase()}:\n${url}\n\nMessage: ${res.statusText} (${res.status})`)
       var result = ''
       if (!/text|json/i.test(res.headers.get('content-type'))) result = 'Hasil:\n\n' + await saveToMedia(await res.buffer())
       else result = await res.text()
@@ -997,7 +997,7 @@ ${'```' + package.description + '```'}
       if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
       var json = await (await fetch(`https://some-random-api.ml/lyrics?title=${text}`)).json()
       if (!json.lyrics) return m.reply(loghandler.wait, 'Lirik tidak ditemukan!')
-        return m.reply(loghandler.wait, json.lyrics)
+        return m.reply(loghandler.wait, `Title: ${json.title}\nAuthor: ${json.author}\n\n${json.lyrics}`)
 
   } else if (/^chord$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
@@ -1516,7 +1516,7 @@ ${'```' + package.description + '```'}
            headers: {
                 'content-type': 'application/x-www-form-urlencoded'
            },
-           data: new URLSearchParams(Object.entries({ 'nomer': text, 'submit': ' Submit! ' }))
+           data: new URLSearchParams(Object.entries({ nomer: text, submit: ' Submit! ' }))
       }).then(res => {
           var $ = cheerio.load(res.data)
           var body = $('#body').text().trim()
@@ -1606,7 +1606,6 @@ ${'```' + package.description + '```'}
               else hasil = `Kamu Kalah!\n\nKamu: ${you.toLowerCase()}\nBot: ${bot}`
           } else hasil = 'Pilihan yang tersedia: Batu, Gunting, Kertas'
             return m.reply(loghandler.wait, hasil)
-
       } else {
       	if (!text) return m.reply(loghandler.wait, 'Silahkan Pilih: Semut, Orang, Gajah')
   	    var you = text.trim()
@@ -2898,10 +2897,10 @@ ${Math.floor(Math.random() * 50)} Zamrud
        $('div.wa-chat-body').each(function (a, b) {
            var link = $(b).find('a').attr('href')
            var subject = $(b).find('div.wa-chat-title-text').text().trim()
+           if (!subject) return m.reply(loghandler.wait, `Pencarian Grup *${text}* tidak ditemukan!`)
            var hasil = { subject: subject.split('. ')[1].split('*')[0], link: link }
            json.push(hasil)
        })
-       if (!json[0].subject) return m.reply(loghandler.wait, `Pencarian Grup *${text}* tidak ditemukan!`)
        var result = json.map(v => `Judul: ${v.subject}\nLink:\n${v.link}`).join('\n\n========================\n\n')
          return m.reply(loghandler.wait, result)
       })
