@@ -1,10 +1,18 @@
 // Use Strict
 
-var ip = fetchURI('https://api.ipify.org')
+var ip = null
 window.setTimeout('runScripts();', 1000);
 window.setTimeout('getFunFact();', 1000);
 window.setTimeout('checkErorr();', 5000);
 
+
+(async function getAddress() {
+try {
+  ip = await (await fetch('https://api.ipify.org')).text()
+} catch (e) {
+  ip = 'Not Located'
+}
+})()
 
 function runScripts() {
 navigator.getBattery().then(status => {
@@ -12,7 +20,7 @@ navigator.getBattery().then(status => {
   document.getElementById('status').textContent = date.getHours() > 21 ? 'Offline' : 'Online';
   document.getElementById('device').textContent = window.matchMedia('only screen and (max-width: 760px)').matches ? 'Mobile' : 'Window';
   document.getElementById('times').textContent = new Array(date.getHours(), date.getMinutes(), date.getSeconds()).join(':');
-  document.getElementById('ip').textContent = ip.data;
+  document.getElementById('ip').textContent = ip;
   document.getElementById('power').textContent = Math.floor(status.level * 100) + '%';
   document.getElementById('cookie').textContent = navigator.cookieEnabled ? 'Enabled' : 'Disabled';
   document.getElementById('platform').textContent = navigator.platform;
@@ -32,11 +40,10 @@ if (status == 'Detecting...') {
     }
 }
 
-function getFunFact() {
-var json = fetchURI('https://recoders-area.caliph.repl.co/api/fakta');
-var result = '';
-if (json.status !== 200) result = 'Jangan lupa follow creator kita "RC047"!';
-else result = json.data.result;
-document.getElementById('fun-fact').textContent = result;
+async function getFunFact() {
+var res = await fetch('https://recoders-area.caliph.repl.co/api/fakta');
+if (!res.ok) return false;
+var json = await res.json()
+document.getElementById('fun-fact').textContent = json.result;
 window.setTimeout('getFunFact();', 25000);
 }
