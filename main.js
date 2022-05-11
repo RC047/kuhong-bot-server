@@ -2414,7 +2414,7 @@ Tamat..
 
   } else if (/^min(e|ing)$/i.test(command)) {
       var result = `
-Anda telah mining selama ${new Array(Math.floor(Math.random() * 24), Math.floor(Math.random() * 60), Math.floor(Math.random() * 60)).join(':')}
+Anda telah mining selama ${[Math.floor(Math.random() * 24), Math.floor(Math.random() * 60), Math.floor(Math.random() * 60)].join(':')}
 
 Hasil yang didapatkan:
 ${Math.floor(Math.random() * 10000)} Batu
