@@ -39,7 +39,7 @@ var package = require('./package.json')
 var { apikey } = require('./config.json')
 var botName = m.get('BOT_NAME') || 'WhatsApp Bot'
 var owner = (m.get('OWNER_NUMBER') || '62895337278647').replace(/[-+<>@]/g, '').replace(/ +/g, '')
-var jadwal = m.get('BOT_SCHEDULE') || '-'
+var jadwal = m.get('BOT_SCHEDULE') || '24 Jam'
 var group_link = m.get('GROUP_LINK') || '-'
 var donate_link = m.get('DONATE_LINK') || '-'
 var gh_link = m.get('GITHUB_LINK') || '-'
@@ -302,12 +302,13 @@ var listMenu = {
 'tinyurl <url>',
 'shorturl <url>',
 'bitly <url>',
+'pastebin <url>',
 'font <text>',
 'style <text>',
 'bold <text>',
 'italic <text>',
 'strikethrough <text>',
-'monoscope <text>',
+'monospace <text>',
 'imgbb <image url>',
 'ocr <image url>',
 'tesseract <image url>',
@@ -337,8 +338,8 @@ try {
   if (/^true|enable|on|1$/i.test(m.get('SELF_MODE'))) { if (!isOwner) return m.ignoreMessage() }
   if (/^true|enable|on|1$/i.test(m.get('WELCOME_MESSAGE')) && isWelcome == false) {
       if (!senderMessage) return m.ignoreMessage()
-      var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : pickRandom(m.get('BOT_PREFIX').split(''))}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
-      if (isGroup) welcome = `Selamat ${salam} Member Grup\n*${groupName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : pickRandom(m.get('BOT_PREFIX').split(''))}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
+      var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : pickRandom((m.get('BOT_PREFIX') || '!').split(''))}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
+      if (isGroup) welcome = `Selamat ${salam} Member Grup\n*${groupName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : pickRandom((m.get('BOT_PREFIX') || '!').split(''))}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
       await fs.writeFileSync('./tmp/' + (isGroup ? groupName : senderName) + '_welcome.txt', date.toString())
         return m.reply(welcome)
   } else if (/^true|enable|on|1$/i.test(m.get('SIMI_MODE'))) {
@@ -982,9 +983,9 @@ ${'```' + package.description + '```'}
       var result = Object.entries(await stylizeText(text)).map(([name, value]) => `*${name}*\n${value}`).join('\n\n')
         return m.reply(loghandler.wait, result)
 
-  } else if (/^(bold|italic|strikethrough|monoscope)$/i.test(command)) {
+  } else if (/^(bold|italic|strikethrough|monospace)$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notText)
-      var modifier = /^bold$/i.test(command) ? '*' : /^italic$/i.test(command) ? '_' : /^strikethrough$/i.test(command) ? '~' : /^monoscope$/i.test(command) ? '```' : ''
+      var modifier = /^bold$/i.test(command) ? '*' : /^italic$/i.test(command) ? '_' : /^strikethrough$/i.test(command) ? '~' : /^monospace$/i.test(command) ? '```' : ''
         return m.reply(loghandler.wait, modifier + text + modifier)
 
   } else if (/^(tiny|short)url$/i.test(command)) {
@@ -3176,7 +3177,7 @@ Kata sandi: superiorman_
          return m.reply(loghandler.wait, result)
 
   } else if (/^spamchat$/i.test(command)) {
-  	 if (!isPremium) return m.reply(loghandler.wait, loghandler.premiumOnly)
+       if (!isPremium) return m.reply(loghandler.wait, loghandler.premiumOnly)
        if (!text) return m.reply(loghandler.wait, loghandler.notNumber)
        var [jumlah, pesan] = text.split('|')
        if (!jumlah) return m.reply(loghandler.wait, loghandler.notLength)
@@ -3188,8 +3189,8 @@ Kata sandi: superiorman_
          return eval(`m.reply('${result.slice(0, result.length - 3)}')`)
 
   } else if (/^kisahnabi$/i.test(command)) {
-  	 if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
-  	 var res = await fetch(`https://raw.githubusercontent.com/shansekai/My-SQL-Results/main/kisahnabi/${text.toLowerCase()}.json`)
+       if (!text) return m.reply(loghandler.wait, loghandler.notQuery)
+       var res = await fetch(`https://raw.githubusercontent.com/shansekai/My-SQL-Results/main/kisahnabi/${text.toLowerCase()}.json`)
        if (res.status !== 200) return m.reply(loghandler.wait, `Nama nabi *${text}* tidak dapat ditemukan!\n\nPastikan anda memasukan nama nabinya dengan benar`)
        var json = await res.json()
        var result = `Kisah: ${json.name}\nTempat Kelahiran: ${json.tmp} (${json.thn_kelahiran})\nUsia: ${json.usia}\nThumb:\n${json.image_url}\n\n\n${json.description}`
@@ -3198,6 +3199,10 @@ Kata sandi: superiorman_
   } else if (/^blank|empty|kosong$/i.test(command)) {
   	var result = String.fromCharCode(8206)
   	  return m.reply(loghandler.wait, result)
+
+    } else if (/^pastebin$/i.test(command)) {
+  	var json = await (await fetch(`https://api-anoncybfakeplayer.herokuapp.com/pastebin?text=${text}`)).json()
+  	  return m.reply(loghandler.wait, `Hasil:\n\n${json.result}`)
 
   } else return m.reply(loghandler.wait, loghandler.notCommand)
 } catch (e) {
