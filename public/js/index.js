@@ -6,7 +6,7 @@ window.setTimeout('getFunFact();', 1000);
 window.setTimeout('checkErorr();', 5000);
 
 
-(async function getAddress() {
+(async function() {
 try {
   ip = await (await fetch('https://api.ipify.org')).text()
 } catch (e) {
