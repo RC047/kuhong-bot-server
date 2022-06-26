@@ -66,6 +66,7 @@ else if (hours == 10 || hours == 11 || hours == 12 || hours == 13 || hours == 14
 else if (hours == 15 || hours == 16 || hours == 17) salam = 'Sore'
 else if (hours == 18 || hours == 19 || hours == 20 || hours == 21 || hours == 22 || hours == 23 || hours == 0 || hours == 1 || hours == 2 || hours == 3) salam = 'Malam'
 
+try { var isWarning = await fs.readFileSync('./tmp/unknown_detect.txt') } catch (e) { isWarning = false }
 try { var isWelcome = await fs.readFileSync('./tmp/' + (isGroup ? groupName : senderName) + '_welcome.txt') } catch (e) { isWelcome = false }
 try { var afk = JSON.parse(await fs.readFileSync('./tmp/' + senderName + '_afk.json')) } catch (e) { afk = { name: null, reason: null } }
 var opts = {
@@ -336,7 +337,10 @@ var listMenu = {
 
 try {
   if (/^true|enable|on|1$/i.test(m.get('SELF_MODE'))) { if (!isOwner) return m.ignoreMessage() }
-  if (/^true|enable|on|1$/i.test(m.get('WELCOME_MESSAGE')) && isWelcome == false) {
+  if (!/^tkstudio\.autoresponderfor/i.test(appPackageName) && isWarning == false) {
+      if (!senderMessage) return m.ignoreMessage()
+      return m.reply('*「 Peringatan 」*\n\nKami mendeteksi bahwa anda tidak menggunakan aplikasi autoresponder!\nKemungkinan besar pesan yang dikirim tidak akan benar atau tidak terkirim sama sekali')
+  } else if (/^true|enable|on|1$/i.test(m.get('WELCOME_MESSAGE')) && isWelcome == false) {
       if (!senderMessage) return m.ignoreMessage()
       var welcome = `Selamat ${salam}${senderName.startsWith('+') ? '\n' : ' '}*${senderName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : pickRandom((m.get('BOT_PREFIX') || '!').split(''))}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
       if (isGroup) welcome = `Selamat ${salam} Member Grup\n*${groupName}*!\n\nSilahkan ketik *${prefix.test(senderMessage) ? usedPrefix : pickRandom((m.get('BOT_PREFIX') || '!').split(''))}${pickRandom(listMenu.main)}* untuk memulai Bot ini.`
@@ -477,7 +481,7 @@ ${listMenu.others.map(v => `│• ${usedPrefix + v}`).join('\n')}
 
 
 User ID:
-_${await createHash('md5').update(senderName).digest('hex')}_
+_${await createHash('md5').update(senderName).digest('hex').slice(0, 15)}_
 *${botName.toLowerCase().replace(/ +/g, '-')}@^${m.appVersion}*
 ${'```' + package.description + '```'}
 `.trim()
@@ -488,11 +492,10 @@ ${'```' + package.description + '```'}
         return m.reply(loghandler.wait, result)
 
   } else if (/^s(tatus|peed)|ping$/i.test(command)) {
-  	var old = performance.now()
       var p = process.memoryUsage()
       var cpus = os.cpus().map(cpu => {
-         cpu.total = Object.keys(cpu.times).reduce((last, type) => last + cpu.times[type], 0)
-         return cpu
+          cpu.total = Object.keys(cpu.times).reduce((last, type) => last + cpu.times[type], 0)
+          return cpu
       })
       var cpu = cpus.reduce((last, cpu, _, { length }) => {
          last.total += cpu.total
@@ -504,7 +507,6 @@ ${'```' + package.description + '```'}
          last.times.irq += cpu.times.irq
          return last
       }, { speed: 0, total: 0, times: { user: 0, nice: 0, sys: 0, idle: 0, irq: 0 }})
-      var neww = performance.now()
       var result = `
 ╭─ *「 Status Bot 」*
 │
@@ -512,7 +514,7 @@ ${'```' + package.description + '```'}
 │• Device: ${(m.get('User-Agent') || 'Unknown').replace(/[;]/g, '').split('(')[1].split(')')[0]}
 │• Server: ${m.get('Host')}
 │• Mode: ${/^true|enable|on|1$/i.test(m.get('SELF_MODE')) ? 'Self' : 'Public'}
-│• Library: AutoResponder
+│• Library: ${/^tkstudio\.autoresponderfor/i.test(appPackageName) ? 'AutoResponder' : 'Unknown'}
 │• Application: ${messengerPackageName}
 │• Type: Text Only (Non Media)
 │• Platform: ${os.type()}
@@ -521,7 +523,6 @@ ${'```' + package.description + '```'}
 │• Ram: ${formatSize(p.heapUsed)} / ${formatSize(p.rss + p.heapTotal + p.heapUsed + p.external + p.arrayBuffers)}
 │• Rom: ${formatSize(os.totalmem() - os.freemem())} / ${formatSize(os.totalmem())}
 │• Cpu: ${cpus[0].model} (${cpu.speed} MHZ)
-│• Packages: NodeJS, FFmpeg, Tesseract, ImagesMagick, GraphicsMagick
 │• Port: ${process.env.PORT || 3000}
 │• IP: ${m.ip}
 │• Received Message: ${m.receivedCount}
@@ -532,7 +533,7 @@ ${'```' + package.description + '```'}
 │• Total Features: ${listMenu.downloaders.length + listMenu.makers.length + listMenu.groups.length + listMenu.games.length + listMenu.searchs.length + listMenu.primbons.length + listMenu.animes.length + listMenu.randoms.length + listMenu.news.length + listMenu.encrypts.length + listMenu.tools.length + listMenu.owners.length + listMenu.others.length}
 │• Total Modules: ${fs.readdirSync('./node_modules').length}
 │• Uptime: ${muptime(process.uptime())}
-│• Ping: ${neww - old}ms
+│• Ping: ${m.ping}ms
 │• App Version: ${m.appVersion}
 │• Node Version: ${process.versions.node}
 │• Package Version: ${package.version}
