@@ -239,6 +239,7 @@ var listMenu = {
 'hiburan',
 'darkjokes',
 'quotes',
+'quotesanime',
 'katabijak',
 'faktaunik',
 'fml',
@@ -481,7 +482,7 @@ ${listMenu.others.map(v => `│• ${usedPrefix + v}`).join('\n')}
 
 
 User ID:
-_${await createHash('md5').update(senderName).digest('hex').slice(0, 15)}_
+_${await createHash('md5').update(senderName).digest('hex').slice(0, 20)}_
 *${botName.toLowerCase().replace(/ +/g, '-')}@^${m.appVersion}*
 ${'```' + package.description + '```'}
 `.trim()
@@ -492,6 +493,7 @@ ${'```' + package.description + '```'}
         return m.reply(loghandler.wait, result)
 
   } else if (/^s(tatus|peed)|ping$/i.test(command)) {
+      var old = performance.now()
       var p = process.memoryUsage()
       var cpus = os.cpus().map(cpu => {
           cpu.total = Object.keys(cpu.times).reduce((last, type) => last + cpu.times[type], 0)
@@ -507,6 +509,7 @@ ${'```' + package.description + '```'}
          last.times.irq += cpu.times.irq
          return last
       }, { speed: 0, total: 0, times: { user: 0, nice: 0, sys: 0, idle: 0, irq: 0 }})
+      var neww = performance.now()
       var result = `
 ╭─ *「 Status Bot 」*
 │
@@ -533,7 +536,7 @@ ${'```' + package.description + '```'}
 │• Total Features: ${listMenu.downloaders.length + listMenu.makers.length + listMenu.groups.length + listMenu.games.length + listMenu.searchs.length + listMenu.primbons.length + listMenu.animes.length + listMenu.randoms.length + listMenu.news.length + listMenu.encrypts.length + listMenu.tools.length + listMenu.owners.length + listMenu.others.length}
 │• Total Modules: ${fs.readdirSync('./node_modules').length}
 │• Uptime: ${muptime(process.uptime())}
-│• Ping: ${m.ping}ms
+│• Ping: ${Math.round(neww - old)}ms
 │• App Version: ${m.appVersion}
 │• Node Version: ${process.versions.node}
 │• Package Version: ${package.version}
@@ -1059,6 +1062,11 @@ ${'```' + package.description + '```'}
       var data = JSON.parse(await fs.readFileSync('./lib/json/quotes.json'))
       var json = pickRandom(data)
         return m.reply(loghandler.wait, json.quotes)
+
+  } else if (/^(kata|quotes?)a?nime$/i.test(command)) {
+      var res = await (await fetch('https://katanime.vercel.app/api/getrandom')).json().result
+      var json = res[Math.floor(Math.random() * res.length)]
+        return m.reply(loghandler.wait, `Character: ${json.character}\nAnime: ${json.anime}\n\nQuotes:\n${json.indo}`)
 
   } else if (/^sindiran$/i.test(command)) {
       var data = JSON.parse(await fs.readFileSync('./lib/json/sindiran.json'))
