@@ -1,3 +1,4 @@
+if (!window.matchMedia('only screen and (max-width: 760px)').matches) $('.other-menu').css('left', '85%')
 if (!('navigator' in window)) window.alert('Navigator is required!')
 var date = new Date
 var userID = Math.floor(Math.random() * 1000)
