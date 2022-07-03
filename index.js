@@ -47,7 +47,6 @@ req.reply = (...message) => {
 }
 req.ignoreMessage = () => req.reply('');
 req.battery = '%battery%';
-req.ping = '%processing_time%';
 req.time = '%hour_of_day%:%minute%:%second%';
 req.date = '%day_of_week% %day_of_month_short% %month_name% %year%';
 req.appVersion = '%app_version%';
