@@ -55,6 +55,10 @@ $('.send').click(function() {
     return sendMessage()
 })
 
+$('.send-file').click(function() {
+    return alert('Fitur ini akan segera datang :D')
+})
+
 window.setTimeout(function() {
 
 $('.messages').animate({ scrollTop: $('.messages > ul').height() }, 'fast')
@@ -70,7 +74,7 @@ $('<li class="you"><img src="https://i.ibb.co/3ThyTTQ/avatar-contact.png"></img>
 $('input[type=text]').val(null)
 $('.messages').animate({ scrollTop: $('.messages > ul').height() }, 'fast')
 $.ajax({
-	url: 'https://api.countapi.xyz/hit/kuhong-bot-received',
+    url: 'https://api.countapi.xyz/hit/kuhong-bot-received',
     method: 'GET',
     dataType: 'json'
 })
@@ -88,7 +92,7 @@ $.ajax({
 function sendRequest(message) {
 
 $.ajax({
-	url: 'https://kuhong-bot.herokuapp.com',
+    url: 'https://kuhong-bot.herokuapp.com',
     method: 'POST',
     dataType: 'json',
     headers: {
@@ -101,7 +105,7 @@ $.ajax({
     	appPackageName: 'tkstudio.autoresponderforwa',
         messengerPackageName: 'com.android.chrome',
         query: {
-        	sender: username,
+            sender: username,
             message: message,
             isGroup: false,
             groupParticipant: '',
@@ -127,7 +131,7 @@ if ($.trim(message) == '') return false
 $('<li class="bot"><img src="https://i.ibb.co/frhZmyZ/pp.jpg"></img><p>' + message.replaceTags() + '</p><div class="date"></div></li>').appendTo($('.messages > ul'))
 $('.messages').animate({ scrollTop: $('.messages > ul').height() }, 'fast')
 $.ajax({
-	url: 'https://api.countapi.xyz/hit/kuhong-bot-replies',
+    url: 'https://api.countapi.xyz/hit/kuhong-bot-replies',
     method: 'GET',
     dataType: 'json'
 })
