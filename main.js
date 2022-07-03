@@ -1065,8 +1065,8 @@ ${'```' + package.description + '```'}
         return m.reply(loghandler.wait, json.quotes)
 
   } else if (/^(kata|quotes?)a?nime$/i.test(command)) {
-      var res = await (await fetch('https://katanime.vercel.app/api/getrandom')).json().result
-      var json = res[Math.floor(Math.random() * res.length)]
+      var res = await (await fetch('https://katanime.vercel.app/api/getrandom')).json()
+      var json = res.result[Math.floor(Math.random() * res.result.length)]
         return m.reply(loghandler.wait, `Character: ${json.character}\nAnime: ${json.anime}\n\nQuotes:\n${json.indo}`)
 
   } else if (/^sindiran$/i.test(command)) {
