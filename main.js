@@ -537,7 +537,7 @@ ${'```' + package.description + '```'}
 │• Total Features: ${listMenu.downloaders.length + listMenu.makers.length + listMenu.groups.length + listMenu.games.length + listMenu.searchs.length + listMenu.primbons.length + listMenu.animes.length + listMenu.randoms.length + listMenu.news.length + listMenu.encrypts.length + listMenu.tools.length + listMenu.owners.length + listMenu.others.length}
 │• Total Modules: ${fs.readdirSync('./node_modules').length}
 │• Uptime: ${muptime(process.uptime())}
-│• Ping: ${Math.round(neww - old)}ms
+│• Ping: ${neww - old}ms
 │• App Version: ${m.appVersion}
 │• Node Version: ${process.versions.node}
 │• Package Version: ${package.version}
