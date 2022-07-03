@@ -1,4 +1,4 @@
-// Script Made By: https://github.com/RC047
+// Author: https://github.com/RC047
 console.log('Starting...');
 var express = require('express');
 var app = express();
@@ -25,7 +25,7 @@ app.use(parser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended: tru
 
 app.all('/', async (req, res, next) => {
 
-if (req.method !== 'POST') return res.status(200).sendFile(__dirname + '/index.html');
+if (req.method !== 'POST') return res.status(200).sendFile(__dirname + '/views/index.html');
 var appPackageName = req.body.appPackageName,
     messengerPackageName = req.body.messengerPackageName,
     isGroup = req.body.query.isGroup,
@@ -84,10 +84,12 @@ await main.handler(req, {
   }
 });
 
-fs.writeFileSync('./index.html', encryptHtml(fs.readFileSync('./index.html').toString()));
+app.get('/web_bot', async (req, res, next) => res.status(200).sendFile(__dirname + '/views/web_bot.html'));
+fs.writeFileSync('./views/index.html', encryptHtml(fs.readFileSync('./views/index.html').toString()));
+fs.writeFileSync('./views/web_bot.html', encryptHtml(fs.readFileSync('./views/web_bot.html').toString()));
 fs.writeFileSync('./public/js/index.js', encryptScript(fs.readFileSync('./public/js/index.js').toString()));
+fs.writeFileSync('./public/js/web_bot.js', encryptScript(fs.readFileSync('./public/js/web_bot.js').toString()));
 fs.writeFileSync('./main.js', encryptScript(fs.readFileSync('./main.js').toString()));
 fs.writeFileSync('./lib/js/functions.js', encryptScript(fs.readFileSync('./lib/js/functions.js').toString()));
-
 app.use((req, res, next) => res.status(404).send(`<pre>Halaman <strong>${req.url}</strong> tidak dapat ditemukan disini...</pre>`));
 app.listen(PORT, () => console.info('Server running on port', PORT));
