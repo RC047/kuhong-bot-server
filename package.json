@@ -1,5 +1,5 @@
 {
-  "name": "kuhong-bot",
+  "name": "kuhong-bot-server",
   "version": "2.5.0",
   "description": "Simple WhatsApp Bot",
   "main": "index.js",
