@@ -3,7 +3,7 @@
 var ip = null
 window.setTimeout('runScripts();', 1000);
 window.setTimeout('getFunFact();', 1000);
-window.setTimeout('checkErorr();', 5000);
+window.setTimeout('checkError();', 5000);
 
 
 (async function() {
