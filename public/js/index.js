@@ -1,7 +1,6 @@
 // Use Strict
 
 var ip = null
-var battery = null
 window.setTimeout('runScripts();', 1000);
 window.setTimeout('getFunFact();', 1000);
 window.setTimeout('checkError();', 5000);
@@ -10,23 +9,23 @@ window.setTimeout('checkError();', 5000);
 (async function() {
 try {
   ip = await (await fetch('https://api.ipify.org')).text()
-  battery = await navigator.getBattery()
 } catch (e) {
   ip = 'Not Located'
-  battery = { level: 0, charging: null }
 }
 })()
 
 function runScripts() {
 var date = new Date();
-document.getElementById('status').textContent = date.getHours() > 21 ? 'Offline' : 'Online';
-document.getElementById('device').textContent = window.matchMedia('only screen and (max-width: 760px)').matches ? 'Mobiles' : 'Windows';
-document.getElementById('times').textContent = new Array(date.getHours(), date.getMinutes(), date.getSeconds()).join(':');
-document.getElementById('ip').textContent = ip;
-document.getElementById('power').textContent = Math.floor(battery.level * 100) + '%' + (battery.charging ? ' (Charging)' : '');
-document.getElementById('cookie').textContent = navigator.cookieEnabled ? 'Enabled' : 'Disabled';
-document.getElementById('platform').textContent = navigator.platform;
-document.getElementById('ping').textContent = Math.floor(Math.random() * 500) + 'ms';
+navigator.getBattery().then(status => {
+  document.getElementById('status').textContent = date.getHours() > 21 ? 'Offline' : 'Online';
+  document.getElementById('device').textContent = window.matchMedia('only screen and (max-width: 760px)').matches ? 'Mobiles' : 'Windows';
+  document.getElementById('times').textContent = new Array(date.getHours(), date.getMinutes(), date.getSeconds()).join(':');
+  document.getElementById('ip').textContent = ip;
+  document.getElementById('power').textContent = Math.floor(status.level * 100) + '%' + (status.charging ? ' (Charging)' : '');
+  document.getElementById('cookie').textContent = navigator.cookieEnabled ? 'Enabled' : 'Disabled';
+  document.getElementById('platform').textContent = navigator.platform;
+  document.getElementById('ping').textContent = Math.floor(Math.random() * 500) + 'ms';
+  });
 window.setTimeout('runScripts();', 1000);
 }
 
