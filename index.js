@@ -27,8 +27,9 @@ app.use(parser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended: tru
 app.all('/', async (req, res, next) => {
 
 if (req.method !== 'POST') return res.status(200).sendFile(__dirname + '/views/index.html');
-console.log(req.headers.authorization, req.header('authorization'))
-// if (!req.header('authorization')) return res.status(400).json({ status: false, message: 'Credentials not found!' });
+if (!req.get('Authorization')) return res.status(400).json({ status: 400, message: 'Credentials not found!' });
+var [parameters, apikey] = req.get('Authorization').split(' ')
+if (parameters !== 'APIKEY' && apikey !== user.apikey.kuhong) return res.status(403).json({ status: 403, message: 'Apikey yang anda masukkan tidak valid! Silahkan kunjungi web utama untuk mendapatkan apikey yang valid' })
 var appPackageName = req.body.appPackageName,
     messengerPackageName = req.body.messengerPackageName,
     isGroup = req.body.query.isGroup,
@@ -42,7 +43,7 @@ req.reply = (...message) => {
   var botName = req.get('BOT_NAME') || 'WhatsApp Bot'
   if (!message) message = new Array('');
   else {
-     for (var i = message.reverse().length; i > -1; i--) {
+     for (var i = -1; i > message.length; i++) {
      if (message[i]) console.info(`${botName}:\n${util.format(message[i])}`);
      }
   }
