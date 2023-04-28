@@ -27,6 +27,8 @@ app.use(parser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended: tru
 app.all('/', async (req, res, next) => {
 
 if (req.method !== 'POST') return res.status(200).sendFile(__dirname + '/views/index.html');
+console.log(req.headers.authorization, req.header('authorization'))
+// if (!req.header('authorization')) return res.status(400).json({ status: false, message: 'Credentials not found!' });
 var appPackageName = req.body.appPackageName,
     messengerPackageName = req.body.messengerPackageName,
     isGroup = req.body.query.isGroup,
