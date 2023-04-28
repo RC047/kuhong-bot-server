@@ -89,13 +89,13 @@ await main.handler(req, {
 });
 
 app.get('/web_bot', async (req, res, next) => res.status(200).sendFile(__dirname + '/views/web_bot.html'));
-fs.writeFileSync('./views/index.html', encryptHtml(fs.readFileSync('./views/index.html').toString()));
-fs.writeFileSync('./views/web_bot.html', encryptHtml(fs.readFileSync('./views/web_bot.html').toString()));
-fs.writeFileSync('./public/js/index.js', encryptScript(fs.readFileSync('./public/js/index.js').toString()));
-fs.writeFileSync('./public/js/web_bot.js', encryptScript(fs.readFileSync('./public/js/web_bot.js').toString()));
-fs.writeFileSync('./public/js/ads.js', encryptHtml(fs.readFileSync('./public/js/ads.js').toString()));
-fs.writeFileSync('./main.js', encryptScript(fs.readFileSync('./main.js').toString()));
-fs.writeFileSync('./lib/js/functions.js', encryptScript(fs.readFileSync('./lib/js/functions.js').toString()));
+fs.writeFileSync('./views/index.html', encryptHtml(fs.readFileSync('./views/index.html', { encoding: 'utf-8' }).replace('APIKEY', user.apikey.kuhong)));
+fs.writeFileSync('./views/web_bot.html', encryptHtml(fs.readFileSync('./views/web_bot.html', { encoding: 'utf-8' })));
+fs.writeFileSync('./public/js/index.js', encryptScript(fs.readFileSync('./public/js/index.js', { encoding: 'utf-8' })));
+fs.writeFileSync('./public/js/web_bot.js', encryptScript(fs.readFileSync('./public/js/web_bot.js', { encoding: 'utf-8' })));
+fs.writeFileSync('./public/js/ads.js', encryptHtml(fs.readFileSync('./public/js/ads.js', { encoding: 'utf-8' })));
+fs.writeFileSync('./main.js', encryptScript(fs.readFileSync('./main.js', { encoding: 'utf-8' })));
+fs.writeFileSync('./lib/js/functions.js', encryptScript(fs.readFileSync('./lib/js/functions.js', { encoding: 'utf-8' })));
 app.use((req, res, next) => res.status(404).send(`<pre>Halaman <strong>${req.url}</strong> tidak dapat ditemukan disini...</pre>`));
 app.listen(PORT, () => {
   console.info('Server running on port', PORT);
