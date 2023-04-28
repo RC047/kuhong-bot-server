@@ -96,7 +96,7 @@ $.ajax({
     method: 'POST',
     dataType: 'json',
     headers: {
-	'Authorization': 'APIKEY YOUR_APIKEY'
+	'Authorization': 'APIKEY YOUR_APIKEY',
     	'Content-Type': 'application/json',
         'BOT_NAME': 'Kuhong Bot',
         'BOT_PREFIX': '!?/#$,.',
