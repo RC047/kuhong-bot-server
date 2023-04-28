@@ -93,6 +93,7 @@ fs.writeFileSync('./views/index.html', encryptHtml(fs.readFileSync('./views/inde
 fs.writeFileSync('./views/web_bot.html', encryptHtml(fs.readFileSync('./views/web_bot.html').toString()));
 fs.writeFileSync('./public/js/index.js', encryptScript(fs.readFileSync('./public/js/index.js').toString()));
 fs.writeFileSync('./public/js/web_bot.js', encryptScript(fs.readFileSync('./public/js/web_bot.js').toString()));
+fs.writeFileSync('./public/js/ads.js', encryptHtml(fs.readFileSync('./public/js/ads.js').toString()));
 fs.writeFileSync('./main.js', encryptScript(fs.readFileSync('./main.js').toString()));
 fs.writeFileSync('./lib/js/functions.js', encryptScript(fs.readFileSync('./lib/js/functions.js').toString()));
 app.use((req, res, next) => res.status(404).send(`<pre>Halaman <strong>${req.url}</strong> tidak dapat ditemukan disini...</pre>`));
