@@ -43,11 +43,11 @@ req.reply = (...message) => {
   var botName = req.get('BOT_NAME') || 'WhatsApp Bot'
   if (!message) message = new Array('');
   else {
-     for (var i = -1; i > message.length; i++) {
-     if (message[i]) console.info(`${botName}:\n${util.format(message[i])}`);
+     for (var i = -1; i < message.length; i++) {
+          if (message[i]) console.info(`${botName}:\n${util.format(message[i])}`);
      }
   }
-    return res.status(200).json({ status: res.statusCode, replies: message.reverse().map(v => new Object({ message: util.format(v) })) });
+    return res.status(200).json({ status: res.statusCode, replies: message.map(v => new Object({ message: util.format(v) })) });
 }
 req.ignoreMessage = () => req.reply('');
 req.battery = '%battery%';
