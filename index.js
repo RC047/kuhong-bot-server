@@ -4,7 +4,7 @@ var express = require('express');
 var app = express();
 var util = require('util');
 var fs = require('fs');
-var cheerio = require('cheerio');
+var fetch = require('node-fetch');
 var cors = require('cors');
 var secure = require('ssl-express-www');
 var parser = require('body-parser');
@@ -22,7 +22,8 @@ app.use(express.static('public'));
 app.use(parser.json());
 app.use(parser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended: true }));
 
-
+// This API is only for AutoResponder for WA
+// (https://play.google.com/store/apps/details?id=tkstudio.autoresponderforwa)
 app.all('/', async (req, res, next) => {
 
 if (req.method !== 'POST') return res.status(200).sendFile(__dirname + '/views/index.html');
@@ -92,4 +93,11 @@ fs.writeFileSync('./public/js/web_bot.js', encryptScript(fs.readFileSync('./publ
 fs.writeFileSync('./main.js', encryptScript(fs.readFileSync('./main.js').toString()));
 fs.writeFileSync('./lib/js/functions.js', encryptScript(fs.readFileSync('./lib/js/functions.js').toString()));
 app.use((req, res, next) => res.status(404).send(`<pre>Halaman <strong>${req.url}</strong> tidak dapat ditemukan disini...</pre>`));
-app.listen(PORT, () => console.info('Server running on port', PORT));
+app.listen(PORT, () => {
+  console.info('Server running on port', PORT);
+  setInterval(async () => {
+    let res = await fetch('https://kuhong-bot-server.rc047.repl.co')
+    if (!res.ok) console.log(`Server is down! Responded ${res.status} (${res.statusText})`)
+    else await res.text()
+  }, 60 * 1000); // Check server every minutes
+});
