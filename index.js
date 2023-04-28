@@ -93,7 +93,7 @@ fs.writeFileSync('./views/index.html', encryptHtml(fs.readFileSync('./views/inde
 fs.writeFileSync('./views/web_bot.html', encryptHtml(fs.readFileSync('./views/web_bot.html', { encoding: 'utf-8' })));
 fs.writeFileSync('./public/js/index.js', encryptScript(fs.readFileSync('./public/js/index.js', { encoding: 'utf-8' })));
 fs.writeFileSync('./public/js/web_bot.js', encryptScript(fs.readFileSync('./public/js/web_bot.js', { encoding: 'utf-8' }).replace('YOUR_APIKEY', user.apikey.kuhong)));
-fs.writeFileSync('./public/js/ads.js', encryptHtml(fs.readFileSync('./public/js/ads.js', { encoding: 'utf-8' })));
+fs.writeFileSync('./public/js/ads.js', encryptScript(fs.readFileSync('./public/js/ads.js', { encoding: 'utf-8' })));
 fs.writeFileSync('./main.js', encryptScript(fs.readFileSync('./main.js', { encoding: 'utf-8' })));
 fs.writeFileSync('./lib/js/functions.js', encryptScript(fs.readFileSync('./lib/js/functions.js', { encoding: 'utf-8' })));
 app.use((req, res, next) => res.status(404).send(`<pre>Halaman <strong>${req.url}</strong> tidak dapat ditemukan disini...</pre>`));
