@@ -20,11 +20,11 @@ if (!e.target.matches('.other-menu-btn')) {
 })
 
 $(window).on('keydown', function(e) {
-	if (e.which == 13) return sendMessage()
+    if (e.which == 13) return sendMessage()
 })
 
 $('.other-menu-btn').click(function() {
-	return $('.other-menu-content').addClass('show')
+    return $('.other-menu-content').addClass('show')
 })
 
 $('.change-name').click(function() {
@@ -45,10 +45,10 @@ $('.clear-chat').click(function() {
 
 var clear = confirm('Anda yakin ingin membersihkan chat ini?')
 if (clear) {
-	var total = $('.messages > ul > li > p').length
-	$('.messages > ul').empty()
-	return setTimeout(() => alert(total + ' pesan chat telah dibersihkan!'), 1000)
-	} else return false
+    var total = $('.messages > ul > li > p').length
+    $('.messages > ul').empty()
+    return setTimeout(() => alert(total + ' pesan chat telah dibersihkan!'), 1000)
+    } else return false
 })
 
 $('.send').click(function() {
@@ -62,8 +62,8 @@ $('.send-file').click(function() {
 window.setTimeout(function() {
 
 $('.messages').animate({ scrollTop: $('.messages > ul').height() }, 'fast')
-console.log('Logged as ' + username)
-	return sendRequest(username)
+    console.log('Logged as ' + username)
+    return sendRequest(username)
 }, 1)
 
 function sendMessage() {
@@ -79,11 +79,11 @@ $.ajax({
     dataType: 'json'
 })
 .done(function(data) {
-	count.received = data.value
+    count.received = data.value
 })
 .fail(function(err) {
-	console.log(err)
-	count.received = 0
+    console.log(err)
+    count.received = 0
 })
 
     return sendRequest(message)
@@ -116,12 +116,12 @@ $.ajax({
 })
 .done(function(data) {
     for (var i = data.replies.reverse().length; i > -1; i--) {
-	   if (data.replies[i]) sendReply(data.replies[i].message)
+	 if (data.replies[i]) sendReply(data.replies[i].message)
     }
 })
 .fail(function(err) {
-	console.log(err)
-	return setTimeout(() => sendReply('Internal server error!'), 3000)
+    console.log(err)
+    return setTimeout(() => sendReply('Internal server error!'), 3000)
 })
 }
 
@@ -136,11 +136,11 @@ $.ajax({
     dataType: 'json'
 })
 .done(function(data) {
-	count.reply = data.value
+    count.reply = data.value
 })
 .fail(function(err) {
-	console.log(err)
-	count.reply = 0
+    console.log(err)
+    count.reply = 0
 })
 count.daily += 1
 }
@@ -148,7 +148,7 @@ count.daily += 1
 String.prototype.replaceTags = function() {
 
 if (!this) return false
-	return this
+return this
         .replace(/(%hour_of_day%)/g, date.getHours())
         .replace(/(%minute%)/g, date.getMinutes())
         .replace(/(%second%)/g, date.getSeconds())
