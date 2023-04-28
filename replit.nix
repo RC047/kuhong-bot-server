@@ -1,5 +1,9 @@
 { pkgs }: {
     deps = [
+      pkgs.ffmpeg.bin
+      pkgs.graphicsmagick
+      pkgs.imagemagick7
+      pkgs.tesseract
       pkgs.nano
       pkgs.nodejs-18_x
       pkgs.nodePackages.typescript-language-server
