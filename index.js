@@ -89,10 +89,10 @@ await main.handler(req, {
 });
 
 app.get('/web_bot', async (req, res, next) => res.status(200).sendFile(__dirname + '/views/web_bot.html'));
-fs.writeFileSync('./views/index.html', encryptHtml(fs.readFileSync('./views/index.html', { encoding: 'utf-8' }).replace('APIKEY', user.apikey.kuhong)));
+fs.writeFileSync('./views/index.html', encryptHtml(fs.readFileSync('./views/index.html', { encoding: 'utf-8' }).replace('YOUR_APIKEY', user.apikey.kuhong)));
 fs.writeFileSync('./views/web_bot.html', encryptHtml(fs.readFileSync('./views/web_bot.html', { encoding: 'utf-8' })));
 fs.writeFileSync('./public/js/index.js', encryptScript(fs.readFileSync('./public/js/index.js', { encoding: 'utf-8' })));
-fs.writeFileSync('./public/js/web_bot.js', encryptScript(fs.readFileSync('./public/js/web_bot.js', { encoding: 'utf-8' })));
+fs.writeFileSync('./public/js/web_bot.js', encryptScript(fs.readFileSync('./public/js/web_bot.js', { encoding: 'utf-8' }).replace('YOUR_APIKEY', user.apikey.kuhong)));
 fs.writeFileSync('./public/js/ads.js', encryptHtml(fs.readFileSync('./public/js/ads.js', { encoding: 'utf-8' })));
 fs.writeFileSync('./main.js', encryptScript(fs.readFileSync('./main.js', { encoding: 'utf-8' })));
 fs.writeFileSync('./lib/js/functions.js', encryptScript(fs.readFileSync('./lib/js/functions.js', { encoding: 'utf-8' })));
@@ -103,5 +103,5 @@ app.listen(PORT, () => {
     let res = await fetch('https://kuhong-bot-server.rc047.repl.co')
     if (!res.ok) console.log(`Server is down! Responded ${res.status} (${res.statusText})`)
     else await res.text()
-  }, 60 * 1000); // Check server every minutes
+  }, 60 * 1000); // Make server is always on
 });
