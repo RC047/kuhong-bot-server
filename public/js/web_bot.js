@@ -96,10 +96,10 @@ $.ajax({
     method: 'POST',
     dataType: 'json',
     headers: {
-	'Authorization': 'APIKEY YOUR_APIKEY',
+	'Authorization': 'Basic YOUR_TOKEN',
     	'Content-Type': 'application/json',
         'BOT_NAME': 'Kuhong Bot',
-        'BOT_PREFIX': '!?/#$,.',
+        'BOT_PREFIX': 'zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-',
         'WELCOME_MESSAGE': true
     },
     data: JSON.stringify({
