@@ -9,7 +9,7 @@ var cors = require('cors');
 var secure = require('ssl-express-www');
 var parser = require('body-parser');
 
-var { encryptHtml, encryptScript, arrayRegex } = require('./lib/js/functions.js');
+var { encryptHtml, encryptScript, arrayRegex, toBase64 } = require('./lib/js/functions.js');
 var user = require('./config.json');
 var main = require('./main.js');
 var PORT = process.env.PORT || 3000;
@@ -20,7 +20,7 @@ app.use(cors());
 app.use(secure);
 app.use(express.static('public'));
 app.use(parser.json());
-app.use(parser.urlencoded({ parameterLimit: 100000, limit: '10mb', extended: true }));
+app.use(parser.urlencoded({ extended: true }));
 
 // This API is only for AutoResponder for WA
 // (https://play.google.com/store/apps/details?id=tkstudio.autoresponderforwa)
@@ -29,7 +29,8 @@ app.all('/', async (req, res, next) => {
 if (req.method !== 'POST') return res.status(200).sendFile(__dirname + '/views/index.html');
 if (!req.get('Authorization')) return res.status(400).json({ status: 400, message: 'Credentials not found!' });
 var [type, value] = req.get('Authorization').split(' ')
-if (type !== 'APIKEY' && value !== user.apikey.kuhong) return res.status(403).json({ status: 403, message: 'Apikey yang anda masukkan tidak valid! Silahkan kunjungi web utama untuk mendapatkan apikey yang valid' })
+var key = await toBase64(`apikey:${user.apikey.kuhong}`)
+if (type !== 'Basic' && value !== key) return res.status(403).json({ status: 403, message: 'Apikey yang anda masukkan tidak valid! Silahkan kunjungi web utama untuk mendapatkan apikey yang valid' })
 var appPackageName = req.body.appPackageName,
     messengerPackageName = req.body.messengerPackageName,
     isGroup = req.body.query.isGroup,
