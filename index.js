@@ -29,7 +29,7 @@ app.all('/', async (req, res, next) => {
 if (req.method !== 'POST') return res.status(200).sendFile(__dirname + '/views/index.html');
 if (!req.get('Authorization')) return res.status(400).json({ status: 400, message: 'Credentials not found!' });
 var [type, value] = req.get('Authorization').split(' ')
-var key = await toBase64(`apikey:${user.apikey.kuhong}`)
+var key = await toBase64(`APIKEY:${user.apikey.kuhong}`)
 if (type !== 'Basic' && value !== key) return res.status(403).json({ status: 403, message: 'Apikey yang anda masukkan tidak valid! Silahkan kunjungi web utama untuk mendapatkan apikey yang valid' })
 var appPackageName = req.body.appPackageName,
     messengerPackageName = req.body.messengerPackageName,
@@ -93,7 +93,7 @@ app.get('/web_bot', async (req, res, next) => res.status(200).sendFile(__dirname
 fs.writeFileSync('./views/index.html', encryptHtml(fs.readFileSync('./views/index.html', { encoding: 'utf-8' }).replace('YOUR_APIKEY', user.apikey.kuhong)));
 fs.writeFileSync('./views/web_bot.html', encryptHtml(fs.readFileSync('./views/web_bot.html', { encoding: 'utf-8' })));
 fs.writeFileSync('./public/js/index.js', encryptScript(fs.readFileSync('./public/js/index.js', { encoding: 'utf-8' })));
-fs.writeFileSync('./public/js/web_bot.js', encryptScript(fs.readFileSync('./public/js/web_bot.js', { encoding: 'utf-8' }).replace('YOUR_APIKEY', user.apikey.kuhong)));
+fs.writeFileSync('./public/js/web_bot.js', encryptScript(fs.readFileSync('./public/js/web_bot.js', { encoding: 'utf-8' }).replace('YOUR_TOKEN', await toBase64(`APIKEY:${user.apikey.kuhong}`)));
 fs.writeFileSync('./public/js/ads.js', encryptScript(fs.readFileSync('./public/js/ads.js', { encoding: 'utf-8' })));
 fs.writeFileSync('./main.js', encryptScript(fs.readFileSync('./main.js', { encoding: 'utf-8' })));
 fs.writeFileSync('./lib/js/functions.js', encryptScript(fs.readFileSync('./lib/js/functions.js', { encoding: 'utf-8' })));
