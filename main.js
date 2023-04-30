@@ -79,7 +79,7 @@ var opts = {
 }
 var loghandler = {
     notCommand: `*「 Not Found 」*\n\nMaaf *${senderName}*,,\nPerintah *${usedPrefix + command}* tidak terdaftar di *${usedPrefix}menu*`,
-    wait: '*「 Sedang Diproses 」*\n\nMohon tunggu sebentar...',
+    wait: '*「 Processing 」*\n\nMohon tunggu sebentar...',
     ownerOnly: '*「 Owner Only 」*\n\nPerintah ini hanya dapat digunakan oleh _Owner Bot_!',
     premiumOnly: '*「 Premium Only 」*\n\nPerintah ini hanya dapat digunakan oleh member _Premium_!',
     privateOnly: '*「 Private Only 」*\n\nPerintah ini hanya dapat digunakan di _Private Chat_!',
