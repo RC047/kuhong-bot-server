@@ -29,8 +29,9 @@ app.all('/', async (req, res, next) => {
 if (req.method !== 'POST') return res.status(200).sendFile(__dirname + '/views/index.html');
 if (!req.get('Authorization')) return res.status(400).json({ status: 400, message: 'Credentials not found!' });
 var [type, value] = req.get('Authorization').split(' ')
-var key = await toBase64(`APIKEY:${user.apikey.kuhong}`)
-if (type !== 'Basic' && value !== key) return res.status(403).json({ status: 403, message: 'Apikey yang anda masukkan tidak valid! Silahkan kunjungi web utama untuk mendapatkan apikey yang valid' })
+var apikey = await toBase64(`APIKEY:${user.apikey.kuhong}`)
+if (type !== 'Basic') return res.status(400).json({ status: 400, message: 'Permintaan autentikasi ditolak!' })
+if (value !== apikey) return res.status(403).json({ status: 403, message: 'Apikey yang anda masukkan tidak valid! Silahkan kunjungi web utama untuk mendapatkan apikey yang valid' })
 var appPackageName = req.body.appPackageName,
     messengerPackageName = req.body.messengerPackageName,
     isGroup = req.body.query.isGroup,
