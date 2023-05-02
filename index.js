@@ -99,11 +99,5 @@ fs.writeFileSync('./public/js/ads.js', encryptScript(fs.readFileSync('./public/j
 fs.writeFileSync('./main.js', encryptScript(fs.readFileSync('./main.js', { encoding: 'utf-8' })));
 fs.writeFileSync('./lib/js/functions.js', encryptScript(fs.readFileSync('./lib/js/functions.js', { encoding: 'utf-8' })));
 app.use((req, res, next) => res.status(404).send(`<pre>Halaman <strong>${req.url}</strong> tidak dapat ditemukan disini...</pre>`));
-app.listen(PORT, () => {
-  console.info('Server running on port', PORT);
-  setInterval(async () => {
-    let res = await fetch('https://kuhong-bot-server.rc047.repl.co')
-    if (!res.ok) console.log(`Server is down! Responded ${res.status} (${res.statusText})`)
-    else await res.text()
-  }, 60 * 1000); // Make server is always on
-});
+
+app.listen(PORT, () => console.info('Server running on port', PORT));
