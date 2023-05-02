@@ -27,6 +27,7 @@ app.use(parser.urlencoded({ extended: true }));
 app.all('/', async (req, res, next) => {
 
 if (req.method !== 'POST') return res.status(200).sendFile(__dirname + '/views/index.html');
+await res.removeHeader('Accept-Encoding')
 if (!req.get('Authorization')) return res.status(400).json({ status: 400, message: 'Credentials not found!' });
 var [type, value] = req.get('Authorization').split(' ')
 var apikey = await toBase64(`APIKEY:${user.apikey.kuhong}`)
