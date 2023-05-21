@@ -1,33 +1,37 @@
-var os = require('os')
-var util = require('util')
-var path = require('path')
-var cp = require('child_process')
-var axios = require('axios')
-var translate = require('translate-google-api')
-var google = require('google-it')
-var gis = require('g-i-s')
-var barcode = require('barcode')
-var qrcode = require('qrcode')
-var toBase64 = require('image-to-base64')
-var formatSize = require('filesize')
-var FormData = require('form-data')
-var tesseract = require('node-tesseract-ocr')
-var fetch = require('node-fetch')
-var request = require('request')
-var cheerio = require('cheerio')
-var tiktok = require('tiktok-scraper')
-var shopee = require('shopee')
-var yts = require('yt-search')
-var fs = require('fs')
-var msu = require('minecraft-server-util')
-var { fromString, convert, compile } = require('html-to-text')
-var { removeBackgroundFromImageFile } = require('remove.bg')
-var { createHash, randomBytes } = require('crypto')
-var { performance } = require('perf_hooks')
-var { obfuscate } = require('js-confuser')
-var { JSDOM } = require('jsdom')
-var { fromBuffer } = require('file-type')
-var { saveToMedia, math, modes, encryptHtml, encryptScript, escapeFull, getZodiac, yta, ytv, servers, joox, stylizeText, tts, tahta, searchGempa, getBuffer, textWrap, getRandom, arrayRegex, pickRandom, formatDate, muptime, pad, clockString, post, stringify } = require('./lib/js/functions.js')
+let { fetchV2, saveFrom, uploadImage, uploadFile, uploadImgbb, ssweb, webp2mp4, webp2png, getEmoji, getEmojiV2, yt, yta, ytv, servers, igstalk, tiktokstalk, joox, gdrive, mediafire, textpro, photooxy, ephoto360, google, lyrics, chord, wikipedia, kbbi, searchRecipes, shortLink, shortBitly, getAnimeInfo, genMath, modes, encryptHtml, encryptScript, escapeFull, getZodiac, toBase64, toHex, toBinary, decodeString, randomString, reverseText, stylizeText, tts, running, tahta, searchGempa, getBuffer, textWrap, arrayRegex, pickRandom, formatSize, formatDate, parseUptime, pad, clockString, countDown, parseCookie, setDelay, isNumber, isURL, isBase64, isHex, isBinary, capitalize, replaceAll } = require('./functions.js')
+let { removeBackgroundFromImageFile } = require('remove.bg')
+let { spawn, exec } = require('child_process')
+let { createCanvas } = require('canvas')
+let { Canvas, Rank, Spotify } = require('canvacord')
+let { createHash, randomBytes } = require('crypto')
+let { performance } = require('perf_hooks')
+let { obfuscate } = require('js-confuser')
+let { fromBuffer } = require('file-type')
+let { JSDOM } = require('jsdom')
+let { apikey } = require('./config.json')
+let os = require('os')
+let util = require('util')
+let fs = require('fs')
+let path = require('path')
+let chalk = require('chalk')
+let axios = require('axios')
+let autocorrect = require('autocorrect')
+let brainly = require('brainly-scraper')
+let translate = require('translate-google-api')
+let gis = require('g-i-s')
+let barcode = require('jsbarcode')
+let qrcode = require('qrcode')
+let similarity = require('similarity')
+let PhoneNumber = require('awesome-phonenumber')
+let FormData = require('form-data')
+let fetch = require('node-fetch')
+let request = require('request')
+let cheerio = require('cheerio')
+let shopee = require('shopee')
+let yts = require('yt-search')
+let msu = require('minecraft-server-util')
+let package = require('./package.json')
+let multiplier = 25 // The higher, the harder levelup
 
 
 async function handler(m, { appPackageName, messengerPackageName, isOwner, isPremium, isGroup, senderMessage, messageType, groupName, senderName, usedPrefix, command, text }) {
@@ -35,36 +39,14 @@ async function handler(m, { appPackageName, messengerPackageName, isOwner, isPre
 Function.prototype.toString = function() { return `function${this.name ? ' ' + this.name : ''}() { [native code] }` }
 String.prototype.toNumber = function() { return Number(this) }
 
-var package = require('./package.json')
-var { apikey } = require('./config.json')
 var botName = m.get('BOT_NAME') || 'WhatsApp Bot'
 var owner = (m.get('OWNER_NUMBER') || '62895337278647').replace(/[-+<>@]/g, '').replace(/ +/g, '')
-var jadwal = m.get('BOT_SCHEDULE') || '24 Jam'
-var group_link = m.get('GROUP_LINK') || '-'
-var donate_link = m.get('DONATE_LINK') || '-'
-var gh_link = m.get('GITHUB_LINK') || '-'
-var yt_link = m.get('YOUTUBE_LINK') || '-'
-var ig_link = m.get('INSTAGRAM_LINK') || '-'
-var fb_link = m.get('FACEBOOK_LINK') || '-'
-var twt_link = m.get('TWITTER_LINK') || '-'
-var tt_link = m.get('TIKTOK_LINK') || '-'
-
 var date = new Date()
-var prefix = new RegExp('^[' + (m.get('BOT_PREFIX') || '!') + ']', 'gi')
-var readMore = String.fromCharCode(8206).repeat(4001)
-var isApikey = new RegExp(apikey.kuhong + '|' + apikey.xteam + '|' + apikey.zeks + '|' + apikey.zekais + '|' + apikey.imgbb + '|' + apikey.removebg, 'gi')
-var isGroupLink = /(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})/gi
-var isToxic = /(a(s[uw]|nj(([ie])?ng|([ie])r)?)|me?me?k|ko?nto?l|ba?bi|fu?ce?k|ta(e|i)k?|ba?ngsa?(t|d)|(ba?)?ji?nga?n|g([iueo])?bl([iueo])?(k|g)|col(i|ay)|an?jg|nge?nto?d|tod|tolol|(ng)?ewe(an)?|jemb(u|o)(d|t))/gi
-var isVirtex = //gi
-var isURL = (url) => /^(http(s)?:\/\/)?(\w+:?\w*@)?(\S+)(:\d+)?((?<=\.)\w+)+(\/([\w#!:.?+=&%@!\-/])*)?/gi.test(url)
-var capitalText = (str) => str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase()
-var replaceAll = (str, find, replace) => str.replace(new RegExp(find, 'g'), replace)
-var hours = date.getHours() + 7
-var salam = 'Pagi'
-if (hours == 4 || hours == 5 || hours == 6 || hours == 7 || hours == 8 || hours == 9) salam = 'Pagi'
-else if (hours == 10 || hours == 11 || hours == 12 || hours == 13 || hours == 14) salam = 'Siang'
-else if (hours == 15 || hours == 16 || hours == 17) salam = 'Sore'
-else if (hours == 18 || hours == 19 || hours == 20 || hours == 21 || hours == 22 || hours == 23 || hours == 0 || hours == 1 || hours == 2 || hours == 3) salam = 'Malam'
+var prefix = new RegExp('^[' + (m.get('BOT_PREFIX') || '!').replace(/[|\\{}()[\]^$+*?.\-\^]/g, '\\$&') + ']', 'gi')
+var isApikey = arrayRegex(Object.values(global.config.apiKeys), 'gi')
+let isGroupLink = /(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})/gi
+let isToxic = /(a(s[uw]|nj(([ie])?ng|([ie])r)?)|me?me?k|ko?nto?l|ba?bi|fu?ce?k|ta(e|i)k?|ba?ngsa?(t|d)|(ba?)?ji?nga?n|g([iueo])?bl([iueo])?(k|g)|col(i|ay)|an?jg|nge?nto?d|tod|tolol|(ng)?ewe(an)?|jemb(u|o)(d|t))/gi
+let isVirtex = //gi
 
 try { var isWarning = await fs.readFileSync('./tmp/warn.txt') } catch (e) { isWarning = false }
 try { var isWelcome = await fs.readFileSync('./tmp/' + (isGroup ? groupName : senderName) + '_welcome.txt') } catch (e) { isWelcome = false }
@@ -77,34 +59,49 @@ var opts = {
 	antivirtex: /^true|enable|on|1$/i.test(m.get('ANTI_VIRTEX')),
 	antisticker: /^true|enable|on|1$/i.test(m.get('ANTI_STICKER'))
 }
-var loghandler = {
-    notCommand: `*「 Not Found 」*\n\nMaaf *${senderName}*,,\nPerintah *${usedPrefix + command}* tidak terdaftar di *${usedPrefix}menu*`,
-    wait: '*「 Processing 」*\n\nMohon tunggu sebentar...',
-    ownerOnly: '*「 Owner Only 」*\n\nPerintah ini hanya dapat digunakan oleh _Owner Bot_!',
-    premiumOnly: '*「 Premium Only 」*\n\nPerintah ini hanya dapat digunakan oleh member _Premium_!',
-    privateOnly: '*「 Private Only 」*\n\nPerintah ini hanya dapat digunakan di _Private Chat_!',
-    groupOnly: '*「 Group Only 」*\n\nPerintah ini hanya dapat digunakan di _Grup Chat_!',
-    notReason: 'Silahkan masukan alasan',
-    notDate: 'Silahkan masukan tanggal',
-    notName: 'Silahkan masukan nama',
+
+let loghandler = {
+	wait: '*「 Processing 」*\n\nMohon tunggu sebentar...',
+	notRegistered: `*「 Not Registered 」*\n\nSilahkan daftar terlebih dahulu untuk menggunakan Bot ini dengan cara ketik:\n*${usedPrefix ? usedPrefix : '!'}register nama.umur*\n\nContoh: *${usedPrefix ? usedPrefix : '!'}register ${(m._data.notifyName || 'Kuhong').replace(/[\W]/g, '')}|${pickRandom([14, 15, 16, 17, 18, 19, 20, 21])}*`,
+    ownerOnly: '*「 Owner Only 」*\n\nPerintah ini hanya dapat digunakan oleh _*Owner Bot*_!',
+    premiumOnly: `*「 Premium Only 」*\n\nPerintah ini hanya dapat digunakan oleh member _*Premium*_!\nKetik *${usedPrefix}premium* untuk beli premium`,
+    privateOnly: '*「 Private Only 」*\n\nPerintah ini hanya dapat digunakan di _*Private Chat*_!',
+    groupOnly: '*「 Group Only 」*\n\nPerintah ini hanya dapat digunakan di _*Group Chat*_!',
+	adminOnly: '*「 Admin Only 」*\n\nPerintah ini hanya dapat digunakan oleh _*Admin Group*_!',
+	botAdminOnly: '*「 Bot Admin Only 」*\n\nJadikan Bot sebagai _*Admin*_ untuk menggunakan perintah ini!',
+	clientOnly: '*「 Client Only 」*\n\nPerintah ini hanya dapat digunakan yang menumpang _*Jadi Bot*_!',
+	notAllowed: '*「 Not Allowed 」*\n\nAkses untuk menggunakan perintah ini tidak diizinkan! Kemungkinan perintah atau isi yang anda masukan mengandung hal yang tidak baik atau terlarang',
+	notMedia: `Silahkan kirim atau balas media dengan caption *${usedPrefix + command}*`,
+    notDate: 'Silahkan masukan parameter tanggal',
+    notName: 'Silahkan masukan parameter nama',
     numberOnly: 'Teks harus berupa angka!',
-    notNumber: 'Silahkan masukan angka',
-    notLength: 'Silahkan masukan jumlah',
-    notUrl: 'Silahkan masukan url',
-    invalidLink: 'Link yang anda masukan tidak valid',
-    notText: 'Silahkan masukan text',
-    notType: 'Silahkan masukan type',
-    notServer: 'Silahkan masukan server',
-    notQuery: 'Silahkan masukan query',
-    notLang: 'Silahkan masukan kodebahasa',
-    notPass: 'Silahkan masukan password',
-    notMethod: 'Silahkan masukan method',
-    notCaption: 'Silahkan masukan caption',
-    notID: 'Silahkan masukan id',
-    notOption: 'Silahkan masukan opsi',
+    notNumber: 'Silahkan masukan parameter nomor/angka',
+	invalidNumber: 'Nomor yang anda masukan tidak valid!',
+    notLength: 'Silahkan masukan parameter jumlah',
+    notUrl: 'Silahkan masukan parameter url',
+    invalidLink: 'Link yang anda masukan tidak valid!',
+    notText: 'Silahkan masukan parameter text',
+	notText2: 'Silahkan masukan parameter text 2',
+	notMessage: 'Silahkan masukan parameter pesan',
+    notType: 'Silahkan masukan parameter type',
+    notServer: 'Silahkan masukan parameter server',
+    notQuery: 'Silahkan masukan parameter query',
+    notLang: 'Silahkan masukan parameter kodebahasa',
+    notPass: 'Silahkan masukan parameter password',
+    notMethod: 'Silahkan masukan parameter method',
+    notCaption: 'Silahkan masukan parameter caption',
+    notID: 'Silahkan masukan parameter id',
+	notCode: 'Silahkan masukan parameter kode',
+	notEffect: 'Silahkan masukan parameter effect',
+    notOption: 'Silahkan masukan parameter opsi',
+	notTagged: 'Silahkan tag target',
     overText: 'Teks terlalu panjang!',
     overLength: 'Jumlah terlalu banyak!',
-    imageOnly: 'Hanya dapat digunakan untuk Gambar!'
+	overDuration: 'Durasi terlalu panjang!',
+    imageOnly: 'Hanya dapat digunakan untuk gambar!',
+	videoOnly: 'Hanya dapat digunakan untuk video!',
+	audioOnly: 'Hanya dapat digunakan untuk audio!',
+	loadFailed: 'Gagal untuk mendapatkan data!'7
 }
 var listMenu = {
     main: [
@@ -335,7 +332,6 @@ var listMenu = {
 'owner'
      ]
 }
-
 try {
   if (/^true|enable|on|1$/i.test(m.get('SELF_MODE'))) { if (!isOwner) return m.ignoreMessage() }
   if (!/^tkstudio\.autoresponderfor/i.test(appPackageName) && isWarning == false) {
@@ -352,19 +348,16 @@ try {
       if (!senderMessage) return m.ignoreMessage()
       var tmp = await (await fetch(`https://raw.githubusercontent.com/herokuapp-com/kuhong-api/main/api/simsimi.json`)).json()
       var { result } = pickRandom(tmp)
-      var res = await fetch(`https://simsumi.herokuapp.com/api?text=${encodeURIComponent(senderMessage)}&lang=id`)
-      if (!/json/i.test(res.headers.get('content-type'))) {
-	       res = await fetch(`https://api.simsimi.net/v2/?text=${encodeURIComponent(senderMessage)}&lc=id`)
-	       if (!/json/i.test(res.headers.get('content-type'))) return m.reply(result)
-      }
+      var res = await fetch(`https://api.simsimi.net/v2/?text=${encodeURIComponent(senderMessage)}&lc=id`)
+      if (!/json/i.test(res.headers.get('content-type'))) return m.reply(result)
       var json = await res.json()
       if (json.success == '' || json.success == undefined || /Limit/i.test(json.success)) return m.reply(result)
         return m.reply(json.success)
   } else if (isGroup && afk.name !== null) {
       await fs.writeFileSync('./tmp/' + afk.name + '_afk.json', stringify({ name: null, reason: null }))
-      return m.reply(`*「 Berhenti Afk 」*\n\nSelamat datang kembali *${afk.name}!*\nudah beres ${afk.reason}nya kan?`)
+      return m.reply(`*「 Stop AFK 」*\n\nSelamat datang kembali *${afk.name}!*\nudah beres ${afk.reason}nya kan?`)
   } else if (isGroup && afk.name !== null && senderMessage.includes(afk.name == null ? Math.floor(Math.random() * 10000) : afk.name)) {
-      return m.reply(`*「 Sedang Afk 」*\n\nSshhh!!! Jangan ganggu dia!\nDianya lagi ${afk.reason} dulu katanya`)
+      return m.reply(`*「 Currently AFK 」*\n\nSshhh!!! Jangan ganggu dia!\nDia sedang AFK dengan alasan *${afk.reason}*`)
   } else if (isGroup && opts.antidelete && senderMessage == 'Pesan ini telah dihapus') {
       return m.reply(`*「 Anti Delete 」*\n\nDari: ${senderName}\nMember: ${groupName}\n\n_Seseorang telah terdeteksi menghapus pesan!_`)
   } else if (isGroup && opts.antilink && isGroupLink.test(senderMessage)) {
@@ -385,15 +378,73 @@ try {
       return m.reply('Yaa Aku Disini??\n\nIngin Memulai Bot? Ketik !help atau !menu yaa ;)')
   } else if (/^p$/i.test(senderMessage)) {
       return m.reply('Dilarang P! Biasakan salam')
-  } else if (/ass?alamm?ualaikum/gi.test(senderMessage)) {
+  } else if (/ass?alamm?u'?alaikum/gi.test(senderMessage)) {
       return m.reply('Wa\'alaikumussalam')
   } else if (!(prefix.test(senderMessage) && command)) return m.ignoreMessage()
 
-  if (/^menu|help|start|\?$/i.test(command)) {
-      var d = new Date(new Date + 3600000)
-      var weton = ['Pahing', 'Pon', 'Wage', 'Kliwon', 'Legi'][Math.floor(d / 84600000) % 5]
-      var islamic = Intl.DateTimeFormat('id-TN-u-ca-islamic', { day: 'numeric', month: 'long', year: 'numeric' }).format(d)
-      var menu = `
+  // Commands chat
+  if (/^(menu|help|start|\?)$/i.test(command)) {
+      await chat.sendStateTyping()
+      await m.reply(loghandler.wait)
+	  if (!isRegisteredUser) return m.reply(loghandler.notRegistered)
+      let d = new Date()
+      let salam
+      switch (d.getHours()) {
+		  case 3:
+		  case 4:
+		  case 5:
+		  case 6:
+		  case 7:
+		  case 8:
+		  case 9:
+		  salam = 'Pagi'
+		  break
+		  case 10:
+		  case 11:
+		  case 12:
+		  case 13:
+		  case 14:
+		  salam = 'Siang'
+		  break
+		  case 15:
+		  case 16:
+		  case 17:
+		  salam = 'Sore'
+		  break
+		  case 18:
+		  case 19:
+		  case 20:
+		  case 21:
+		  case 22:
+		  case 23:
+		  case 0:
+		  case 1:
+		  case 2:
+		  salam = 'Malam'
+		  break
+		  default:
+		  salam = 'Datang'
+	  }
+	  let time = [d.getHours(), d.getMinutes(), d.getSeconds()].join(':')
+	  let date = d.toLocaleDateString(global.config.locale, {
+		  weekday: 'long',
+		  day: 'numeric',
+		  month: 'long',
+		  year: 'numeric'
+	  })
+	  
+      let weton = ['Pahing', 'Pon', 'Wage', 'Kliwon', 'Legi'][Math.floor(d / 84600000) % 5]
+      let islamic = Intl.DateTimeFormat('id-TN-u-ca-islamic', {
+		  day: 'numeric',
+		  month: 'long',
+		  year: 'numeric'
+	  }).format(d)
+	  let index = Object.entries(listMenu)
+      let features = ''
+      for (let i = 0; index.length > i; i++) {
+		  if (index[i]) features += `╭─ *「 ${capitalize(index[i][0])} Menu 」*\n${index[i][1].map(v => '│• ' + usedPrefix + v).join('\n')}\n╰────\n\n`
+	  }
+      let result = `
 ╭─ *「 ${botName} 」*
 │
 │ _Selamat *${salam}*!_
@@ -401,106 +452,56 @@ try {
 │• Location: ${isGroup ? 'Group' : 'Private'} Chat
 │• Mode: ${/^true|enable|on|1$/i.test(m.get('SELF_MODE')) ? 'Self' : 'Public'}
 │• Prefix: [ ${usedPrefix} ]
-│• Jadwal: ${jadwal}
+│• Jadwal: ${m.get('BOT_SCHEDULE') || '-'}
 │• Time: ${m.time}
 │• Uptime: ${muptime(process.uptime())}
 │• Weton: ${weton}
 │• Islamic: ${islamic}
 │• Date: ${m.date}
-│• Total Features: ${listMenu.downloaders.length + listMenu.makers.length + listMenu.groups.length + listMenu.games.length + listMenu.searchs.length + listMenu.primbons.length + listMenu.animes.length + listMenu.randoms.length + listMenu.news.length + listMenu.encrypts.length + listMenu.tools.length + listMenu.owners.length + listMenu.others.length}
-│• Total Replies: ${m.replyCount.all}
 ╰────
 
 ╭─ *「 Social Media 」*
 │
-│• GitHub: ${gh_link}
-│• YouTube: ${yt_link}
-│• Instagram: ${ig_link}
-│• FaceBook: ${fb_link}
-│• Twitter: ${twt_link}
-│• Tiktok: ${tt_link}
+│• GitHub:
+│${m.get('GITHUB_LINK') || '-'}
+│• YouTube:
+│${m.get('YOUTUBE_LINK') || '-'}
+│• Facebook:
+│${m.get('FACEBOOK_LINK') || '-'}
+│• Twitter:
+│${m.get('TWITTER_LINK') || '-'}
+│• Instagram:
+│${m.get('INSTAGRAM_LINK') || '-'}
+│• Tiktok:
+│${m.get('TIKTOK_LINK') || '-'}
 ╰────
 
-╭─ *「 Join Group 」*
-│${group_link}
+╭─ *「 Join Us 」*
+${m.get('GROUP_LINK') ? ('│' + m.get('GROUP_LINK')) : '│'}
 ╰────
-${readMore}
-╭─ *「 Main Menu 」*
-${listMenu.main.map(v => `│• ${usedPrefix + v}`).join('\n')}
-╰────
+${String.fromCharCode(8206).repeat(4001)}
+${features}
 
-╭─ *「 Downloaders Menu 」*
-${listMenu.downloaders.map(v => `│• ${usedPrefix + v}`).join('\n')}
-╰────
-
-╭─ *「 Makers Menu 」*
-${listMenu.makers.map(v => `│• ${usedPrefix + v}`).join('\n')}
-╰────
-
-╭─ *「 Groups Menu 」*
-${listMenu.groups.map(v => `│• ${usedPrefix + v}`).join('\n')}
-╰────
-
-╭─ *「 Games Menu 」*
-${listMenu.games.map(v => `│• ${usedPrefix + v}`).join('\n')}
-╰────
-
-╭─ *「 Searchs Menu 」*
-${listMenu.searchs.map(v => `│• ${usedPrefix + v}`).join('\n')}
-╰────
-
-╭─ *「 Primbons Menu 」*
-${listMenu.primbons.map(v => `│• ${usedPrefix + v}`).join('\n')}
-╰────
-
-╭─ *「 Animes Menu 」*
-${listMenu.animes.map(v => `│• ${usedPrefix + v}`).join('\n')}
-╰────
-
-╭─ *「 Randoms Menu 」*
-${listMenu.randoms.map(v => `│• ${usedPrefix + v}`).join('\n')}
-╰────
-
-╭─ *「 News Menu 」*
-${listMenu.news.map(v => `│• ${usedPrefix + v}`).join('\n')}
-╰────
-
-╭─ *「 Encrypts Menu 」*
-${listMenu.encrypts.map(v => `│• ${usedPrefix + v}`).join('\n')}
-╰────
-
-╭─ *「 Tools Menu 」*
-${listMenu.tools.map(v => `│• ${usedPrefix + v}`).join('\n')}
-╰────
-
-╭─ *「 Owners Menu 」*
-${listMenu.owners.map(v => `│• ${usedPrefix + v}`).join('\n')}
-╰────
-
-╭─ *「 Others Menu 」*
-${listMenu.others.map(v => `│• ${usedPrefix + v}`).join('\n')}
-╰────
-
-
-User ID:
-_${await createHash('md5').update(senderName).digest('hex').slice(0, 20)}_
 *${botName.toLowerCase().replace(/ +/g, '-')}@^${m.appVersion}*
 ${'```' + package.description + '```'}
 `.trim()
-      return m.reply(loghandler.wait, menu)
+      return m.reply(loghandler.wait, result.trim())
 
   } else if (/^owner$/i.test(command)) {
-  	var str = `Owner Bot:\nhttps://wa.me/${owner}?text=${encodeURIComponent('Halo bang jago!')}`
+  	var str = `Owner Bot:\nhttps://wa.me/${owner}`
         return m.reply(loghandler.wait, result)
 
   } else if (/^s(tatus|peed)|ping$/i.test(command)) {
-      var old = performance.now()
-      var p = process.memoryUsage()
-      var cpus = os.cpus().map(cpu => {
-          cpu.total = Object.keys(cpu.times).reduce((last, type) => last + cpu.times[type], 0)
-          return cpu
+      await chat.sendStateTyping()
+      await m.reply(loghandler.wait)
+	  if (!isRegisteredUser) return m.reply(loghandler.notRegistered)
+      let old = await performance.now()
+      let p = process.memoryUsage()
+      let cpus = os.cpus().map(cpu => {
+        cpu.total = Object.keys(cpu.times).reduce((last, type) => last + cpu.times[type], 0)
+        return cpu
       })
-      var cpu = cpus.reduce((last, cpu, _, { length }) => {
+      let cpu = cpus.reduce((last, cpu, _, { length }) => {
          last.total += cpu.total
          last.speed += cpu.speed / length
          last.times.user += cpu.times.user
@@ -508,10 +509,17 @@ ${'```' + package.description + '```'}
          last.times.sys += cpu.times.sys
          last.times.idle += cpu.times.idle
          last.times.irq += cpu.times.irq
-         return last
+       return last
       }, { speed: 0, total: 0, times: { user: 0, nice: 0, sys: 0, idle: 0, irq: 0 }})
-      var neww = performance.now()
-      var result = `
+      let neww = await performance.now()
+	  let battery = await client.pupPage.evaluate(async () => {
+		  let status = await navigator.getBattery()
+		  return {
+			  level: Math.floor(status.level * 100),
+			  charging: Boolean(status.charging)
+		  }
+	  }).catch(() => {})
+      let result = `
 ╭─ *「 Status Bot 」*
 │
 │• Name: ${botName}
@@ -527,14 +535,14 @@ ${'```' + package.description + '```'}
 │• Ram: ${formatSize(p.heapUsed)} / ${formatSize(p.rss + p.heapTotal + p.heapUsed + p.external + p.arrayBuffers)}
 │• Rom: ${formatSize(os.totalmem() - os.freemem())} / ${formatSize(os.totalmem())}
 │• Cpu: ${cpus[0].model} (${cpu.speed} MHZ)
-│• Port: ${process.env.PORT || 3000}
+│• Port: ${process.env.PORT || '3000 (Default)'}
 │• IP: ${m.ip}
 │• Received Message: ${m.receivedCount}
 │• Daily Replies: ${m.replyCount.day}
 │• Contacts Replies: ${m.replyCount.contact}
 │• Groups Replies: ${m.replyCount.group}
 │• Total Replies: ${m.replyCount.all}
-│• Total Features: ${listMenu.downloaders.length + listMenu.makers.length + listMenu.groups.length + listMenu.games.length + listMenu.searchs.length + listMenu.primbons.length + listMenu.animes.length + listMenu.randoms.length + listMenu.news.length + listMenu.encrypts.length + listMenu.tools.length + listMenu.owners.length + listMenu.others.length}
+│• Total Features: ${await eval(Object.values(listMenu).map(list => list.length).join('+'))}
 │• Total Modules: ${fs.readdirSync('./node_modules').length}
 │• Uptime: ${muptime(process.uptime())}
 │• Ping: ${neww - old}ms
@@ -548,24 +556,19 @@ ${'```' + package.description + '```'}
   } else if (/^afk$/i.test(command)) {
       if (!isGroup) return m.reply(loghandler.wait, loghandler.groupOnly)
       if (!text) return m.reply(loghandler.wait, loghandler.notReason)
-      var result = `*「 Izin Afk 」*\n\nNama: ${senderName}\nAlasan: ${text}`
+      var result = `*「 AFK Now 」*\n\nNama: ${senderName}\nAlasan: ${text}`
       await fs.writeFileSync('./tmp/' + senderName + '_afk.json', stringify({ name: senderName, reason: text.trim() }))
     	return m.reply(result)
 
-  } else if (/^e(xec(ute)?|val)$/i.test(command)) {
-  	if (!isOwner) return m.reply(loghandler.wait, loghandler.ownerOnly)
+  } else if (/^e(xec(ute)?|val(uate)?)$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notText)
-      var exec = util.promisify(cp.exec).bind(cp)
-      if (/^exec(ute)?$/i.test(command)) {
-      	var res
-          try { res = await exec(text) } catch (e) { res = e }
-          finally {
-          var { stdout, stderr, err } = res
-	      if (err) return m.reply(loghandler.wait, util.format(err.message ? err.message : err))
-          else if (stdout) return m.reply(loghandler.wait, util.format(stdout))
-          else if (stderr) return m.reply(loghandler.wait, util.format(stderr))
-          }
-       } else return eval(text)
+      if (/^exec/i.test(command)) {
+		  let execute = util.promisify(exec)
+		  let { stdout, stderr, err } = await execute(text)
+		  if (stdout) return m.reply(loghandler.wait, stdout.trim())
+		  else if (stderr) return m.reply(loghandler.wait, stderr.trim())
+		  else if (err) return m.reply(loghandler.wait, util.format(err.message ? err.message : err).trim())
+	  } else return m.reply(loghandler.wait, util.format(await eval(text)))
 
   } else if (/^ytmp(3|4)$/i.test(command)) {
       if (!text) return m.reply(loghandler.wait, loghandler.notUrl)
@@ -2725,7 +2728,19 @@ Kata sandi: superiorman_
   	var json = await (await fetch(`https://api-anoncybfakeplayer.herokuapp.com/pastebin?text=${text}`)).json()
   	  return m.reply(loghandler.wait, `Hasil:\n\n${json.result}`)
 
-  } else return m.reply(loghandler.wait, loghandler.notCommand)
+  } else {
+	  let commands = []
+	  Object.keys(listMenu)
+	    .filter(v => v !== 'main')
+		.map(index => {
+			return listMenu[index].map(v => {
+				let command = v.includes(' ') ? v.split(' ')[0] : v
+				return commands.push(command)
+			})
+		})
+	  let correct = await autocorrect({ words: commands })
+	  return m.reply(loghandler.wait, `*「 Not Found 」*\n\nMaaf *${senderName}*,,\nPerintah *${usedPrefix + command}* tidak terdaftar di *${usedPrefix}menu*\n\n_Mungkin maksud anda *${usedPrefix + correct(command)}*?_`)
+  }
 } catch (e) {
   console.error(e)
   var err = e.message ? e.message : e
