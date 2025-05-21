@@ -22,7 +22,7 @@ app.use(express.static('public'));
 app.use(parser.json());
 app.use(parser.urlencoded({ extended: true }));
 
-// This API is only for AutoResponder for WA
+// This API is only support for AutoResponder Apps
 // (https://play.google.com/store/apps/details?id=tkstudio.autoresponderforwa)
 app.all('/', async (req, res, next) => {
 
