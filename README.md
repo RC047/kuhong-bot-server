@@ -1,2 +1,2 @@
 # kuhong-bot-server
-Simple WhatsApp Bot for Server
+Simple WhatsApp Bot for AutoResponder
