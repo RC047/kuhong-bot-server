@@ -38,7 +38,7 @@
     "form-data": "^4.0.4",
     "g-i-s": "^2.1.7",
     "human-readable": "^0.2.1",
-    "js-confuser": "^1.5.1",
+    "js-confuser": "^2.0.0",
     "jsdom": "^26.1.0",
     "jsbarcode": "^3.11.5",
     "minecraft-server-util": "^3.5.1",
