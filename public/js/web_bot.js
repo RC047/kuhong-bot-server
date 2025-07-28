@@ -70,7 +70,7 @@ function sendMessage() {
 
 var message = $('input[type=text]').val()
 if ($.trim(message) == '') return false
-$('<li class="you"><img src="https://i.ibb.co/3ThyTTQ/avatar-contact.png"></img><p>' + message.replaceTags() + '</p><div class="date"></div></li>').appendTo($('.messages > ul'))
+$('<li class="you"><img src="https://kuhong-bot-server.vercel.app/media/avatar-contact.png"></img><p>' + message.replaceTags() + '</p><div class="date"></div></li>').appendTo($('.messages > ul'))
 $('input[type=text]').val(null)
 $('.messages').animate({ scrollTop: $('.messages > ul').height() }, 'fast')
 $.ajax({
@@ -129,7 +129,7 @@ $.ajax({
 function sendReply(message) {
 
 if ($.trim(message) == '') return false
-$('<li class="bot"><img src="https://i.ibb.co/frhZmyZ/pp.jpg"></img><p>' + message.replaceTags() + '</p><div class="date"></div></li>').appendTo($('.messages > ul'))
+$('<li class="bot"><img src="https://kuhong-bot-server.vercel.app/media/kuhong.png"></img><p>' + message.replaceTags() + '</p><div class="date"></div></li>').appendTo($('.messages > ul'))
 $('.messages').animate({ scrollTop: $('.messages > ul').height() }, 'fast')
 $.ajax({
     url: 'https://api.countapi.xyz/hit/kuhong-bot-replies',
