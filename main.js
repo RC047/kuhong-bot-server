@@ -101,7 +101,7 @@ let loghandler = {
     imageOnly: 'Hanya dapat digunakan untuk gambar!',
 	videoOnly: 'Hanya dapat digunakan untuk video!',
 	audioOnly: 'Hanya dapat digunakan untuk audio!',
-	loadFailed: 'Gagal untuk mendapatkan data!'7
+	loadFailed: 'Gagal untuk mendapatkan data!'
 }
 var listMenu = {
     main: [
