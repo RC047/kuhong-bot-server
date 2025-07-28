@@ -26,13 +26,17 @@ app.use(parser.urlencoded({ extended: true }));
 // (https://play.google.com/store/apps/details?id=tkstudio.autoresponderforwa)
 app.all('/', async (req, res, next) => {
 
-if (req.method !== 'POST') return res.status(200).sendFile(__dirname + '/views/index.html');
+if (req.method !== 'POST') {
+    let index = await fs.readFileSync('./views/index.html', { encoding: 'utf-8' });
+    index = index.replace('YOUR_APIKEY', user.apikey.kuhong);
+    return res.status(200).send(index);
+}
 await res.removeHeader('Accept-Encoding')
 if (!req.get('Authorization')) return res.status(400).json({ status: 400, message: 'Credentials not found!' });
-var [type, value] = req.get('Authorization').split(' ')
-var apikey = await toBase64(`APIKEY:${user.apikey.kuhong}`)
-if (type !== 'Basic') return res.status(403).json({ status: 403, message: 'Permintaan autentikasi ditolak!' })
-if (value !== apikey) return res.status(403).json({ status: 403, message: 'Apikey yang anda masukkan tidak valid! Silahkan kunjungi web utama untuk mendapatkan apikey yang valid' })
+var [type, value] = req.get('Authorization').split(' ');
+var apikey = await toBase64(`APIKEY:${user.apikey.kuhong}`);
+if (type !== 'Basic') return res.status(403).json({ status: 403, message: 'Permintaan autentikasi ditolak!' });
+if (value !== apikey) return res.status(403).json({ status: 403, message: 'Apikey yang anda masukkan tidak valid! Silahkan kunjungi web utama untuk mendapatkan apikey yang valid' });
 var appPackageName = req.body.appPackageName,
     messengerPackageName = req.body.messengerPackageName,
     isGroup = req.body.query.isGroup,
@@ -93,7 +97,6 @@ await main.handler(req, {
 
 app.get('/web_bot', async (req, res, next) => res.status(200).sendFile(__dirname + '/views/web_bot.html'));
 app.use((req, res, next) => res.status(404).send(`<pre>Halaman <strong>${req.url}</strong> tidak dapat ditemukan disini...</pre>`));
-fs.writeFileSync('./views/index.html', fs.readFileSync('./views/index.html', { encoding: 'utf-8' }).replace('YOUR_APIKEY', user.apikey.kuhong));
 fs.writeFileSync('./public/js/index.js', encryptScript(fs.readFileSync('./public/js/index.js', { encoding: 'utf-8' })));
 fs.writeFileSync('./public/js/web_bot.js', encryptScript(fs.readFileSync('./public/js/web_bot.js', { encoding: 'utf-8' }).replace('YOUR_TOKEN', toBase64(`APIKEY:${user.apikey.kuhong}`))));
 fs.writeFileSync('./public/js/ads.js', encryptScript(fs.readFileSync('./public/js/ads.js', { encoding: 'utf-8' })));
