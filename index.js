@@ -97,7 +97,7 @@ await main.handler(req, {
 
 app.get('/web_bot', async (req, res, next) => res.status(200).sendFile(__dirname + '/views/web_bot.html'));
 app.use((req, res, next) => res.status(404).send(`<pre>Halaman <strong>${req.url}</strong> tidak dapat ditemukan disini...</pre>`));
-console.log(__dirname, __path);
+console.log(__dirname, __filename);
 fs.writeFileSync('./js/index.js', encryptScript(fs.readFileSync('./js/index.js', { encoding: 'utf-8' })));
 fs.writeFileSync('./public/js/web_bot.js', encryptScript(fs.readFileSync('./public/js/web_bot.js', { encoding: 'utf-8' }).replace('YOUR_TOKEN', toBase64(`APIKEY:${user.apikey.kuhong}`))));
 fs.writeFileSync('./public/js/ads.js', encryptScript(fs.readFileSync('./public/js/ads.js', { encoding: 'utf-8' })));
