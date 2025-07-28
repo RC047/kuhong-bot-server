@@ -92,7 +92,7 @@ $.ajax({
 function sendRequest(message) {
 
 $.ajax({
-    url: 'https://kuhong-bot-server.rc047.repl.co',
+    url: 'https://kuhong-bot-server.vercel.app',
     method: 'POST',
     dataType: 'json',
     headers: {
