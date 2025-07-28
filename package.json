@@ -25,6 +25,7 @@
     "axios": "^1.11.0",
     "autocorrect": "^1.2.0",
     "body-parser": "^2.2.0",
+    "brainly-scraper": "^1.0.3",
     "barcode": "^0.1.0",
     "chalk": "^4.1.2",
     "cors": "^2.8.5",
