@@ -426,7 +426,7 @@ try {
 		  salam = 'Datang'
 	  }
 	  let time = [d.getHours(), d.getMinutes(), d.getSeconds()].join(':')
-	  let date = d.toLocaleDateString('id'', {
+	  let date = d.toLocaleDateString('id', {
 		  weekday: 'long',
 		  day: 'numeric',
 		  month: 'long',
