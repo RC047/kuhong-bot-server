@@ -47,6 +47,43 @@ var isApikey = arrayRegex(Object.values(apikey), 'gi')
 let isGroupLink = /(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})/gi
 let isToxic = /(a(s[uw]|nj(([ie])?ng|([ie])r)?)|me?me?k|ko?nto?l|ba?bi|fu?ce?k|ta(e|i)k?|ba?ngsa?(t|d)|(ba?)?ji?nga?n|g([iueo])?bl([iueo])?(k|g)|col(i|ay)|an?jg|nge?nto?d|tod|tolol|(ng)?ewe(an)?|jemb(u|o)(d|t))/gi
 let isVirtex = //gi
+let salam
+switch (d.getHours()) {
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 9:
+		salam = 'Pagi'
+		break
+		case 10:
+		case 11:
+		case 12:
+		case 13:
+		case 14:
+		salam = 'Siang'
+		break
+		case 15:
+		case 16:
+		case 17:
+		salam = 'Sore'
+		break
+		case 18:
+		case 19:
+		case 20:
+		case 21:
+		case 22:
+		case 23:
+		case 0:
+		case 1:
+		case 2:
+		salam = 'Malam'
+		break
+		default:
+		salam = 'Datang'
+}
 
 try { var isWarning = await fs.readFileSync('./tmp/warn.txt') } catch (e) { isWarning = false }
 try { var isWelcome = await fs.readFileSync('./tmp/' + (isGroup ? groupName : senderName) + '_welcome.txt') } catch (e) { isWelcome = false }
@@ -386,53 +423,14 @@ try {
   if (/^(menu|help|start|\?)$/i.test(command)) {
       await chat.sendStateTyping()
       await m.reply(loghandler.wait)
-	  if (!isRegisteredUser) return m.reply(loghandler.notRegistered)
-      let d = new Date()
-      let salam
-      switch (d.getHours()) {
-		  case 3:
-		  case 4:
-		  case 5:
-		  case 6:
-		  case 7:
-		  case 8:
-		  case 9:
-		  salam = 'Pagi'
-		  break
-		  case 10:
-		  case 11:
-		  case 12:
-		  case 13:
-		  case 14:
-		  salam = 'Siang'
-		  break
-		  case 15:
-		  case 16:
-		  case 17:
-		  salam = 'Sore'
-		  break
-		  case 18:
-		  case 19:
-		  case 20:
-		  case 21:
-		  case 22:
-		  case 23:
-		  case 0:
-		  case 1:
-		  case 2:
-		  salam = 'Malam'
-		  break
-		  default:
-		  salam = 'Datang'
-	  }
-	  let time = [d.getHours(), d.getMinutes(), d.getSeconds()].join(':')
-	  let date = d.toLocaleDateString('id', {
-		  weekday: 'long',
-		  day: 'numeric',
-		  month: 'long',
-		  year: 'numeric'
-	  })
-	  
+      if (!isRegisteredUser) return m.reply(loghandler.notRegistered)
+      let time = [d.getHours(), d.getMinutes(), d.getSeconds()].join(':')
+      let date = d.toLocaleDateString('id', {
+	      weekday: 'long',
+	      day: 'numeric',
+	      month: 'long',
+	      year: 'numeric'
+       })
       let weton = ['Pahing', 'Pon', 'Wage', 'Kliwon', 'Legi'][Math.floor(d / 84600000) % 5]
       let islamic = Intl.DateTimeFormat('id-TN-u-ca-islamic', {
 		  day: 'numeric',
