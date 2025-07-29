@@ -62,7 +62,7 @@ var opts = {
 
 let loghandler = {
 	wait: '*「 Processing 」*\n\nMohon tunggu sebentar...',
-	notRegistered: `*「 Not Registered 」*\n\nSilahkan daftar terlebih dahulu untuk menggunakan Bot ini dengan cara ketik:\n*${usedPrefix ? usedPrefix : '!'}register nama.umur*\n\nContoh: *${usedPrefix ? usedPrefix : '!'}register ${(m._data.notifyName || 'Kuhong').replace(/[\W]/g, '')}|${pickRandom([14, 15, 16, 17, 18, 19, 20, 21])}*`,
+	notRegistered: `*「 Not Registered 」*\n\nSilahkan daftar terlebih dahulu untuk menggunakan Bot ini dengan cara ketik:\n*${usedPrefix ? usedPrefix : '!'}register nama.umur*\n\nContoh: *${usedPrefix ? usedPrefix : '!'}register ${(senderName || 'Kuhong').replace(/[\W]/g, '')}|${pickRandom([14, 15, 16, 17, 18, 19, 20, 21])}*`,
     ownerOnly: '*「 Owner Only 」*\n\nPerintah ini hanya dapat digunakan oleh _*Owner Bot*_!',
     premiumOnly: `*「 Premium Only 」*\n\nPerintah ini hanya dapat digunakan oleh member _*Premium*_!\nKetik *${usedPrefix}premium* untuk beli premium`,
     privateOnly: '*「 Private Only 」*\n\nPerintah ini hanya dapat digunakan di _*Private Chat*_!',
