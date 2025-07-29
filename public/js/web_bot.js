@@ -101,7 +101,7 @@ $.ajax({
 	'Authorization': `Basic ${token.trim()}`,
     	'Content-Type': 'application/json',
         'BOT_NAME': 'Kuhong Bot',
-        'BOT_PREFIX': 'zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-',
+        'BOT_PREFIX': encodeURI('zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-'),
         'WELCOME_MESSAGE': true
     },
     data: JSON.stringify({
