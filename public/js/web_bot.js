@@ -93,12 +93,13 @@ $.ajax({
 
 function sendRequest(message) {
 
+var auth = btoa(`APIKEY:${token}`)
 $.ajax({
     url: 'https://kuhong-bot-server.vercel.app',
     method: 'POST',
     dataType: 'json',
     headers: {
-	'Authorization': `Basic ${token.trim()}`,
+	'Authorization': `Basic ${auth}`,
     	'Content-Type': 'application/json',
         'BOT_NAME': 'Kuhong Bot',
         'BOT_PREFIX': encodeURI('zxZX¡!/#$%+£¢€¥^°=¶∆×÷π√✓©®:;?¿&.\\-'),
