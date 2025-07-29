@@ -4,6 +4,7 @@ var express = require('express');
 var app = express();
 var util = require('util');
 var fs = require('fs');
+var path = require('path');
 var fetch = require('node-fetch');
 var cors = require('cors');
 var secure = require('ssl-express-www');
@@ -18,7 +19,7 @@ app.enable('trust proxy');
 app.set('json spaces', 2);
 app.use(cors());
 app.use(secure);
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(parser.json());
 app.use(parser.urlencoded({ extended: true }));
 
