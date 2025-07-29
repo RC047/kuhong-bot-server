@@ -43,7 +43,7 @@ var botName = m.get('BOT_NAME') || 'WhatsApp Bot'
 var owner = (m.get('OWNER_NUMBER') || '62895337278647').replace(/[-+<>@]/g, '').replace(/ +/g, '')
 var date = new Date()
 var prefix = new RegExp('^[' + (m.get('BOT_PREFIX') || '!').replace(/[|\\{}()[\]^$+*?.\-\^]/g, '\\$&') + ']', 'gi')
-var isApikey = arrayRegex(Object.values(global.config.apiKeys), 'gi')
+var isApikey = arrayRegex(Object.values(apikey), 'gi')
 let isGroupLink = /(http(s)?:\/\/)?chat.whatsapp.com\/(?:invite\/)?([0-9A-Za-z]{20,24})/gi
 let isToxic = /(a(s[uw]|nj(([ie])?ng|([ie])r)?)|me?me?k|ko?nto?l|ba?bi|fu?ce?k|ta(e|i)k?|ba?ngsa?(t|d)|(ba?)?ji?nga?n|g([iueo])?bl([iueo])?(k|g)|col(i|ay)|an?jg|nge?nto?d|tod|tolol|(ng)?ewe(an)?|jemb(u|o)(d|t))/gi
 let isVirtex = //gi
@@ -426,7 +426,7 @@ try {
 		  salam = 'Datang'
 	  }
 	  let time = [d.getHours(), d.getMinutes(), d.getSeconds()].join(':')
-	  let date = d.toLocaleDateString(global.config.locale, {
+	  let date = d.toLocaleDateString('id'', {
 		  weekday: 'long',
 		  day: 'numeric',
 		  month: 'long',
